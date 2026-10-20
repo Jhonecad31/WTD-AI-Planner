@@ -1,0 +1,366 @@
+{
+  "meta": {
+    "title": "My Cancun Plan AI · Your ideal trip starts here",
+    "description": "The official AI planner of WhatToDoInCancun.com: 500+ activities, restaurants and excursions, built by local experts with 35+ years in Cancún. Free."
+  },
+  "common": {
+    "poweredBy": "powered by WhatToDo",
+    "next": "Continue",
+    "back": "Back",
+    "skip": "Skip",
+    "optional": "optional",
+    "usd": "USD",
+    "perPerson": "per person",
+    "loading": "Loading…",
+    "language": "Language"
+  },
+  "landing": {
+    "title": "Your ideal trip starts here.",
+    "subtitle": "The official AI planner of WhatToDoInCancun.com.",
+    "cta": "Create my itinerary",
+    "quick": {
+      "arrival": "Arrival",
+      "departure": "Departure",
+      "travelers": "Travelers",
+      "go": "Start planning",
+      "hint": "Takes about 3 minutes · no account needed"
+    },
+    "featuredTitle": "Experiences travelers book the most",
+    "featuredBody": "Every tour in your plan is a real WhatToDo product with today's price.",
+    "from": "From {price}",
+    "perPerson": "per person",
+    "viewAll": "See all tours",
+    "howTitle": "How it works",
+    "steps": {
+      "1": {
+        "title": "Your dates",
+        "body": "Tell us the day you arrive and the day you leave so every day counts."
+      },
+      "2": {
+        "title": "Your crew & budget",
+        "body": "Adults, kids and their ages, plus a budget per person."
+      },
+      "3": {
+        "title": "What you love",
+        "body": "Adventure, culture, food, beach, party… and chill days if you want them."
+      },
+      "4": {
+        "title": "Your itinerary",
+        "body": "A beautiful PDF in your inbox and a specialist ready to book it."
+      }
+    },
+    "whyTitle": "Why plan with WhatToDo",
+    "why": {
+      "1": {
+        "title": "Real prices, no surprises",
+        "body": "Every price comes straight from our booking system, in USD."
+      },
+      "2": {
+        "title": "A human books it",
+        "body": "A Cancun travel specialist confirms every detail with you by email or phone."
+      },
+      "3": {
+        "title": "Family-safe picks",
+        "body": "Age limits are checked for every traveler, so kids never get a nightclub."
+      },
+      "4": {
+        "title": "Pickup included",
+        "body": "Hotel pickup and airport transfers planned around your travel dates."
+      }
+    },
+    "trustTitle": "Backed by the team behind WhatToDo In Cancun",
+    "trustBody": "Thousands of travelers book with WhatToDo every year. Your plan uses the same tours, operators and prices.",
+    "awardsTitle": "Awards & recognition",
+    "partnersTitle": "Our partners & operators",
+    "finalTitle": "Ready when you are",
+    "finalBody": "Build your itinerary now and have it in your inbox in minutes.",
+    "sisterSites": "Also planning Mexico City or Madrid?",
+    "award": "World Travel Award: Mexico's Travel Agency 2026 Winner",
+    "benefits": {
+      "1": {
+        "title": "<big>500</big>+ options",
+        "body": "Activities, restaurants and excursions."
+      },
+      "2": {
+        "title": "Local experts",
+        "body": "35+ years in tourism in Cancún and the Riviera Maya."
+      },
+      "3": {
+        "title": "Top rated",
+        "body": "Recommendations kept up to date with Tripadvisor reviews."
+      }
+    },
+    "freeTitle": "Free Planner. Why is it free?",
+    "whyFree": {
+      "1": {
+        "title": "You book. We earn.",
+        "body": "We earn a commission when you book tours through us. If you love your itinerary, give us the opportunity to book it for you!"
+      },
+      "2": {
+        "title": "Great planning. Unforgettable memories.",
+        "body": "We believe a well-planned trip creates unforgettable experiences that make you want to return to Cancún and the Riviera Maya."
+      },
+      "optional": "(Optional)"
+    }
+  },
+  "wizard": {
+    "title": "Plan my trip",
+    "stepOf": "Step {current} of {total}",
+    "steps": {
+      "flights": "Flights",
+      "stay": "Stay & transfers",
+      "travelers": "Travelers",
+      "preferences": "Preferences",
+      "itinerary": "Itinerary",
+      "done": "Your plan",
+      "contact": "Send",
+      "restaurants": "Restaurants"
+    },
+    "flights": {
+      "title": "When are you flying?",
+      "arrival": "Arrival in Cancun",
+      "departure": "Departure from Cancun",
+      "nights": "{count, plural, =0 {Same-day trip} one {# night} other {# nights}}",
+      "errorOrder": "Your departure must be after your arrival.",
+      "arrivalSlot": "What time do you land?",
+      "departureSlot": "What time do you leave?",
+      "optional": "optional",
+      "slots": {
+        "early": "Before 4 pm",
+        "late": "After 4 pm",
+        "morning": "Morning",
+        "afternoon": "Afternoon",
+        "night": "Night"
+      }
+    },
+    "stay": {
+      "title": "Where are you staying?",
+      "zone": "Which area do you want to stay in?",
+      "hotel": "Your hotel",
+      "transfersTitle": "Airport transfers",
+      "transfersBody": "Private, with WhatToDo.",
+      "arrivalTransfer": "Airport to hotel",
+      "departureTransfer": "Hotel to airport",
+      "luxury": "Luxury vehicle",
+      "zones": {
+        "cancun": "Cancun",
+        "costa_mujeres": "Costa Mujeres",
+        "puerto_morelos": "Puerto Morelos",
+        "playa_del_carmen": "Playa del Carmen",
+        "riviera_maya": "Riviera Maya",
+        "puerto_aventuras": "Puerto Aventuras",
+        "tulum": "Tulum"
+      },
+      "zoneHints": {
+        "cancun": "20 min",
+        "costa_mujeres": "35 min",
+        "puerto_morelos": "25 min",
+        "playa_del_carmen": "50 min",
+        "riviera_maya": "1 h 15 min",
+        "puerto_aventuras": "1 h 10 min",
+        "tulum": "1 h 40 min"
+      },
+      "noHotel": "I don't have a hotel yet",
+      "noHotelNote": "We'll use the area and a specialist helps you find a hotel.",
+      "hotelPlaceholder": "Search your hotel or type its name",
+      "noTransfers": "I don't need transfers",
+      "hotelSearching": "Searching hotels…",
+      "hotelNoMatch": "Not on our list; you can keep the name as typed.",
+      "recommended": "Recommended",
+      "hotelSearchLabel": "Hotel name (optional)"
+    },
+    "travelers": {
+      "title": "Who's coming?",
+      "subtitle": "Ages set the price.",
+      "adults": "Adults (13+)",
+      "children": "Children (0–12)",
+      "childAge": "Age of child {n}",
+      "names": "Names",
+      "namesHint": "Optional, for your PDF",
+      "traveler": "Traveler {n}",
+      "leadName": "Your name",
+      "agesTitle": "How old are the kids?",
+      "titleLabel": "Title",
+      "titles": {
+        "mr": "Mr.",
+        "ms": "Ms.",
+        "none": "None"
+      }
+    },
+    "preferences": {
+      "title": "What’s your travel style?",
+      "subtitle": "Pick several.",
+      "interests": {
+        "adventure": "Adventure",
+        "cultural": "Culture & Mayan ruins",
+        "food": "Food & drinks",
+        "water": "Sea & snorkel",
+        "party": "Nightlife & party",
+        "couples": "Romantic",
+        "chill": "Wellness & relax",
+        "beach": "Beach",
+        "shopping": "Shopping",
+        "parks": "Theme parks"
+      },
+      "chillTitle": "Chill days",
+      "chill": {
+        "none": "None, I want it all",
+        "one": "One day",
+        "two": "Two days",
+        "alternate": "Every other day"
+      },
+      "notes": "Anything else?",
+      "generate": "Build my itinerary",
+      "budgetTitle": "Budget per person",
+      "budgetBody": "Tours and transfers, whole trip.",
+      "budgetTotal": "About {total} for {count, plural, one {# traveler} other {# travelers}}",
+      "private": "Private",
+      "tourDaysTitle": "Tour days",
+      "tourDays": {
+        "all": "As many as possible",
+        "1": "1 day",
+        "2": "2 days",
+        "3": "3 days",
+        "4": "4 days"
+      },
+      "kidsPartyTitle": "Traveling with kids",
+      "kidsParty": "Coco Bongo and night clubs don't admit minors; we'll plan other fun nights for everyone.",
+      "pace": {
+        "title": "What pace do you want?",
+        "relaxed": "Relaxed",
+        "balanced": "Balanced",
+        "intense": "Packed",
+        "counts": "{tours, plural, one {# tour} other {# tours}} · {rest, plural, =0 {no rest} one {# rest} other {# rest}}",
+        "summary": "{tours, plural, one {# tour day} other {# tour days}} · {rest, plural, =0 {no rest days} one {# rest day} other {# rest days}}",
+        "tapHint": "Tap a day to switch it",
+        "tour": "Tour",
+        "rest": "Rest",
+        "arrival": "Arrival",
+        "departure": "Departure"
+      }
+    },
+    "itinerary": {
+      "title": "Your itinerary",
+      "building": "Building your trip…",
+      "buildingHint": "Checking tours, prices and your dates. This takes about 20 seconds.",
+      "regenerate": "Try another version",
+      "retry": "Try again",
+      "failed": "We couldn't build the itinerary.",
+      "invalid": "Some trip details are missing. Go back and check them.",
+      "freeTitle": "Free day",
+      "freeBody": "Pool, beach, nothing planned.",
+      "tour": "Tour",
+      "transfer": "Transfer",
+      "pickup": "hotel pickup",
+      "details": "See details",
+      "perPerson": "Per person",
+      "total": "Total",
+      "withinBudget": "Within your {budget} per-person budget",
+      "overBudget": "Above your {budget} per-person budget — a specialist can adjust it",
+      "looksGood": "Continue",
+      "edit": {
+        "menu": "Options",
+        "move": "Move to another day",
+        "moveTo": "Move to",
+        "seeOptions": "See other options",
+        "makeChill": "Make this a chill day",
+        "addTour": "Add a tour this day",
+        "alternativesTitle": "Other options for {date}",
+        "alternativesBody": "Checked against today's availability.",
+        "available": "Available",
+        "unavailable": "Not available this day",
+        "choose": "Choose",
+        "checking": "Checking availability…",
+        "moved": "Moved to {date}",
+        "error": {
+          "sold_out": "That tour is sold out on {date}.",
+          "no_slots": "That tour doesn't run on {date}.",
+          "does_not_fit": "That tour is too long for your arrival or departure day.",
+          "not_in_trip": "That day is outside your trip.",
+          "unknown_product": "We couldn't find that tour."
+        },
+        "close": "Close",
+        "noAlternatives": "No other tours fit this day."
+      },
+      "restaurant": "Restaurant",
+      "beach": "Beach",
+      "shopping": "Shopping",
+      "map": "View on map",
+      "taReviews": "reviews on Tripadvisor",
+      "restaurantEstimate": "About {price} per person",
+      "diningEstimate": "+ dinners approx. {total}, paid at the restaurant; your specialist books them.",
+      "notices": {
+        "kids": "Traveling with kids",
+        "rain": "Rain in the forecast",
+        "dining": "Restaurants",
+        "hurricane": "Hurricane season",
+        "sargassum": "Sargassum",
+        "change": "Availability change",
+        "rainyDay": "Rainy day: indoor activities, no beach.",
+        "windyDay": "Windy day: no sea tours.",
+        "update": "Update",
+        "group": "Good to know"
+      },
+      "totalTours": "Tours",
+      "totalTransfers": "Transfers",
+      "regenerateConfirm": "Your changes will be lost.",
+      "regenerateYes": "Yes, try another",
+      "regenerateNo": "Cancel"
+    },
+    "contact": {
+      "title": "Where should we send it?",
+      "subtitle": "You get a PDF and a specialist reaches out to book it.",
+      "name": "Your name",
+      "email": "Email",
+      "phone": "Phone",
+      "phoneHint": "Optional, with country code",
+      "consent": "I agree that WhatToDo may contact me about this trip.",
+      "send": "Send my itinerary",
+      "sending": "Sending…",
+      "doneTitle": "Done! Check your inbox",
+      "doneBody": "We sent your itinerary to {email}. A specialist will contact you within {hours} hours to book it.",
+      "download": "Download PDF",
+      "again": "Plan another trip",
+      "reference": "Reference",
+      "failed": "We couldn't send your itinerary. Please try again.",
+      "recapDays": "{count, plural, one {# day} other {# days}}",
+      "recapTours": "{count, plural, one {# tour} other {# tours}}",
+      "errorName": "Enter your name.",
+      "errorEmail": "Enter a valid email, like name@email.com.",
+      "errorConsent": "Tick the box so we can send you your itinerary."
+    },
+    "weather": {
+      "forecast": "forecast",
+      "typical": "typical climate",
+      "rain": "rain {pct}%",
+      "forecastLabel": "Forecast",
+      "goodDays": "{count, plural, one {# good day} other {# good days}}",
+      "rainyDays": "{count, plural, one {# rainy} other {# rainy}}",
+      "windyDays": "{count, plural, one {# windy} other {# windy}}",
+      "typicalLine": "Typical {month} weather: {max}° / {min}°, rain on {rain}% of days",
+      "rainyTip": "For rainy days we recommend Extreme Adventure: ATVs, buggies, ziplines and a cenote.",
+      "season": {
+        "hurricane": "You travel during hurricane season (June to November). Most days are sunny; check the forecast a few days before.",
+        "sargassum": "From April to September sargassum can reach some Caribbean beaches. Cenotes are not affected."
+      }
+    },
+    "restaurants": {
+      "title": "Let’s plan your dinners",
+      "any": "Anything",
+      "cuisines": {
+        "mexican": "Mexican",
+        "italian": "Italian",
+        "japanese": "Japanese",
+        "asian": "Asian",
+        "greek": "Greek",
+        "mediterranean": "Mediterranean",
+        "seafood": "Seafood",
+        "steakhouse": "Steakhouse",
+        "latin": "Latin American",
+        "international": "International"
+      },
+      "budgetTitle": "Budget per dinner",
+      "budgetTotal": "About {total} per dinner for {count, plural, one {# person} other {# people}}"
+    }
+  }
+}

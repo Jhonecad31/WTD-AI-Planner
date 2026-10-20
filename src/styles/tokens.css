@@ -1,0 +1,48 @@
+/*
+ * Design tokens copied from whattodoincancun.com so the planner looks like the main site.
+ * Font: Nunito (self-hosted, same .ttf files as the site). Primary action: Tailwind green-700.
+ * Brand gradient: #00AAFF → #192F5D. Accents: #ff6a00 (deals), #81bd00 / #a1d62f (lime).
+ */
+@theme {
+  --font-sans: var(--font-nunito), ui-sans-serif, system-ui, sans-serif;
+
+  /* Brand */
+  --color-brand-sky: #00aaff;
+  --color-brand-navy: #192f5d;
+  --color-brand-ink: #1a1a1a;
+  --color-brand-deal: #ff6a00;
+  --color-brand-lime: #81bd00;
+  --color-brand-lime-light: #a1d62f;
+
+  /* Primary action (green-700 / green-600 on the site) */
+  --color-primary: #15803d;
+  --color-primary-hover: #16a34a;
+  --color-primary-foreground: #ffffff;
+  --color-primary-soft: #dcfce7; /* green-100 chips on the site */
+  --color-star: #f59e0b; /* amber-500 ratings */
+  --color-muted: #6b7280; /* gray-500 secondary text */
+  --color-heading: #1f2937; /* gray-800 */
+
+  /* Surfaces */
+  --color-surface: #f6f7f8; /* light neutral, like the site's gray-50 sections */
+  --color-surface-card: #ffffff;
+  --color-line: #e5e7eb; /* gray-200 hairlines, as on the site */
+  --color-success: #15803d;
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.05), 0 8px 24px -12px rgba(0, 0, 0, 0.15);
+  --shadow-float: 0 20px 50px -20px rgba(0, 0, 0, 0.3);
+
+  /* Radii used on the site */
+  --radius-card: 0.75rem; /* rounded-xl */
+  --radius-field: 40px; /* search inputs */
+  --radius-pill: 9999px; /* buttons */
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: var(--color-brand-ink);
+  --brand-gradient: linear-gradient(
+    135deg,
+    var(--color-brand-sky) 0%,
+    var(--color-brand-navy) 100%
+  );
+}
