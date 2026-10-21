@@ -84,6 +84,43 @@ export function StepTravelers() {
         <p className="mt-1 text-brand-ink/70">{t("subtitle")}</p>
       </header>
 
+      {/* Lead traveler's name first, then how many people come. */}
+      <section className="grid gap-4 sm:grid-cols-2">
+        <Field label={t("leadName")} htmlFor="lead-name" className="sm:col-span-2">
+          <div className="flex gap-2">
+            <div
+              role="radiogroup"
+              aria-label={t("titleLabel")}
+              className="flex shrink-0 rounded-pill border border-black/15 bg-white p-1"
+            >
+              {[...TRAVELER_TITLES, "none" as const].map((v) => {
+                const selected = (draft.travelerTitle ?? "none") === v;
+                return (
+                  <button
+                    key={v}
+                    type="button"
+                    role="radio"
+                    aria-checked={selected}
+                    onClick={() => patch({ travelerTitle: v === "none" ? undefined : v })}
+                    className={`rounded-pill px-3 py-1.5 text-sm font-semibold transition ${
+                      selected ? "bg-primary text-white" : "text-brand-ink/70 hover:text-primary"
+                    }`}
+                  >
+                    {t(`titles.${v}`)}
+                  </button>
+                );
+              })}
+            </div>
+            <Input
+              id="lead-name"
+              value={draft.travelers[0]?.name ?? ""}
+              onChange={(e) => update(0, { name: e.target.value })}
+              autoComplete="given-name"
+            />
+          </div>
+        </Field>
+      </section>
+
       <section className="grid gap-3 sm:grid-cols-2">
         <Counter
           label={t("adults")}
@@ -130,39 +167,6 @@ export function StepTravelers() {
       )}
 
       <section className="grid gap-4 sm:grid-cols-2">
-        <Field label={t("leadName")} htmlFor="lead-name" className="sm:col-span-2">
-          <div className="flex gap-2">
-            <div
-              role="radiogroup"
-              aria-label={t("titleLabel")}
-              className="flex shrink-0 rounded-pill border border-black/15 bg-white p-1"
-            >
-              {[...TRAVELER_TITLES, "none" as const].map((v) => {
-                const selected = (draft.travelerTitle ?? "none") === v;
-                return (
-                  <button
-                    key={v}
-                    type="button"
-                    role="radio"
-                    aria-checked={selected}
-                    onClick={() => patch({ travelerTitle: v === "none" ? undefined : v })}
-                    className={`rounded-pill px-3 py-1.5 text-sm font-semibold transition ${
-                      selected ? "bg-primary text-white" : "text-brand-ink/70 hover:text-primary"
-                    }`}
-                  >
-                    {t(`titles.${v}`)}
-                  </button>
-                );
-              })}
-            </div>
-            <Input
-              id="lead-name"
-              value={draft.travelers[0]?.name ?? ""}
-              onChange={(e) => update(0, { name: e.target.value })}
-              autoComplete="given-name"
-            />
-          </div>
-        </Field>
         {draft.travelers.length > 1 && (
           <details className="sm:col-span-2">
             <summary className="flex cursor-pointer items-center gap-2 text-sm font-semibold text-primary">

@@ -13,7 +13,6 @@ import {
   toItem,
 } from "./rules";
 import { checkDay, type AvailabilityLookup, type DayCheck } from "./edit";
-import { formatDate } from "@/lib/format";
 
 /**
  * Live availability pass over a generated itinerary (read-only Bokun calls):
@@ -73,8 +72,6 @@ export async function verifyAvailability(
   const report: AvailabilityReport = { checked: 0, moved: 0, replaced: 0, unverified: 0 };
   const warnings: string[] = [];
   const days = itinerary.days.map((d) => ({ ...d, items: [...d.items] }));
-  const nice = (date: string) =>
-    formatDate(date, request.locale, { weekday: "long", month: "long", day: "numeric" });
   const notify = (i: number, text: string) => {
     days[i] = { ...days[i], notices: [...(days[i].notices ?? []), text] };
   };
@@ -139,18 +136,8 @@ export async function verifyAvailability(
         items: days[other.index].items.map((i) => (i === otherItem ? withSlot(current, here) : i)),
       };
       report.moved++;
-      notify(
-        index,
-        es
-          ? `"${item.title}" no sale este día, así que lo pasamos al ${nice(days[other.index].date)} y trajimos "${otherItem.title}" a este día.`
-          : `"${item.title}" doesn't run this day, so we moved it to ${nice(days[other.index].date)} and brought "${otherItem.title}" here.`,
-      );
-      notify(
-        other.index,
-        es
-          ? `Movimos "${item.title}" a este día porque no salía el ${nice(d.date)}.`
-          : `We moved "${item.title}" to this day because it doesn't run on ${nice(d.date)}.`,
-      );
+      // No notice for the traveler: this is their first look at the plan, so "we moved it"
+      // only confuses. The agent still sees it in `warnings`.
       warnings.push(
         `"${item.title}" doesn't run on ${d.date}; swapped days with "${otherItem.title}" (${days[other.index].date}).`,
       );
@@ -216,12 +203,7 @@ export async function verifyAvailability(
         items: days[index].items.map((i) => (i === item ? next : i)),
       };
       used.add(replacement.p.bokunId);
-      notify(
-        index,
-        es
-          ? `Cambiamos "${item.title}" por "${replacement.p.title}" porque ${why}.`
-          : `We swapped "${item.title}" for "${replacement.p.title}" because it ${why}.`,
-      );
+      // Same as a move: the traveler never saw the original pick, so no notice.
       report.replaced++;
       warnings.push(
         `"${item.title}" on ${d.date} ${result.reason}; replaced by "${replacement.p.title}".`,

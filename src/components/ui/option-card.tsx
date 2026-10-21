@@ -96,7 +96,7 @@ export function OptionCard({
       </div>
       <span
         aria-hidden
-        className={`absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full border-2 transition-all ${
+        className={`absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-md border-2 transition-all ${
           selected
             ? "scale-100 border-primary bg-primary text-white"
             : "scale-90 border-black/15 bg-white/90 text-transparent"

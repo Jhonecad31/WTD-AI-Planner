@@ -10,6 +10,7 @@ import { buildRulesItinerary } from "./rules";
 import { draftToItinerary, generateWithClaude } from "./claude";
 import { validateAndRepair } from "./validate";
 import { enrichItinerary } from "./enrich";
+import { fitBudget } from "./budget";
 import { verifyAvailability } from "./availability-check";
 import { getAvailability } from "@/server/catalog/availability";
 import { getRatings, withTripAdvisor } from "@/server/tripadvisor";
@@ -36,7 +37,10 @@ export async function generateItinerary(request: TripRequest): Promise<GenerateR
   const result = await generateWithEngines(request, products, weather, ratings);
   // Trip rules (dinners, beach/shopping, arrival/departure, party nights), then re-total.
   // Weather goes on first so rainy days swap the beach for shopping.
-  const enriched = enrichItinerary(withWeather(result.itinerary, weather), request, products, {
+  // The engine is only asked to respect the budget: enforce it before the seats check,
+  // so any tour swapped in here is verified in Bokun too.
+  const withinBudget = fitBudget(withWeather(result.itinerary, weather), request, products);
+  const enriched = enrichItinerary(withinBudget, request, products, {
     ratings,
   });
   // Live seats check in Bokun; swap sold-out tours, then re-apply dinners/places if anything changed.

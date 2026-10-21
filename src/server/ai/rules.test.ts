@@ -5,6 +5,7 @@ import { ItinerarySchema } from "@/lib/itinerary-schema";
 import { buildRulesItinerary, isRainyFavorite, isSeaTour, planDays } from "./rules";
 import type { DayWeather } from "@/lib/itinerary-schema";
 import { categoryForAge, fitsAges, priceProductForParty } from "./pricing";
+import { pickCandidates } from "./claude";
 
 function product(
   partial: Partial<CatalogProduct> & { bokunId: number; title: string },
@@ -295,5 +296,28 @@ describe("weather-aware picking", () => {
     const ids = ["2026-12-11", "2026-12-13", "2026-12-14"].map((d) => tourOn(it_, d)?.bokunId);
     expect(ids.filter((id) => id === 7 || id === 8)).toHaveLength(2);
     expect(ids).not.toContain(3);
+  });
+});
+
+describe("pickCandidates (Claude's menu)", () => {
+  const adults = [{ age: 30 }, { age: 30 }];
+  const ids = (r: TripRequest) => pickCandidates(r, catalog).tours.map((p) => p.bokunId);
+
+  it("keeps night life off the menu when the traveler didn't pick party", () => {
+    expect(ids({ ...request, travelers: adults, interests: ["cultural"] })).not.toContain(4);
+  });
+
+  it("offers night life when party is an interest", () => {
+    expect(ids({ ...request, travelers: adults, interests: ["party"] })).toContain(4);
+  });
+
+  it("lists interest matches first, then tops up with other tours", () => {
+    const tours = ids({ ...request, travelers: adults, interests: ["cultural"] });
+    expect(tours[0]).toBe(1);
+    expect(tours).toEqual(expect.arrayContaining([2, 3]));
+  });
+
+  it("never offers adults-only night life to a group with kids", () => {
+    expect(ids({ ...request, interests: ["party"] })).not.toContain(4);
   });
 });
