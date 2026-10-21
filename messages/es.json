@@ -15,8 +15,8 @@
     "language": "Idioma"
   },
   "landing": {
-    "title": "Tu viaje ideal empieza aquí.",
-    "subtitle": "El planificador con IA oficial de WhatToDoInCancun.com.",
+    "title": "Descubre, explora y vive Cancún a tu manera",
+    "subtitle": "Con nuestro planificador inteligente encuentra las mejores actividades y experiencias con un itinerario hecho a la medida.",
     "cta": "Crear mi itinerario",
     "quick": {
       "arrival": "Llegada",
@@ -30,77 +30,99 @@
     "from": "Desde {price}",
     "perPerson": "por persona",
     "viewAll": "Ver todos los tours",
-    "howTitle": "Cómo funciona",
+    "howTitle": "Planea tu viaje ideal a Cancún en 4 sencillos pasos ",
     "steps": {
       "1": {
-        "title": "Tus fechas",
-        "body": "Dinos qué día llegas y qué día te vas para aprovechar cada día."
+        "title": "Elige tus fechas",
+        "body": "Indica cuándo visitarás Cancún para organizar las mejores experiencias durante tu estancia"
       },
       "2": {
-        "title": "Tu grupo y presupuesto",
-        "body": "Adultos, niños con sus edades y un presupuesto por persona."
+        "title": "Personaliza tu viaje",
+        "body": "Cuéntanos cuántas personas viajan contigo y cuál es tu presupuesto por persona"
       },
       "3": {
-        "title": "Lo que te gusta",
-        "body": "Aventura, cultura, gastronomía, playa, fiesta… y días de descanso si quieres."
+        "title": "Selecciona tus intereses",
+        "body": "Elige entre aventura, cultura, gastronomía, playas y otras experiencias que te gustaría disfrutar"
       },
       "4": {
-        "title": "Tu itinerario",
-        "body": "Un PDF bonito en tu correo y un especialista listo para reservarlo."
+        "title": "Recibe tu itinerario",
+        "body": "Obtén un plan de viaje personalizado en PDF y asesoría para reservar tus experiencias con un especialista de WhatToDo In Cancun"
       }
     },
-    "whyTitle": "Por qué planear con WhatToDo",
-    "why": {
-      "1": {
-        "title": "Precios reales, sin sorpresas",
-        "body": "Cada precio sale directo de nuestro sistema de reservas, en USD."
+    "whyPlan": {
+      "eyebrow": "Tu viaje en buenas manos",
+      "title": "¿Por qué planear con {brand}?",
+      "body": "Combinamos tecnología inteligente con experiencia local para ayudarte a descubrir Cancún y crear un viaje a tu medida.",
+      "benefits": {
+        "curated": {
+          "title": "Experiencias seleccionadas",
+          "body": "Tours y actividades elegidos por nuestro equipo local."
+        },
+        "experts": {
+          "title": "Expertos en el destino",
+          "body": "Más de 35 años de experiencia en Cancún y la Riviera Maya."
+        },
+        "tailored": {
+          "title": "Itinerarios a tu medida",
+          "body": "Recomendaciones según tus intereses, presupuesto y estilo de viaje."
+        },
+        "allInOne": {
+          "title": "Todo en un solo lugar",
+          "body": "Actividades, transporte, restaurantes y más, para que planees tu viaje de forma fácil y completa."
+        }
       },
-      "2": {
-        "title": "Lo reserva una persona",
-        "body": "Un especialista de viajes en Cancún confirma cada detalle contigo por correo o teléfono."
+      "trustTitle": "La experiencia de {brand} detrás de cada viaje",
+      "trustBody": "Miles de viajeros confían en nosotros cada año para descubrir todo lo que hace especial a Cancún y la Riviera Maya.",
+      "trustTitleShort": "Respaldado por el equipo de {brand}",
+      "trustBodyShort": "Miles de viajeros confían en nuestra experiencia para descubrir lo mejor de Cancún.",
+      "stats": {
+        "years": "años en el mercado",
+        "travelers": "viajeros atendidos",
+        "rating": "calificación promedio",
+        "tours": "tours y experiencias"
       },
-      "3": {
-        "title": "Opciones aptas para familias",
-        "body": "Revisamos la edad mínima de cada viajero; los niños nunca terminan en un antro."
-      },
-      "4": {
-        "title": "Recogida incluida",
-        "body": "Recogida en hotel y traslados al aeropuerto planeados según tus fechas."
-      }
+      "ratingLabel": "{value} de 5"
     },
-    "trustTitle": "Respaldado por el equipo de WhatToDo In Cancun",
-    "trustBody": "Miles de viajeros reservan con WhatToDo cada año. Tu plan usa los mismos tours, operadores y precios.",
-    "awardsTitle": "Premios y reconocimientos",
-    "partnersTitle": "Nuestros socios y operadores",
     "finalTitle": "Cuando tú quieras",
     "finalBody": "Arma tu itinerario ahora y tenlo en tu correo en minutos.",
     "sisterSites": "¿También planeas Ciudad de México o Madrid?",
-    "award": "World Travel Award: Mexico's Travel Agency 2026 Winner",
+    
     "benefits": {
       "1": {
-        "title": "Más de <big>500</big> opciones",
-        "body": "Actividades, restaurantes y excursiones."
+        "title": " Mas de <big>100</big> experiencias por descubrir",
+        "body": "Tours, aventuras y rincones únicos de Cancún"
       },
       "2": {
         "title": "Expertos locales",
-        "body": "Más de 35 años en turismo en Cancún y Riviera Maya."
+        "body": "Experiencias seleccionadas por profesionales del destino."
       },
       "3": {
-        "title": "Los mejor calificados",
-        "body": "Recomendaciones actualizadas con reseñas de Tripadvisor."
+        "title": "Un viaje hecho para ti",
+        "body": "Recomendaciones personalizadas según tus gustos y estilo de viaje"
       }
     },
-    "freeTitle": "Planificador gratis. ¿Por qué es gratis?",
+    "bestRated": {
+      "title": "Actividades mejor calificadas",
+      "seeAll": "Ver todos los tours",
+      "items": {
+        "atv": "Aventura en cuatrimoto por la selva, tirolesa, cenote y cata de tequila",
+        "chichen": "Tour clásico a Chichén Itzá, cenote y Valladolid",
+        "snorkel": "Experiencia de snorkel en el arrecife de Puerto Morelos",
+        "cenotes": "Experiencia semiprivada en cenotes",
+        "cocoBongo": "Coco Bongo Bar Disco & Show"
+      }
+    },
+    "freeTitle": "Tu Planificador de experiencias es gratis",
     "whyFree": {
       "1": {
-        "title": "Tú reservas. Nosotros ganamos.",
-        "body": "Ganamos una comisión cuando reservas tus tours con nosotros. Si te encanta tu itinerario, ¡danos la oportunidad de reservarlo por ti!"
+        "title": "Tu aventura, nuestro compromiso.",
+        "body": "Planea tu viaje con libertad. Si decides reservar tus experiencias con nosotros, nos ayudas a seguir creando herramientas para viajeros como tú."
       },
       "2": {
         "title": "Buena planeación. Recuerdos inolvidables.",
         "body": "Creemos que un viaje bien planeado crea experiencias inolvidables que te hacen querer volver a Cancún y la Riviera Maya."
-      },
-      "optional": "(Opcional)"
+      }
+      
     }
   },
   "wizard": {
@@ -134,11 +156,11 @@
       }
     },
     "stay": {
-      "title": "¿Dónde te hospedas?",
-      "zone": "¿En qué zona te quieres quedar?",
+      "title": "¿Dónde te hospedarás durante tu viaje?",
+      "zone": "¿En qué zona te gustaría hospedarte?",
       "hotel": "Tu hotel",
-      "transfersTitle": "Traslados al aeropuerto",
-      "transfersBody": "Privados, con WhatToDo.",
+      "transfersTitle": "Servicio de transporte aeropuerto",
+      "transfersBody": "Requieres traslados desde y hacia el aeropuerto?",
       "arrivalTransfer": "Aeropuerto a hotel",
       "departureTransfer": "Hotel a aeropuerto",
       "luxury": "Vehículo de lujo",
@@ -161,7 +183,7 @@
         "tulum": "1 h 40 min"
       },
       "noHotel": "Aún no tengo hotel",
-      "noHotelNote": "Usamos la zona y un especialista te ayuda con el hotel.",
+      "noHotelNote": "Usamos como referencia la zona y un especialista te puede asesorar con la búsqueda.",
       "hotelPlaceholder": "Busca tu hotel o escribe el nombre",
       "noTransfers": "No quiero traslados",
       "hotelSearching": "Buscando hoteles…",
@@ -170,15 +192,15 @@
       "hotelSearchLabel": "Nombre del hotel (opcional)"
     },
     "travelers": {
-      "title": "¿Quiénes vienen?",
-      "subtitle": "Las edades definen el precio.",
+      "title": "¿¿Cuántos viajeros vivirán esta aventura?",
+      "subtitle": "Indica cuántos adultos y niños viajarán para encontrar las mejores experiencias para todos.",
       "adults": "Adultos (13+)",
       "children": "Niños (0–12)",
       "childAge": "Edad del niño {n}",
       "names": "Nombres",
       "namesHint": "Opcional, para tu PDF",
       "traveler": "Viajero {n}",
-      "leadName": "Tu nombre",
+      "leadName": "Por favor escribe el nombre del viajero principal",
       "agesTitle": "¿Qué edad tienen los niños?",
       "titleLabel": "Tratamiento",
       "titles": {
@@ -188,8 +210,8 @@
       }
     },
     "preferences": {
-      "title": "¿Cuál es tu estilo de viaje?",
-      "subtitle": "Elige varias.",
+      "title": "¿Qué intereses definen tu estilo de viaje?",
+      "subtitle": "Selecciona tus intereses y preferencias para descubrir experiencias que se adapten a tu estilo de viaje. Puedes elegir varias opciones.",
       "interests": {
         "adventure": "Aventura",
         "cultural": "Cultura y ruinas mayas",
@@ -212,7 +234,7 @@
       "notes": "¿Algo más?",
       "generate": "Armar mi itinerario",
       "budgetTitle": "Presupuesto por persona",
-      "budgetBody": "Tours y traslados, todo el viaje.",
+      "budgetBody": "Para tours y traslados durante tu estancia. Los restaurantes son adicionales.",
       "budgetTotal": "Aprox. {total} para {count, plural, one {# viajero} other {# viajeros}}",
       "private": "Privados",
       "tourDaysTitle": "Días de tour",
@@ -226,7 +248,7 @@
       "kidsPartyTitle": "Viajas con niños",
       "kidsParty": "Coco Bongo y los centros nocturnos no admiten menores; armaremos otras noches divertidas para todos.",
       "pace": {
-        "title": "¿Qué ritmo quieres?",
+        "title": "¿A qué ritmo te gustaría disfrutar tu viaje?",
         "relaxed": "Relajado",
         "balanced": "Equilibrado",
         "intense": "Intenso",
@@ -345,7 +367,7 @@
       }
     },
     "restaurants": {
-      "title": "Planeemos tus cenas",
+      "title": "Exploremos tus gustos gastronómicos",
       "any": "Me da igual",
       "cuisines": {
         "mexican": "Mexicana",

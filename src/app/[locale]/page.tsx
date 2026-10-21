@@ -1,11 +1,14 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { brand } from "@/content/brand";
+import { BEST_RATED, BEST_RATED_ALL_URL } from "@/content/best-rated";
+import { WHY_PLAN_PHOTO } from "@/content/why-plan";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { QuickStart } from "@/components/landing/quick-start";
 import {
   ArrowRightIcon,
+  CalendarIcon,
   CheckIcon,
   ClockIcon,
   ExternalIcon,
@@ -13,7 +16,7 @@ import {
   MapIcon,
   PinIcon,
   PlaneIcon,
-  ShieldIcon,
+  SlidersIcon,
   StarIcon,
   UsersIcon,
 } from "@/components/ui/icons";
@@ -47,7 +50,13 @@ export default async function LandingPage() {
   const { hero, featured } = await loadCatalog();
   const steps = ["1", "2", "3", "4"] as const;
   const stepIcons = [PlaneIcon, UsersIcon, CompassIcon, MapIcon];
-  const whyIcons = [StarIcon, UsersIcon, ShieldIcon, PinIcon];
+  const whyBenefits = [
+    { id: "curated", Icon: StarIcon },
+    { id: "experts", Icon: UsersIcon },
+    { id: "tailored", Icon: SlidersIcon },
+    { id: "allInOne", Icon: PinIcon },
+  ] as const;
+  const statIcons = { years: CalendarIcon, travelers: UsersIcon, rating: StarIcon, tours: PinIcon };
 
   return (
     <>
@@ -72,16 +81,14 @@ export default async function LandingPage() {
               </h1>
               <div className="flex max-w-xl flex-col gap-1">
                 <p className="text-lg font-semibold text-white/95 sm:text-xl">{t("subtitle")}</p>
-                <p className="inline-flex items-start gap-2 text-sm text-white/85 sm:text-base">
-                  <StarIcon size={16} className="mt-1 shrink-0 text-brand-lime-light" />
-                  {t("award")}
-                </p>
+              
               </div>
-              <ul className="flex max-w-xl flex-col gap-4">
+              {/* Stacked on phones/tablets, one row from lg (desktop) up. */}
+              <ul className="flex max-w-xl flex-col gap-4 lg:max-w-none lg:flex-row lg:gap-8">
                 {(["1", "2", "3"] as const).map((k, i) => {
                   const Icon = [PinIcon, UsersIcon, StarIcon][i];
                   return (
-                    <li key={k} className="flex items-start gap-3">
+                    <li key={k} className="flex items-start gap-3 lg:flex-1">
                       <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/40 bg-white/15 text-white backdrop-blur-sm">
                         <Icon size={20} />
                       </span>
@@ -119,8 +126,105 @@ export default async function LandingPage() {
           </div>
         </section>
 
+        {/* How it works: the same step rail the traveler meets on /plan */}
+        <section id="how" className="mx-auto max-w-6xl px-4 pt-16 sm:px-6 sm:pt-20">
+          <h2 className="text-center text-3xl font-bold sm:text-4xl">{t("howTitle")}</h2>
+          <ol className="relative mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-0">
+            <span
+              aria-hidden
+              className="absolute left-[22px] top-0 hidden h-full w-0.5 bg-primary/30 sm:block lg:left-0 lg:top-[22px] lg:h-0.5 lg:w-full"
+            />
+            {steps.map((n, i) => {
+              const Icon = stepIcons[i];
+              const last = i === steps.length - 1;
+              return (
+                <li key={n} className="relative flex gap-4 lg:flex-col lg:pr-8">
+                  {/* Mobile only: connects this circle to the next one across the gap-8. */}
+                  {!last && (
+                    <span
+                      aria-hidden
+                      className="absolute -bottom-8 left-[21px] top-11 w-0.5 bg-primary/30 sm:hidden"
+                    />
+                  )}
+                  <span
+                    className={`relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 ${
+                      last
+                        ? "border-primary bg-primary text-white"
+                        : "border-transparent bg-primary text-white shadow-md shadow-primary/30"
+                    }`}
+                  >
+                    {last ? <CheckIcon size={18} /> : <Icon size={20} />}
+                  </span>
+                  <div className="lg:mt-5">
+                    <h3 className="text-lg font-bold">{t(`steps.${n}.title`)}</h3>
+                    <p className="mt-1 max-w-xs text-sm leading-relaxed text-brand-ink/70">
+                      {t(`steps.${n}.body`)}
+                    </p>
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
+        </section>
+
+        {/* Best rated activities: swipe on phones/tablets, all five in a row on desktop */}
+        <section className="mx-auto flex max-w-6xl flex-col py-16 sm:py-20">
+          <h2 className="px-4 text-center text-3xl font-bold sm:px-6 sm:text-4xl">
+            {t("bestRated.title")}
+          </h2>
+          {/* One button: below the cards on phones/tablets, top right on desktop. */}
+          <div className="order-last mt-6 flex justify-start px-4 sm:px-6 lg:order-none lg:justify-end">
+            <a
+              href={BEST_RATED_ALL_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 rounded-pill bg-primary px-6 py-3 text-base font-bold text-white shadow-sm transition hover:bg-primary-hover"
+            >
+              {t("bestRated.seeAll")} <ArrowRightIcon size={18} />
+            </a>
+          </div>
+          <ul className="mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-4 px-4 pb-2 sm:scroll-px-6 sm:px-6 lg:grid lg:grid-cols-5 lg:overflow-visible lg:pb-0">
+            {BEST_RATED.map((a) => {
+              const image: string = a.image;
+              const price: number | null = a.priceUsd;
+              return (
+                <li
+                  key={a.id}
+                  className="flex w-[85%] shrink-0 snap-start flex-col sm:w-[45%] lg:w-auto"
+                >
+                  <div className="aspect-[3/4] overflow-hidden rounded-card bg-black/5 shadow-sm">
+                    {image ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={image}
+                        alt=""
+                        loading="lazy"
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center text-brand-ink/25">
+                        <PinIcon size={32} />
+                      </div>
+                    )}
+                  </div>
+                  <h3 className="mt-3 font-bold leading-snug">{t(`bestRated.items.${a.id}`)}</h3>
+                  {price !== null && (
+                    // mt-auto pins the price to the bottom so all prices line up.
+                    <p className="mt-auto pt-1.5 text-sm">
+                      <span className="text-xl font-bold text-primary sm:text-2xl">
+                        {t("from", { price: formatUsd(price, locale) })}
+                      </span>{" "}
+                      <span className="text-brand-ink/60">{t("perPerson")}</span>
+                    </p>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+
         {/* Why is it free */}
-        <section className="mx-auto max-w-5xl px-4 pt-16 sm:px-6 sm:pt-20">
+        <section className="mx-auto max-w-5xl px-4 pb-16 sm:px-6 sm:pb-20">
           <h2 className="text-center text-3xl font-bold sm:text-4xl">{t("freeTitle")}</h2>
           <ol className="mt-8 grid gap-4 sm:grid-cols-2">
             {(["1", "2"] as const).map((k) => (
@@ -134,11 +238,9 @@ export default async function LandingPage() {
                 <div>
                   <h3 className="text-lg font-bold leading-snug">{t(`whyFree.${k}.title`)}</h3>
                   <p className="mt-1 text-brand-ink/70">{t(`whyFree.${k}.body`)}</p>
-                  {k === "1" ? (
-                    <p className="mt-2 text-sm font-semibold text-primary">
-                      {t("whyFree.optional")}
-                    </p>
-                  ) : null}
+                  
+                  
+                
                 </div>
               </li>
             ))}
@@ -201,123 +303,103 @@ export default async function LandingPage() {
           </section>
         )}
 
-        {/* How it works: the same step rail the traveler meets on /plan */}
-        <section id="how" className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
-          <h2 className="text-3xl font-bold sm:text-4xl">{t("howTitle")}</h2>
-          <ol className="relative mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-0">
-            <span
-              aria-hidden
-              className="absolute left-[22px] top-0 hidden h-full w-0.5 bg-primary/30 sm:block lg:left-0 lg:top-[22px] lg:h-0.5 lg:w-full"
-            />
-            {steps.map((n, i) => {
-              const Icon = stepIcons[i];
-              const last = i === steps.length - 1;
-              return (
-                <li key={n} className="relative flex gap-4 lg:flex-col lg:pr-8">
-                  <span
-                    className={`relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 ${
-                      last
-                        ? "border-primary bg-primary text-white"
-                        : "border-transparent bg-primary text-white shadow-md shadow-primary/30"
-                    }`}
+        {/* Why plan with What To Do In Cancun: benefits (left) + photo with trust stats (right) */}
+        <section className="pb-16 sm:px-6 sm:pb-24">
+          <div className="mx-auto grid max-w-6xl gap-10 bg-white px-4 py-12 sm:rounded-[28px] sm:border sm:border-line/70 sm:p-8 sm:shadow-card lg:grid-cols-[1.05fr_1fr] lg:gap-10 lg:p-10">
+            <div className="min-w-0">
+              <p className="text-sm font-bold uppercase tracking-wide text-primary">
+                {t("whyPlan.eyebrow")}
+              </p>
+              <h2 className="mt-3 text-3xl font-bold leading-[1.1] text-brand-ink sm:text-4xl lg:text-5xl">
+                {t("whyPlan.title", { brand: brand.poweredBy })}
+              </h2>
+              <p className="mt-4 max-w-xl text-base leading-relaxed text-brand-ink/70 sm:text-lg">
+                {t("whyPlan.body")}
+              </p>
+              <ul className="mt-8 grid gap-3 min-[360px]:grid-cols-2 sm:gap-4">
+                {whyBenefits.map(({ id, Icon }) => (
+                  <li
+                    key={id}
+                    className="flex flex-col gap-3 rounded-2xl border border-line bg-white p-4 shadow-sm sm:flex-row sm:gap-4 sm:p-5 lg:flex-col xl:flex-row"
                   >
-                    {last ? <CheckIcon size={18} /> : <Icon size={20} />}
-                  </span>
-                  <div className="lg:mt-5">
-                    <h3 className="text-lg font-bold">{t(`steps.${n}.title`)}</h3>
-                    <p className="mt-1 max-w-xs text-sm leading-relaxed text-brand-ink/70">
-                      {t(`steps.${n}.body`)}
-                    </p>
-                  </div>
-                </li>
-              );
-            })}
-          </ol>
-        </section>
-
-        {/* Why + trust */}
-        <section className="bg-white">
-          <div className="mx-auto grid max-w-6xl gap-12 px-4 py-16 sm:px-6 sm:py-24 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
-            <div>
-              <h2 className="text-3xl font-bold sm:text-4xl">{t("whyTitle")}</h2>
-              <ul className="mt-8 grid gap-6 sm:grid-cols-2">
-                {(["1", "2", "3", "4"] as const).map((n, i) => {
-                  const Icon = whyIcons[i];
-                  return (
-                    <li key={n} className="flex gap-4">
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-soft text-primary">
-                        <Icon size={20} />
-                      </span>
-                      <div>
-                        <h3 className="font-bold">{t(`why.${n}.title`)}</h3>
-                        <p className="mt-1 text-sm leading-relaxed text-brand-ink/70">
-                          {t(`why.${n}.body`)}
-                        </p>
-                      </div>
-                    </li>
-                  );
-                })}
+                    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary-soft text-primary sm:h-14 sm:w-14">
+                      <Icon size={24} />
+                    </span>
+                    <div className="min-w-0">
+                      <h3 className="font-bold leading-snug text-brand-ink">
+                        {t(`whyPlan.benefits.${id}.title`)}
+                      </h3>
+                      <p className="mt-1.5 text-sm leading-relaxed text-brand-ink/65">
+                        {t(`whyPlan.benefits.${id}.body`)}
+                      </p>
+                    </div>
+                  </li>
+                ))}
               </ul>
             </div>
-            <div className="rounded-[20px] bg-primary p-7 text-white shadow-card sm:p-9">
-              <h2 className="text-2xl font-bold sm:text-3xl">{t("trustTitle")}</h2>
-              <p className="mt-3 text-white/85">{t("trustBody")}</p>
-              <p className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm text-white/85">
-                {brand.stats.map((s) => (
-                  <span key={s.label} className="inline-flex items-baseline gap-1.5">
-                    <span className="text-xl font-bold text-white">{s.value}</span>
-                    {s.label}
+
+            {/* Photo on top (phones/tablets) or behind the card (desktop) */}
+            <div className="relative flex min-w-0 flex-col overflow-hidden rounded-[20px] lg:justify-end lg:p-3 lg:pt-56">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={WHY_PLAN_PHOTO.src}
+                srcSet={WHY_PLAN_PHOTO.srcSet}
+                sizes="(min-width: 1024px) 540px, (min-width: 640px) 90vw, 100vw"
+                width={WHY_PLAN_PHOTO.width}
+                height={WHY_PLAN_PHOTO.height}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                className="aspect-[16/9] w-full object-cover sm:aspect-[2/1] lg:absolute lg:inset-0 lg:aspect-auto lg:h-full"
+              />
+              <div className="relative -mt-6 rounded-[20px] bg-primary-deep p-5 text-white shadow-float sm:p-7 lg:mt-0 lg:p-5 xl:p-7">
+                <h3 className="text-xl font-bold leading-snug sm:text-2xl">
+                  <span className="lg:hidden">
+                    {t("whyPlan.trustTitleShort", { brand: brand.poweredBy })}
                   </span>
-                ))}
-              </p>
-              {brand.awards.length > 0 && (
-                <div className="mt-7 border-t border-white/20 pt-6">
-                  <p className="text-xs font-bold text-white/70">{t("awardsTitle")}</p>
-                  <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-3">
-                    {brand.awards.map((a) => (
-                      <li key={a.name} className="flex items-center gap-2 text-sm font-semibold">
-                        {a.logo ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img src={a.logo} alt="" className="h-8 object-contain" />
-                        ) : (
-                          <StarIcon size={16} className="text-star" />
-                        )}
-                        {a.name}
-                        {a.year ? ` · ${a.year}` : ""}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-              {brand.partners.length > 0 && (
-                <div className="mt-6">
-                  <p className="text-xs font-bold text-white/70">{t("partnersTitle")}</p>
-                  <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-3 text-sm font-semibold">
-                    {brand.partners.map((p) => (
-                      <li key={p.name}>
-                        {p.logo ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img
-                            src={p.logo}
-                            alt={p.name}
-                            className="h-8 object-contain brightness-0 invert"
-                          />
-                        ) : (
-                          p.name
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-              <a
-                href={brand.siteUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-7 inline-flex items-center gap-1 font-semibold text-white underline-offset-4 hover:underline"
-              >
-                whattodoincancun.com <ExternalIcon size={14} />
-              </a>
+                  <span className="hidden lg:inline">
+                    {t("whyPlan.trustTitle", { brand: brand.poweredBy })}
+                  </span>
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-white/85 sm:text-base">
+                  <span className="lg:hidden">{t("whyPlan.trustBodyShort")}</span>
+                  <span className="hidden lg:inline">{t("whyPlan.trustBody")}</span>
+                </p>
+                <dl className="mt-5 grid gap-px overflow-hidden bg-white/15 min-[360px]:grid-cols-2">
+                  {brand.stats.map((s) => {
+                    const Icon = statIcons[s.id];
+                    return (
+                      <div
+                        key={s.id}
+                        className="flex items-center gap-2.5 bg-primary-deep py-3 min-[360px]:even:pl-3 min-[360px]:odd:pr-2 sm:gap-3 sm:min-[360px]:even:pl-4 sm:min-[360px]:odd:pr-3"
+                      >
+                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-white sm:h-12 sm:w-12 lg:h-10 lg:w-10 xl:h-12 xl:w-12">
+                          <Icon size={18} />
+                        </span>
+                        <div className="flex min-w-0 flex-col">
+                          <dt className="order-2 text-xs leading-snug text-white/80 sm:text-sm">
+                            {t(`whyPlan.stats.${s.id}`)}
+                          </dt>
+                          <dd className="order-1 flex flex-wrap items-center gap-x-2 text-lg font-bold leading-tight sm:text-2xl lg:text-xl xl:text-[1.75rem]">
+                            {s.value}
+                            {s.id === "rating" && (
+                              <span
+                                role="img"
+                                aria-label={t("whyPlan.ratingLabel", { value: s.value })}
+                                className="inline-flex text-star"
+                              >
+                                {[0, 1, 2, 3, 4].map((i) => (
+                                  <StarIcon key={i} size={14} />
+                                ))}
+                              </span>
+                            )}
+                          </dd>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </dl>
+              </div>
             </div>
           </div>
         </section>

@@ -16,11 +16,12 @@ export const brand = {
   },
   phone: "+52 998 300 0040",
   salesEmail: "sales@whattodoincancun.com",
+  /** Labels live in messages/{en,es}.json under `landing.whyPlan.stats.<id>`. */
   stats: [
-    { value: "10", label: "years in Cancun" },
-    { value: "150,000", label: "travelers served" },
-    { value: "4.8", label: "average rating" },
-    { value: "100", label: "tours & experiences" },
+    { id: "years", value: "10+" },
+    { id: "travelers", value: "150,000+" },
+    { id: "rating", value: "4.8" },
+    { id: "tours", value: "100+" },
   ],
   awards: [
     // { name: "TripAdvisor Travelers' Choice", year: 2025, logo: "/awards/tripadvisor.svg" },
