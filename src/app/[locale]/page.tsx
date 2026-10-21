@@ -56,17 +56,14 @@ export default async function LandingPage() {
         {/* Hero */}
         <section className="relative">
           <div className="relative overflow-hidden bg-brand-navy text-white">
-            {hero ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={hero}
-                alt=""
-                className="absolute inset-0 h-full w-full object-cover"
-                fetchPriority="high"
-              />
-            ) : (
-              <div className="absolute inset-0 bg-primary" />
-            )}
+{/* eslint-disable-next-line @next/next/no-img-element */}
+<img
+  src="/hero-top.webp"
+  alt=""
+  className="absolute inset-0 h-full w-full object-cover"
+  fetchPriority="high"
+/>
+            
             <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/45 to-black/15" />
             <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/60 to-transparent" />
             <div className="relative mx-auto flex max-w-6xl flex-col gap-6 px-4 pb-28 pt-16 sm:px-6 sm:pb-36 sm:pt-24 lg:pb-40 lg:pt-28">
@@ -327,17 +324,15 @@ export default async function LandingPage() {
 
         {/* Final CTA */}
         <section className="relative overflow-hidden">
-          {hero ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={hero}
-              alt=""
-              loading="lazy"
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-          ) : (
-            <div className="absolute inset-0 bg-primary" />
-          )}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+<img
+  src="/hero-photo.webp"
+  alt=""
+  className="absolute inset-0 h-full w-full object-cover"
+  fetchPriority="high"
+/>
+
+        
           <div className="absolute inset-0 bg-black/60" />
           <div className="relative mx-auto flex max-w-6xl flex-col items-center gap-5 px-4 py-20 text-center text-white sm:px-6 sm:py-28">
             <h2 className="text-3xl font-bold sm:text-5xl">{t("finalTitle")}</h2>
