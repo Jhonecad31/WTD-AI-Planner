@@ -12,6 +12,7 @@ import {
   PlaneIcon,
   UsersIcon,
 } from "@/components/ui/icons";
+import { ScrollHint } from "./scroll-hint";
 import { STEPS, type StepId } from "./wizard-state";
 
 const ICONS: Record<StepId, ReactNode> = {
@@ -75,9 +76,13 @@ export function WizardShell({
         <div className="flex min-h-[60vh] flex-col">
           <div className="flex-1 px-4 py-6 sm:px-8 sm:py-8 lg:px-12 lg:py-10">{children}</div>
           {footer ? (
-            <div className="sticky bottom-0 z-10 border-t border-line bg-white/90 px-4 py-4 backdrop-blur sm:px-8 lg:static lg:bg-transparent lg:px-12 lg:pb-10 lg:pt-0">
-              {footer}
-            </div>
+            <>
+              <ScrollHint step={current} />
+              {/* Not sticky: Continue sits at the end of the step so travelers scroll past every option. */}
+              <div className="border-t border-line px-4 py-4 sm:px-8 lg:px-12 lg:pb-10 lg:pt-0">
+                {footer}
+              </div>
+            </>
           ) : null}
         </div>
       </div>

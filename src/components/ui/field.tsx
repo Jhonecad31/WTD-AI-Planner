@@ -1,5 +1,6 @@
 import type {
   InputHTMLAttributes,
+  MouseEvent,
   ReactNode,
   SelectHTMLAttributes,
   TextareaHTMLAttributes,
@@ -40,6 +41,15 @@ export function Field({
 
 export function Input({ className = "", ...props }: InputHTMLAttributes<HTMLInputElement>) {
   return <input className={`${control} ${className}`} {...props} />;
+}
+
+/** Opens the native calendar when a date input is clicked anywhere, not only on its icon. */
+export function openDatePicker(e: MouseEvent<HTMLInputElement>) {
+  try {
+    e.currentTarget.showPicker?.();
+  } catch {
+    /* unsupported browser or cross-origin iframe: the icon still works */
+  }
 }
 
 export function Select({ className = "", ...props }: SelectHTMLAttributes<HTMLSelectElement>) {

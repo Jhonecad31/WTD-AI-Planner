@@ -6,6 +6,7 @@ import { INTEREST_PHOTOS } from "@/content/interest-photos";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
+import { openDatePicker } from "@/components/ui/field";
 import { ArrowRightIcon, PlaneLandIcon, PlaneTakeoffIcon, UsersIcon } from "@/components/ui/icons";
 import { todayIso } from "@/lib/format";
 import { initialDraft, type WizardDraft } from "@/components/plan/wizard-state";
@@ -63,6 +64,7 @@ export function QuickStart() {
             <span className="text-[11px] font-bold text-brand-ink/50">{t("arrival")}</span>
             <input
               type="date"
+              onClick={openDatePicker}
               min={today}
               value={arrival}
               onChange={(e) => setArrival(e.target.value)}
@@ -76,6 +78,7 @@ export function QuickStart() {
             <span className="text-[11px] font-bold text-brand-ink/50">{t("departure")}</span>
             <input
               type="date"
+              onClick={openDatePicker}
               min={arrival || today}
               value={departure}
               onChange={(e) => setDeparture(e.target.value)}

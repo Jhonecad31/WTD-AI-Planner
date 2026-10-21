@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useLocale } from "next-intl";
 import { formatUsd } from "@/lib/format";
 
@@ -37,6 +38,14 @@ export function BudgetCard({
   const pct = Math.min(100, ((value - min) / (max - min)) * 100);
   const set = (v: number) =>
     onChange(Math.max(min, Math.min(ceiling, Math.round(v / step) * step)));
+  // What the traveler is typing. Clamping on every keystroke made the field jump to `min`
+  // when emptied and glue the next digit onto it; clamp once they're done instead.
+  const [typed, setTyped] = useState<string | null>(null);
+  const commit = () => {
+    if (typed === null) return;
+    set(Number(typed) || min);
+    setTyped(null);
+  };
 
   return (
     <section className="rounded-card bg-primary p-6 text-white shadow-card" aria-labelledby={id}>
@@ -52,8 +61,17 @@ export function BudgetCard({
             min={min}
             max={ceiling}
             step={step}
-            value={value}
-            onChange={(e) => set(Number(e.target.value) || min)}
+            value={typed ?? value}
+            onChange={(e) => {
+              setTyped(e.target.value);
+              // Keep the slider and totals live while typing, without forcing the text.
+              const n = Number(e.target.value);
+              if (n >= min && n <= ceiling) onChange(n);
+            }}
+            onBlur={commit}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") commit();
+            }}
             aria-label={title}
             className="w-40 rounded-card border border-white/30 bg-white/10 px-3 py-1 text-white outline-none focus:border-white [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
           />

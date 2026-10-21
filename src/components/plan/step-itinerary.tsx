@@ -28,6 +28,7 @@ import { draftRestDates, useWizard } from "./wizard-state";
 import { AlternativesPanel, TourOptions, editItinerary, reasonText } from "./itinerary-editor";
 import { WeatherChip } from "./weather";
 import { seasonNotes } from "@/lib/weather";
+import { ScrollHint } from "./scroll-hint";
 
 type GenerateResponse = {
   itinerary: Itinerary;
@@ -621,7 +622,9 @@ export function StepItinerary() {
             })}
           </ol>
 
-          <div className="sticky bottom-0 -mx-4 flex items-center justify-between gap-3 border-t border-line bg-white/90 px-4 py-4 backdrop-blur sm:static sm:mx-0 sm:border-0 sm:bg-transparent sm:px-0">
+          <ScrollHint step={0} />
+          {/* Not sticky: like the other steps, the buttons sit after the whole itinerary. */}
+          <div className="-mx-4 flex items-center justify-between gap-3 border-t border-line px-4 py-4 sm:mx-0 sm:border-0 sm:px-0">
             <Button variant="ghost" onClick={back}>
               <ArrowLeftIcon size={18} /> {tc("back")}
             </Button>

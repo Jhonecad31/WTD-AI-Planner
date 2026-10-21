@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { useWizard } from "./wizard-state";
 import { ARRIVAL_SLOTS, DEPARTURE_SLOTS, tripNights, type Flight } from "@/lib/trip-schema";
 import { todayIso } from "@/lib/format";
-import { Field, Input } from "@/components/ui/field";
+import { Field, Input, openDatePicker } from "@/components/ui/field";
 import { PlaneLandIcon, PlaneTakeoffIcon } from "@/components/ui/icons";
 import { TripWeatherSummary } from "./weather";
 
@@ -155,6 +155,7 @@ function DateField({
         type="date"
         min={min || undefined}
         value={value}
+        onClick={openDatePicker}
         onChange={(e) => onChange(e.target.value || undefined)}
       />
     </Field>

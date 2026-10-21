@@ -7,6 +7,24 @@
   --color-foreground: var(--foreground);
 }
 
+@keyframes nudge-down {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(6px);
+  }
+}
+
+/* Scroll cue in the wizard: a slow downward nudge that eases out, no bounce. */
+@utility animate-nudge-down {
+  animation: nudge-down 1.8s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
