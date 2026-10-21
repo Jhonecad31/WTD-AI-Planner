@@ -136,6 +136,18 @@ export const SlidersIcon = (p: Props) => (
     <circle cx="17" cy="18" r="2" />
   </Svg>
 );
+export const PhoneIcon = (p: Props) => (
+  <Svg {...p}>
+    <path d="M5 3.5h3l1.5 4-2 1.5a11 11 0 0 0 7.5 7.5l1.5-2 4 1.5v3a2 2 0 0 1-2 2A16.5 16.5 0 0 1 3 5.5a2 2 0 0 1 2-2Z" />
+  </Svg>
+);
+export const GlobeIcon = (p: Props) => (
+  <Svg {...p}>
+    <circle cx="12" cy="12" r="9" />
+    <path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" />
+  </Svg>
+);
+
 export const StarIcon = (p: Props) => (
   <Svg {...p} fill="currentColor" stroke="none">
     <path d="m12 2.5 2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9 2.9-6Z" />

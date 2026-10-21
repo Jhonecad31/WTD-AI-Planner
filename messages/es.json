@@ -14,6 +14,15 @@
     "loading": "Cargando…",
     "language": "Idioma"
   },
+    "footer": {
+      "tagline": "Tu planificador inteligente para descubrir lo mejor de Cancún y la Riviera Maya.",
+      "contact": "Contacto",
+      "follow": "Síguenos",
+      "email": "Correo",
+      "phone": "Teléfono",
+      "website": "Sitio web",
+      "rights": "Todos los derechos reservados."
+    },
   "landing": {
     "title": "Descubre, explora y vive Cancún a tu manera",
     "subtitle": "Con nuestro planificador inteligente encuentra las mejores actividades y experiencias con un itinerario hecho a la medida.",
@@ -83,9 +92,6 @@
       },
       "ratingLabel": "{value} de 5"
     },
-    "finalTitle": "Cuando tú quieras",
-    "finalBody": "Arma tu itinerario ahora y tenlo en tu correo en minutos.",
-    "sisterSites": "¿También planeas Ciudad de México o Madrid?",
     
     "benefits": {
       "1": {

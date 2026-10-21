@@ -14,6 +14,15 @@
     "loading": "Loading…",
     "language": "Language"
   },
+    "footer": {
+      "tagline": "Your smart trip planner to discover the best of Cancun and the Riviera Maya.",
+      "contact": "Contact",
+      "follow": "Follow us",
+      "email": "Email",
+      "phone": "Phone",
+      "website": "Website",
+      "rights": "All rights reserved."
+    },
   "landing": {
     "title": "Discover, explore, and experience Cancun your way",
     "subtitle": "Create your personalized itinerary with the help of AI and discover the best Cancun experiences based on your interests, preferences, and travel style.",
@@ -83,9 +92,6 @@
       },
       "ratingLabel": "{value} out of 5"
     },
-    "finalTitle": "Ready when you are",
-    "finalBody": "Build your itinerary now and have it in your inbox in minutes.",
-    "sisterSites": "Also planning Mexico City or Madrid?",
     
     "benefits": {
       "1": {

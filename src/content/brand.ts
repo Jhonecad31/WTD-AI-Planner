@@ -14,7 +14,7 @@ export const brand = {
     defaultMessage:
       "Hi! I just built my trip itinerary with the WhatToDo planner and I'd like assistance to book it.",
   },
-  phone: "+52 998 300 0040",
+  phone: "+52 998 151 0474",
   salesEmail: "sales@whattodoincancun.com",
   /** Labels live in messages/{en,es}.json under `landing.whyPlan.stats.<id>`. */
   stats: [
@@ -33,10 +33,15 @@ export const brand = {
     { name: "What To Do In Mexico City", url: "https://whattodoinmexicocity.com" },
     { name: "Things To Do In Madrid", url: "https://thingstodoinmadrid.com" },
   ],
+  /**
+   * Footer social icons. Paste each profile URL here (e.g. "https://www.facebook.com/...").
+   * Empty = the icon still shows but doesn't link anywhere.
+   */
   social: {
-    facebook: "",
-    instagram: "",
-    tiktok: "",
+    facebook: "https://www.facebook.com/WhatToDoInCancun/",
+    instagram: "https://www.instagram.com/whattodoincancun",
+    tiktok: "https://www.tiktok.com/@whattodoincancun.com",
+    website: "https://whattodoincancun.com",
     youtube: "",
     tripadvisor: "",
   },

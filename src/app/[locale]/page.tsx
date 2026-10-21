@@ -404,40 +404,6 @@ export default async function LandingPage() {
           </div>
         </section>
 
-        {/* Final CTA */}
-        <section className="relative overflow-hidden">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-<img
-  src="/hero-photo.webp"
-  alt=""
-  className="absolute inset-0 h-full w-full object-cover"
-  fetchPriority="high"
-/>
-
-        
-          <div className="absolute inset-0 bg-black/60" />
-          <div className="relative mx-auto flex max-w-6xl flex-col items-center gap-5 px-4 py-20 text-center text-white sm:px-6 sm:py-28">
-            <h2 className="text-3xl font-bold sm:text-5xl">{t("finalTitle")}</h2>
-            <p className="max-w-xl text-lg text-white/85">{t("finalBody")}</p>
-            <Link
-              href="/plan"
-              className="inline-flex items-center gap-2 rounded-pill bg-primary px-8 py-4 text-lg font-bold text-white shadow-lg shadow-black/25 transition hover:bg-primary-hover"
-            >
-              {t("cta")} <ArrowRightIcon size={20} />
-            </Link>
-            <p className="mt-4 text-sm text-white/70">
-              {t("sisterSites")}{" "}
-              {brand.sisterSites.map((s, i) => (
-                <span key={s.url}>
-                  {i > 0 ? " · " : ""}
-                  <a className="font-semibold text-white hover:underline" href={s.url}>
-                    {s.name}
-                  </a>
-                </span>
-              ))}
-            </p>
-          </div>
-        </section>
       </main>
       <SiteFooter />
     </>
