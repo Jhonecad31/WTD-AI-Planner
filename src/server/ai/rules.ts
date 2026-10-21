@@ -63,7 +63,8 @@ export function scoreProduct(
   if (p.kind !== "tour" && p.kind !== "ticket") return -1;
   const overlap = p.interests.filter((i) => interests.includes(i)).length;
   if (overlap === 0) return 0;
-  const rating = p.rating ?? 4.5;
+  // No reviews means no rating yet (Bokun reports 0): treat as an average tour, not a bad one.
+  const rating = p.reviewCount ? (p.rating ?? 4.5) : 4.5;
   const reviews = Math.log10((p.reviewCount ?? 0) + 1);
   let score = overlap * 3 + rating + reviews;
   if (opts.preferPrivate && PRIVATE_RE.test(p.title)) score += 3;

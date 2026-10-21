@@ -131,11 +131,11 @@ describe("enrichItinerary", () => {
     expect(it_.diningNote).toBeTruthy();
   });
 
-  it("one dinner per tour night, Grupo Anderson first, rotating without repeats", () => {
+  it("one dinner per tour night, Grupo Anderson included, rotating without repeats", () => {
     const it_ = plan(base);
     const dinners = it_.days.flatMap((d) => d.items).filter((i) => i.kind === "restaurant");
     expect(dinners.length).toBeGreaterThanOrEqual(3);
-    expect([911208, 994813]).toContain(dinners[0].bokunId);
+    expect(dinners.some((d) => [911208, 994813].includes(d.bokunId ?? 0))).toBe(true);
     expect(new Set(dinners.slice(0, 4).map((d) => d.bokunId)).size).toBe(
       Math.min(4, dinners.length),
     );
@@ -143,13 +143,33 @@ describe("enrichItinerary", () => {
     expect(it_.totals.totalUsd).toBe(it_.totals.toursUsd + it_.totals.transfersUsd);
   });
 
+  it("the first dinner isn't always the same place across trips", () => {
+    const firsts = new Set(
+      [
+        ["2026-12-10", "2026-12-15"],
+        ["2026-12-11", "2026-12-16"],
+        ["2026-12-12", "2026-12-17"],
+        ["2027-01-05", "2027-01-10"],
+        ["2027-02-14", "2027-02-19"],
+      ].map(([arrive, leave]) => {
+        const it_ = plan({
+          ...base,
+          inbound: { ...base.inbound, date: arrive },
+          outbound: { ...base.outbound, date: leave },
+        });
+        return it_.days.flatMap((d) => d.items).find((i) => i.kind === "restaurant")?.bokunId;
+      }),
+    );
+    expect(firsts.size).toBeGreaterThan(1);
+  });
+
   it("restaurants follow cuisine, budget and kids", () => {
     const italian = rankRestaurants(
-      { ...base, dining: { cuisines: ["italian"], budgetPerMeal: 80 } },
+      { ...base, dining: { cuisines: ["italian"], budgetPerMeal: 60 } },
       catalog,
     );
     expect(italian[0].p.bokunId).toBe(994805);
-    expect(italian.map((r) => r.p.bokunId)).not.toContain(994813); // $100 > budget
+    expect(italian.map((r) => r.p.bokunId)).not.toContain(994813); // $100 > 1.5x budget
     const kids = rankRestaurants({ ...base, travelers: [{ age: 35 }, { age: 6 }] }, catalog);
     expect(kids.map((r) => r.p.bokunId)).not.toContain(994809); // Taboo not kid friendly
   });
