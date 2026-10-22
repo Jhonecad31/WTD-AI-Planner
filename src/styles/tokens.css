@@ -19,6 +19,7 @@
   --color-primary-hover: #16a34a;
   --color-primary-foreground: #ffffff;
   --color-primary-soft: #dcfce7; /* green-100 chips on the site */
+  --color-primary-deep: #14532d; /* green-900, dark trust card */
   --color-star: #f59e0b; /* amber-500 ratings */
   --color-muted: #6b7280; /* gray-500 secondary text */
   --color-heading: #1f2937; /* gray-800 */
