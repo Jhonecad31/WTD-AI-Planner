@@ -149,7 +149,7 @@ export default async function LandingPage() {
         </section>
 
         {/* Featured tours */}
-        {featured.length > 0 && (
+        {/*{featured.length > 0 && (
           <section className="mx-auto max-w-6xl px-4 pb-8 pt-16 sm:px-6 sm:pt-24">
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div>
@@ -202,7 +202,7 @@ export default async function LandingPage() {
               ))}
             </ul>
           </section>
-        )}
+        )}*/}
 
         {/* How it works: the same step rail the traveler meets on /plan */}
         <section id="how" className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
