@@ -249,58 +249,7 @@ export default async function LandingPage() {
 
         {/* Featured tours */}
         {featured.length > 0 && (
-          <section className="mx-auto max-w-6xl px-4 pb-8 pt-16 sm:px-6 sm:pt-24">
-            <div className="flex flex-wrap items-end justify-between gap-4">
-              <div>
-                <h2 className="text-3xl font-bold sm:text-4xl">{t("featuredTitle")}</h2>
-                <p className="mt-2 text-brand-ink/70">{t("featuredBody")}</p>
-              </div>
-              <a
-                href={brand.siteUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-1 font-semibold text-primary hover:underline"
-              >
-                {t("viewAll")} <ExternalIcon size={14} />
-              </a>
-            </div>
-            <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {featured.map((p) => (
-                <li key={p.bokunId}>
-                  <a
-                    href={p.siteUrl ?? brand.siteUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="group flex h-full flex-col overflow-hidden rounded-card border border-line bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-card"
-                  >
-                    <div className="relative aspect-[4/3] overflow-hidden">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={p.imageUrl ?? ""}
-                        alt=""
-                        loading="lazy"
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                      {p.durationMinutes ? (
-                        <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-pill bg-white/90 px-2.5 py-1 text-xs font-bold text-heading backdrop-blur">
-                          <ClockIcon size={12} /> {minutesText(p.durationMinutes)}
-                        </span>
-                      ) : null}
-                    </div>
-                    <div className="flex flex-1 flex-col gap-2 p-4">
-                      <h3 className="line-clamp-2 font-bold leading-snug">{p.title}</h3>
-                      <div className="mt-auto flex items-end justify-between gap-2 pt-2">
-                        <span className="text-xs text-brand-ink/60">{t("perPerson")}</span>
-                        <span className="text-lg font-bold text-primary">
-                          {t("from", { price: formatUsd(p.priceFromUsd ?? 0, locale) })}
-                        </span>
-                      </div>
-                    </div>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </section>
+          
         )}
 
         {/* Why plan with What To Do In Cancun: benefits (left) + photo with trust stats (right) */}
