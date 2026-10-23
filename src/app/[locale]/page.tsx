@@ -187,11 +187,9 @@ export default async function LandingPage() {
             {BEST_RATED.map((a) => {
               const image: string = a.image;
               const price: number | null = a.priceUsd;
-              return (
-                <li
-                  key={a.id}
-                  className="flex w-[85%] shrink-0 snap-start flex-col sm:w-[45%] lg:w-auto"
-                >
+              const url: string | undefined = "url" in a ? a.url : undefined;
+              const card = (
+                <>
                   <div className="aspect-[3/4] overflow-hidden rounded-card bg-black/5 shadow-sm">
                     {image ? (
                       // eslint-disable-next-line @next/next/no-img-element
@@ -199,7 +197,7 @@ export default async function LandingPage() {
                         src={image}
                         alt=""
                         loading="lazy"
-                        className="h-full w-full object-cover"
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                     ) : (
                       <div className="flex h-full w-full items-center justify-center text-brand-ink/25">
@@ -207,7 +205,9 @@ export default async function LandingPage() {
                       </div>
                     )}
                   </div>
-                  <h3 className="mt-3 font-bold leading-snug">{t(`bestRated.items.${a.id}`)}</h3>
+                  <h3 className="mt-3 font-bold leading-snug transition-colors group-hover:text-primary">
+                    {t(`bestRated.items.${a.id}`)}
+                  </h3>
                   {price !== null && (
                     // mt-auto pins the price to the bottom so all prices line up.
                     <p className="mt-auto pt-1.5 text-sm">
@@ -216,6 +216,23 @@ export default async function LandingPage() {
                       </span>{" "}
                       <span className="text-brand-ink/60">{t("perPerson")}</span>
                     </p>
+                  )}
+                </>
+              );
+              return (
+                <li key={a.id} className="flex w-[85%] shrink-0 snap-start sm:w-[45%] lg:w-auto">
+                  {/* Cards without a url in best-rated.ts render the same, just not clickable. */}
+                  {url ? (
+                    <a
+                      href={url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="group flex w-full cursor-pointer flex-col rounded-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+                    >
+                      {card}
+                    </a>
+                  ) : (
+                    <div className="flex w-full flex-col">{card}</div>
                   )}
                 </li>
               );
