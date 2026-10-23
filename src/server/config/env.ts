@@ -34,7 +34,7 @@ const schema = z.object({
   SUPABASE_SERVICE_ROLE_KEY: z.string().default(""),
 
   RESEND_API_KEY: z.string().default(""),
-  EMAIL_FROM: z.string().default("WhatToDo Planner <planner@example.com>"),
+  EMAIL_FROM: z.string().default("WhatToDo Planner <planner@sales.whattodoincancun.com>"),
 
   TURNSTILE_SITE_KEY: z.string().default(""),
   TURNSTILE_SECRET_KEY: z.string().default(""),
