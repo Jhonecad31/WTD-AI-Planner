@@ -3,6 +3,7 @@ import { effectiveZone, type TripRequest } from "@/lib/trip-schema";
 import type { DayWeather, Itinerary, ItineraryDay, ItineraryItem } from "@/lib/itinerary-schema";
 import { fitsAges, priceProductForParty, round2 } from "./pricing";
 import { planDays, type DaySlot } from "@/lib/plan-days";
+import { isPrivateTitle } from "@/lib/item-meta";
 
 export { planDays, type DaySlot } from "@/lib/plan-days";
 
@@ -18,6 +19,8 @@ export interface PlanInputs {
   isAvailable?: (bokunId: number, date: string) => boolean | undefined;
   /** Optional weather per date; rainy/windy days avoid sea tours, rainy days favor Extreme Adventure. */
   weather?: Record<string, DayWeather>;
+  /** Tours of the previous version ("try another version"): used only when nothing else fits. */
+  avoid?: number[];
 }
 
 /**
@@ -34,7 +37,6 @@ export function isParty(p: { interests: Interest[] }): boolean {
   return p.interests.includes("party");
 }
 
-const PRIVATE_RE = /\bprivate\b|\bprivad[oa]s?\b/i;
 export function hasYoungKids(request: Pick<TripRequest, "travelers">): boolean {
   return request.travelers.some((t) => t.age < 12);
 }
@@ -67,7 +69,7 @@ export function scoreProduct(
   const rating = p.reviewCount ? (p.rating ?? 4.5) : 4.5;
   const reviews = Math.log10((p.reviewCount ?? 0) + 1);
   let score = overlap * 3 + rating + reviews;
-  if (opts.preferPrivate && PRIVATE_RE.test(p.title)) score += 3;
+  if (opts.preferPrivate && isPrivateTitle(p.title)) score += 3;
   // Very long day trips rank last with young kids (still allowed if nothing else fits).
   if (opts.youngKids && (p.durationMinutes ?? 0) >= LONG_TOUR_MINUTES)
     score = Math.max(0.1, score - 6);
@@ -100,15 +102,25 @@ export function pickStartTime(p: CatalogProduct, slot: DaySlot): { time?: string
   return { time: pick.time, id: pick.id };
 }
 
-function transferFor(products: CatalogProduct[], request: TripRequest): CatalogProduct | null {
-  const transfers = products.filter((p) => p.kind === "transfer" && p.onSite);
+/**
+ * The airport transfer for the hotel's zone (luxury when asked). Both engines use it and
+ * `validateAndRepair` enforces it, so a Riviera Maya trip never gets the Akumal ride.
+ */
+export function transferFor(
+  products: CatalogProduct[],
+  request: TripRequest,
+): CatalogProduct | null {
+  // Airport rides only: the VIP lounge and the Isla Mujeres ferry are "transfers" in Bokun too.
+  const transfers = products.filter(
+    (p) => p.kind === "transfer" && p.onSite && !/lounge|ferry/i.test(p.title),
+  );
   if (!transfers.length) return null;
   const zoneWords: Record<string, RegExp> = {
     cancun: /hotel zone|zona hotelera|downtown|centro/i,
     costa_mujeres: /costa mujeres|playa mujeres/i,
     puerto_morelos: /puerto morelos/i,
     playa_del_carmen: /playa del carmen/i,
-    riviera_maya: /akumal|playa para[ií]so|riviera/i,
+    riviera_maya: /playa para[ií]so|riviera/i,
     puerto_aventuras: /aventuras|akumal/i,
     tulum: /tulum/i,
   };
@@ -125,6 +137,15 @@ function transferFor(products: CatalogProduct[], request: TripRequest): CatalogP
     })
     .sort((a, b) => b.s - a.s);
   return ranked[0]?.p ?? null;
+}
+
+/** Moves the avoided products to the end of a ranked list, keeping the order otherwise. */
+export function lastIfAvoided<T>(list: T[], avoid: number[] | undefined, id: (x: T) => number) {
+  if (!avoid?.length) return;
+  const skip = new Set(avoid);
+  const kept = list.filter((x) => !skip.has(id(x)));
+  const later = list.filter((x) => skip.has(id(x)));
+  list.splice(0, list.length, ...kept, ...later);
 }
 
 export function toItem(
@@ -172,6 +193,7 @@ export function buildRulesItinerary(inputs: PlanInputs): Itinerary {
     }))
     .filter((x) => x.score > 0)
     .sort((a, b) => b.score - a.score);
+  lastIfAvoided(candidates, inputs.avoid, (x) => x.p.bokunId);
   // Beach / shopping have no tours: don't wait to "cover" them before repeating interests.
   const coverable = request.interests.filter((i) =>
     candidates.some(({ p }) => p.interests.includes(i)),

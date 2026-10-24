@@ -2,7 +2,8 @@ import { describe, expect, it } from "vitest";
 import type { CatalogProduct } from "@/server/catalog/types";
 import type { TripRequest } from "@/lib/trip-schema";
 import { ItinerarySchema } from "@/lib/itinerary-schema";
-import { buildRulesItinerary, isRainyFavorite, isSeaTour, planDays } from "./rules";
+import { buildRulesItinerary, isRainyFavorite, isSeaTour, planDays, transferFor } from "./rules";
+import { validateAndRepair } from "./validate";
 import type { DayWeather } from "@/lib/itinerary-schema";
 import { categoryForAge, fitsAges, priceProductForParty } from "./pricing";
 import { pickCandidates } from "./claude";
@@ -102,7 +103,7 @@ const request: TripRequest = {
   outbound: { date: "2026-12-15", time: "16:00", source: "manual" },
   hotel: { noHotel: false, zone: "cancun" },
   preferPrivate: false,
-  dining: { cuisines: [], budgetPerMeal: 40 },
+  dining: { skip: false, cuisines: [], budgetPerMeal: 40 },
   transfers: { arrival: true, departure: true, luxury: false },
   travelers: [{ age: 30 }, { age: 30 }, { age: 8 }],
   interests: ["adventure", "cultural", "water"],
@@ -319,5 +320,86 @@ describe("pickCandidates (Claude's menu)", () => {
 
   it("never offers adults-only night life to a group with kids", () => {
     expect(ids({ ...request, interests: ["party"] })).not.toContain(4);
+  });
+});
+
+describe("airport transfer by zone", () => {
+  const ride = (id: number, title: string) =>
+    product({ bokunId: id, title, kind: "transfer", interests: [], priceFromUsd: 100 });
+  const rides = [
+    ride(101, "Airport Transfer Cancun Airport to Akumal"),
+    ride(102, "Airport Transfer Cancun Airport to Playa Paraiso"),
+    ride(103, "Airport Transfer Cancun Airport to Hotel Zone"),
+    ride(104, "Cancun Airport Deluxe Transportation to Hotel Zone"),
+    ride(105, "Mera VIP Lounge at Cancun International Airport"),
+  ];
+  const at = (zone: TripRequest["hotel"]["zone"], luxury = false) => ({
+    ...request,
+    hotel: { noHotel: false, zone },
+    transfers: { arrival: true, departure: true, luxury },
+  });
+
+  it("Riviera Maya rides to Playa Paraiso, not Akumal", () => {
+    expect(transferFor(rides, at("riviera_maya"))?.bokunId).toBe(102);
+  });
+
+  it("picks the deluxe ride when the traveler asks for luxury", () => {
+    expect(transferFor(rides, at("cancun", true))?.bokunId).toBe(104);
+    expect(transferFor(rides, at("cancun"))?.bokunId).toBe(103);
+  });
+
+  it("validation swaps a transfer for another zone with the right one", () => {
+    const req = at("riviera_maya");
+    const products = [...catalog.filter((p) => p.kind !== "transfer"), ...rides];
+    const raw = buildRulesItinerary({ request: req, products });
+    const wrong = {
+      ...raw,
+      days: raw.days.map((d) => ({
+        ...d,
+        items: d.items.map((i) => (i.kind === "transfer" ? { ...i, bokunId: 101 } : i)),
+      })),
+    };
+    const { itinerary } = validateAndRepair(wrong, req, products);
+    const ids = itinerary.days
+      .flatMap((d) => d.items)
+      .filter((i) => i.kind === "transfer")
+      .map((i) => i.bokunId);
+    expect(ids).toEqual([102, 102]);
+  });
+});
+
+describe("try another version", () => {
+  it("leaves the previous version's tours out when others fit", () => {
+    const first = buildRulesItinerary({ request, products: catalog });
+    const used = first.days
+      .flatMap((d) => d.items)
+      .filter((i) => i.kind === "tour")
+      .map((i) => i.bokunId!);
+    const extra = [
+      product({ bokunId: 201, title: "Cenote Swim", interests: ["adventure", "water"] }),
+      product({ bokunId: 202, title: "Tulum Ruins", interests: ["cultural"] }),
+      product({ bokunId: 203, title: "Reef Snorkel", interests: ["water"] }),
+    ];
+    const second = buildRulesItinerary({
+      request,
+      products: [...catalog, ...extra],
+      avoid: used,
+    });
+    const again = second.days
+      .flatMap((d) => d.items)
+      .filter((i) => i.kind === "tour")
+      .map((i) => i.bokunId!);
+    expect(again.length).toBeGreaterThan(0);
+    expect(again.some((id) => used.includes(id))).toBe(false);
+  });
+});
+
+describe("shared tickets", () => {
+  it("charges each traveler their share when one ticket covers two people", () => {
+    // 670333: Extreme Adventure ATV, USD 126 for 2 riders.
+    const atv = product({ bokunId: 670333, title: "ATV, Ziplining & Cenote", priceFromUsd: 126 });
+    const p = priceProductForParty(atv, [{ age: 30 }, { age: 30 }]);
+    expect(p.pricing[0]).toMatchObject({ count: 2, unitUsd: 63 });
+    expect(p.priceTotalUsd).toBe(126);
   });
 });

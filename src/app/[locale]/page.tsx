@@ -6,11 +6,11 @@ import { WHY_PLAN_PHOTO } from "@/content/why-plan";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { QuickStart } from "@/components/landing/quick-start";
+import { formatUsd } from "@/lib/format";
 import {
   ArrowRightIcon,
   CalendarIcon,
   CheckIcon,
-  ClockIcon,
   ExternalIcon,
   CompassIcon,
   MapIcon,
@@ -20,34 +20,24 @@ import {
   StarIcon,
   UsersIcon,
 } from "@/components/ui/icons";
-import { formatUsd } from "@/lib/format";
-import { getFeaturedProducts, getHeroImage, hasBokunCredentials } from "@/server/catalog/service";
-import type { CatalogProduct } from "@/server/catalog/types";
+import { getHeroImage, hasBokunCredentials } from "@/server/catalog/service";
 
 export const instant = false;
 export const maxDuration = 60;
 
-function minutesText(m: number | null) {
-  if (!m) return null;
-  if (m >= 24 * 60) return `${Math.round(m / (24 * 60))}d`;
-  const h = Math.floor(m / 60);
-  return m % 60 ? `${h}h ${m % 60}m` : `${h}h`;
-}
-
-async function loadCatalog(): Promise<{ hero: string | null; featured: CatalogProduct[] }> {
-  if (!hasBokunCredentials()) return { hero: null, featured: [] };
+async function loadHero(): Promise<string | null> {
+  if (!hasBokunCredentials()) return null;
   try {
-    const [hero, featured] = await Promise.all([getHeroImage(), getFeaturedProducts(8)]);
-    return { hero, featured };
+    return await getHeroImage();
   } catch {
-    return { hero: null, featured: [] };
+    return null;
   }
 }
 
 export default async function LandingPage() {
   const t = await getTranslations("landing");
   const locale = await getLocale();
-  const { hero, featured } = await loadCatalog();
+  const hero = await loadHero();
   const steps = ["1", "2", "3", "4"] as const;
   const stepIcons = [PlaneIcon, UsersIcon, CompassIcon, MapIcon];
   const whyBenefits = [

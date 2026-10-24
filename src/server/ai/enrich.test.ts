@@ -90,7 +90,7 @@ const base: TripRequest = {
   chillDays: "one",
   tourDays: "all",
   budgetPerPerson: 1500,
-  dining: { cuisines: [], budgetPerMeal: 120 },
+  dining: { skip: false, cuisines: [], budgetPerMeal: 120 },
 };
 
 function plan(req: TripRequest, products = catalog) {
@@ -163,9 +163,16 @@ describe("enrichItinerary", () => {
     expect(firsts.size).toBeGreaterThan(1);
   });
 
+  it("no restaurants and no dining note when the traveler skips dinners", () => {
+    const it = plan({ ...base, dining: { ...base.dining, skip: true } });
+    expect(it.days.flatMap((d) => d.items).some((i) => i.kind === "restaurant")).toBe(false);
+    expect(it.diningNote).toBeUndefined();
+    expect(it.totals.diningEstimateUsd).toBe(0);
+  });
+
   it("restaurants follow cuisine, budget and kids", () => {
     const italian = rankRestaurants(
-      { ...base, dining: { cuisines: ["italian"], budgetPerMeal: 60 } },
+      { ...base, dining: { skip: false, cuisines: ["italian"], budgetPerMeal: 60 } },
       catalog,
     );
     expect(italian[0].p.bokunId).toBe(994805);

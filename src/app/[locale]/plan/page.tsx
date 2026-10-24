@@ -1,4 +1,4 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { SiteHeader } from "@/components/site-header";
 import { Wizard } from "@/components/plan/wizard";
 import { WizardProvider } from "@/components/plan/wizard-state";

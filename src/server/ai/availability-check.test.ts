@@ -57,7 +57,7 @@ const request: TripRequest = {
   chillDays: "none",
   tourDays: "all",
   budgetPerPerson: 1000,
-  dining: { cuisines: [], budgetPerMeal: 40 },
+  dining: { skip: false, cuisines: [], budgetPerMeal: 40 },
 };
 const slot = (date: string, extra: Partial<AvailabilitySlot> = {}): AvailabilitySlot => ({
   date,

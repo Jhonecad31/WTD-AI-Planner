@@ -5,6 +5,7 @@ import { env } from "@/server/config/env";
 import { normalizeActivity, isRestaurantUrl, XCARET_PARK_RE } from "./normalize";
 import type { CatalogProduct } from "./types";
 import siteLinks from "@/content/site-links.json";
+import { EXCLUDED_BOKUN_IDS } from "@/content/excluded-products";
 
 /**
  * Catalog loader with a local JSON cache (`.cache/catalog.json`).
@@ -142,7 +143,8 @@ export function hasBokunCredentials(): boolean {
 
 /**
  * What the planner (AI, wizard, emails) is allowed to recommend.
- * Decision (Oct 2026): only products that have a page on whattodoincancun.com.
+ * Decision (Oct 2026): only products that have a page on whattodoincancun.com,
+ * minus the ones in `EXCLUDED_BOKUN_IDS`.
  * The rest of the Bokun marketplace stays visible in /dev/catalog only.
  */
 export async function getPlannerProducts(): Promise<CatalogProduct[]> {
@@ -150,7 +152,7 @@ export async function getPlannerProducts(): Promise<CatalogProduct[]> {
   // Caches written before restaurants had their own kind still say "tour".
   return (
     products
-      .filter((p) => p.onSite)
+      .filter((p) => p.onSite && !EXCLUDED_BOKUN_IDS.has(p.bokunId))
       .map((p) =>
         p.kind !== "restaurant" && isRestaurantUrl(p.siteUrl)
           ? { ...p, kind: "restaurant" as const }
@@ -163,38 +165,6 @@ export async function getPlannerProducts(): Promise<CatalogProduct[]> {
           : p,
       )
   );
-}
-
-/** Hand-picked order for the landing: WhatToDo's signature experiences first. */
-const FEATURED_PRIORITY = [
-  /isla mujeres.*catamaran|catamaran.*isla mujeres/i,
-  /chichen itza/i,
-  /cenote/i,
-  /xcaret/i,
-  /tulum/i,
-  /whale shark/i,
-  /atv|zip/i,
-  /snorkel/i,
-  /xoximilco|coco bongo/i,
-  /speedboat|jungle/i,
-];
-
-/** Up to `limit` on-site tours with photos, for the landing page. */
-export async function getFeaturedProducts(limit = 8): Promise<CatalogProduct[]> {
-  const products = (await getPlannerProducts()).filter(
-    (p) => p.kind === "tour" && p.imageUrl && (p.priceFromUsd ?? 0) > 0,
-  );
-  const picked: CatalogProduct[] = [];
-  for (const re of FEATURED_PRIORITY) {
-    const hit = products.find((p) => re.test(p.title) && !picked.includes(p));
-    if (hit) picked.push(hit);
-    if (picked.length >= limit) break;
-  }
-  for (const p of products) {
-    if (picked.length >= limit) break;
-    if (!picked.includes(p)) picked.push(p);
-  }
-  return picked.slice(0, limit);
 }
 
 /** A wide, scenic photo for hero backgrounds. */

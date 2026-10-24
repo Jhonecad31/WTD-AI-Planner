@@ -1,6 +1,7 @@
 import type { CatalogProduct, PricingCategory } from "@/server/catalog/types";
 import type { TripRequest } from "@/lib/trip-schema";
 import type { ItineraryItem } from "@/lib/itinerary-schema";
+import { PEOPLE_PER_PRICE } from "@/content/pricing-overrides";
 
 /**
  * Assigns each traveler to a Bokun pricing category by age and prices the party.
@@ -91,14 +92,16 @@ export function priceProductForParty(
     counts.set(cat.id, entry);
   }
 
+  // Some tickets cover several people (shared ATV): charge each traveler their share.
+  const share = PEOPLE_PER_PRICE[product.bokunId] ?? 1;
   const pricing = [...counts.values()].map(({ cat, count }) => {
     const live = livePrices?.[cat.id];
     const unitUsd = typeof live === "number" ? live : estimateUnitPrice(product, cat);
-    return { pricingCategoryId: cat.id, title: cat.title, count, unitUsd: round2(unitUsd) };
+    return { pricingCategoryId: cat.id, title: cat.title, count, unitUsd: round2(unitUsd / share) };
   });
 
   // Products without pricing categories: charge the "from" price per traveler.
-  const fallback = unknown.length * (product.priceFromUsd ?? 0);
+  const fallback = (unknown.length * (product.priceFromUsd ?? 0)) / share;
   const priceTotalUsd = round2(pricing.reduce((s, p) => s + p.unitUsd * p.count, 0) + fallback);
   return { priceTotalUsd, pricing };
 }

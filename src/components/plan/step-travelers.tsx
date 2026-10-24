@@ -93,15 +93,16 @@ export function StepTravelers() {
               aria-label={t("titleLabel")}
               className="flex shrink-0 rounded-pill border border-black/15 bg-white p-1"
             >
-              {[...TRAVELER_TITLES, "none" as const].map((v) => {
-                const selected = (draft.travelerTitle ?? "none") === v;
+              {/* Optional: tapping the selected title again clears it. */}
+              {TRAVELER_TITLES.map((v) => {
+                const selected = draft.travelerTitle === v;
                 return (
                   <button
                     key={v}
                     type="button"
                     role="radio"
                     aria-checked={selected}
-                    onClick={() => patch({ travelerTitle: v === "none" ? undefined : v })}
+                    onClick={() => patch({ travelerTitle: selected ? undefined : v })}
                     className={`rounded-pill px-3 py-1.5 text-sm font-semibold transition ${
                       selected ? "bg-primary text-white" : "text-brand-ink/70 hover:text-primary"
                     }`}
