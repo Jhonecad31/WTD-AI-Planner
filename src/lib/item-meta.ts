@@ -1,5 +1,10 @@
 import type { ItineraryItem } from "./itinerary-schema";
 
+/** Private tours carry "Private"/"Privado" in their Bokun title ("Semi-private" isn't). */
+export function isPrivateTitle(title: string): boolean {
+  return /(?<!semi[- ]?)\bprivate\b|(?<!semi[- ]?)\bprivad[oa]s?\b/i.test(title);
+}
+
 const CUISINE_LABEL: Record<string, { es: string; en: string }> = {
   mexican: { es: "Mexicana", en: "Mexican" },
   italian: { es: "Italiana", en: "Italian" },

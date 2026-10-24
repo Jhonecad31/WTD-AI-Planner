@@ -314,7 +314,9 @@ export function enrichItinerary(
   const locale = request.locale;
   const zone = effectiveZone(request);
   const product = productOf(products);
-  const restaurants = rankRestaurants(request, products, opts.ratings);
+  // "Don't plan my dinners": no restaurants and no note about missing picks.
+  const skipDining = request.dining.skip;
+  const restaurants = skipDining ? [] : rankRestaurants(request, products, opts.ratings);
   // Rotate through the ranked list (no repeats until every place was used), starting at a
   // per-trip offset among the top picks instead of always at the first one.
   let nextRestaurant = restaurants.length
@@ -351,12 +353,8 @@ export function enrichItinerary(
 
     if (day.label === "arrival") {
       items.push(...transfers);
-      if (request.inbound.slot === "early") {
-        const d = dinner();
-        if (d) items.push(d);
-      } else {
-        items.push(restItem(locale));
-      }
+      const d = request.inbound.slot === "early" ? dinner() : null;
+      items.push(d ?? restItem(locale));
     } else if (day.label === "departure") {
       if (request.outbound.slot === "night") {
         const place = nextPlace(day.weather?.kind === "rainy");
@@ -389,10 +387,11 @@ export function enrichItinerary(
     days,
     introWarnings: kidWarnings(request, days),
     weatherNote: rainyTripNote(days, locale),
-    diningNote: restaurants.length
-      ? undefined
-      : es
-        ? "Todavía no tenemos restaurantes recomendados en tu zona; tu especialista te sugerirá los mejores."
-        : "We don't have restaurant picks in your area yet; your specialist will suggest the best ones.",
+    diningNote:
+      restaurants.length || skipDining
+        ? undefined
+        : es
+          ? "Todavía no tenemos restaurantes recomendados en tu zona; tu especialista te sugerirá los mejores."
+          : "We don't have restaurant picks in your area yet; your specialist will suggest the best ones.",
   };
 }

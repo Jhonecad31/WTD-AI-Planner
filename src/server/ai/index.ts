@@ -23,7 +23,10 @@ export interface GenerateResult {
   usage?: { inputTokens: number; outputTokens: number; cacheRead: number };
 }
 
-export async function generateItinerary(request: TripRequest): Promise<GenerateResult> {
+export async function generateItinerary(
+  request: TripRequest,
+  opts: { avoid?: number[] } = {},
+): Promise<GenerateResult> {
   const [products, weather] = await Promise.all([
     getPlannerProducts(),
     getTripWeather({
@@ -34,7 +37,7 @@ export async function generateItinerary(request: TripRequest): Promise<GenerateR
   ]);
   // Tripadvisor ratings (cached; empty without a key) break ties between similar picks.
   const ratings = await getRatings(products.map((p) => p.bokunId));
-  const result = await generateWithEngines(request, products, weather, ratings);
+  const result = await generateWithEngines(request, products, weather, ratings, opts.avoid);
   // Trip rules (dinners, beach/shopping, arrival/departure, party nights), then re-total.
   // Weather goes on first so rainy days swap the beach for shopping.
   // The engine is only asked to respect the budget: enforce it before the seats check,
@@ -71,12 +74,17 @@ async function generateWithEngines(
   products: CatalogProduct[],
   weather: Record<string, DayWeather>,
   ratings: Record<number, TripAdvisorRating>,
+  avoid?: number[],
 ): Promise<GenerateResult> {
   const wantClaude = flags.aiProvider() === "claude" && !!env().ANTHROPIC_API_KEY;
 
   if (wantClaude) {
     try {
-      const { draft, usage } = await generateWithClaude(request, products, { weather, ratings });
+      const { draft, usage } = await generateWithClaude(request, products, {
+        weather,
+        ratings,
+        avoid,
+      });
       const { itinerary } = validateAndRepair(
         draftToItinerary(draft, request, products),
         request,
@@ -100,7 +108,7 @@ async function generateWithEngines(
             : String(e);
       console.warn("[ai] Claude failed, falling back to rules:", reason);
       const { itinerary } = validateAndRepair(
-        buildRulesItinerary({ request, products, weather }),
+        buildRulesItinerary({ request, products, weather, avoid }),
         request,
         products,
       );
@@ -109,7 +117,7 @@ async function generateWithEngines(
   }
 
   const { itinerary } = validateAndRepair(
-    buildRulesItinerary({ request, products, weather }),
+    buildRulesItinerary({ request, products, weather, avoid }),
     request,
     products,
   );

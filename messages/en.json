@@ -25,11 +25,6 @@
       "go": "Start planning",
       "hint": "Takes about 3 minutes · no account needed"
     },
-    "featuredTitle": "Experiences travelers book the most",
-    "featuredBody": "Every tour in your plan is a real WhatToDo product with today's price.",
-    "from": "From {price}",
-    "perPerson": "per person",
-    "viewAll": "See all tours",
     "howTitle": "How it works",
     "steps": {
       "1": {
@@ -167,7 +162,8 @@
       "hotelSearching": "Searching hotels…",
       "hotelNoMatch": "Not on our list; you can keep the name as typed.",
       "recommended": "Recommended",
-      "hotelSearchLabel": "Hotel name (optional)"
+      "hotelSearchLabel": "Hotel name (optional)",
+      "haveHotel": "I have a hotel"
     },
     "travelers": {
       "title": "Who's coming?",
@@ -183,8 +179,7 @@
       "titleLabel": "Title",
       "titles": {
         "mr": "Mr.",
-        "ms": "Ms.",
-        "none": "None"
+        "ms": "Ms."
       }
     },
     "preferences": {
@@ -214,7 +209,7 @@
       "budgetTitle": "Budget per person",
       "budgetBody": "Tours and transfers, whole trip.",
       "budgetTotal": "About {total} for {count, plural, one {# traveler} other {# travelers}}",
-      "private": "Private",
+      "private": "Private tours",
       "tourDaysTitle": "Tour days",
       "tourDays": {
         "all": "As many as possible",
@@ -237,7 +232,8 @@
         "rest": "Rest",
         "arrival": "Arrival",
         "departure": "Departure"
-      }
+      },
+      "privateBody": "Only your group, no other travelers. Usually costs more."
     },
     "itinerary": {
       "title": "Your itinerary",
@@ -305,7 +301,33 @@
       "totalTransfers": "Transfers",
       "regenerateConfirm": "Your changes will be lost.",
       "regenerateYes": "Yes, try another",
-      "regenerateNo": "Cancel"
+      "regenerateNo": "Cancel",
+      "private": "Private",
+      "regenerateTitle": "Not quite your trip?",
+      "regenerateBody": "We’ll build a new plan with different tours.",
+      "summary": {
+        "title": "Your trip",
+        "edit": "Edit",
+        "dates": "Dates",
+        "nights": "{count, plural, one {# night} other {# nights}}",
+        "travelers": "Travelers",
+        "party": "{adults, plural, one {# adult} other {# adults}}{children, plural, =0 {} one {, # child} other {, # children}}",
+        "stay": "Stay",
+        "noHotel": "No hotel yet · {zone}",
+        "transfers": "Transfers",
+        "transferArrival": "airport to hotel",
+        "transferDeparture": "hotel to airport",
+        "luxury": "luxury",
+        "noTransfers": "No transfers",
+        "style": "Style",
+        "pace": "{tours, plural, one {# tour day} other {# tour days}} · {rest, plural, =0 {no rest days} one {# rest day} other {# rest days}}",
+        "budget": "{budget} per person",
+        "private": "Private tours",
+        "dining": "Dinners",
+        "noDining": "We won’t plan your dinners",
+        "anyCuisine": "Any cuisine",
+        "perDinner": "{budget} per dinner"
+      }
     },
     "contact": {
       "title": "Where should we send it?",
@@ -360,7 +382,10 @@
         "international": "International"
       },
       "budgetTitle": "Budget per dinner",
-      "budgetTotal": "About {total} per dinner for {count, plural, one {# person} other {# people}}"
-    }
+      "budgetTotal": "About {total} per dinner for {count, plural, one {# person} other {# people}}",
+      "skip": "Don’t plan my dinners",
+      "skipBody": "Your itinerary won’t include restaurants."
+    },
+    "backToItinerary": "Back to my itinerary"
   }
 }
