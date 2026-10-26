@@ -90,6 +90,7 @@ export function StepPreferences() {
           onSelect={() => patch({ preferPrivate: !draft.preferPrivate })}
           icon={<KeyIcon size={20} />}
           title={t("private")}
+          description={t("privateBody")}
           badge="+$"
           compact
         />

@@ -63,7 +63,11 @@ const request: TripRequest = {
   outbound: { date: "2026-12-14", source: "manual" },
   hotel: { noHotel: false, zone: "cancun" },
   preferPrivate: false,
+<<<<<<< HEAD
   dining: { cuisines: [], budgetPerMeal: 40 },
+=======
+  dining: { skip: false, cuisines: [], budgetPerMeal: 40 },
+>>>>>>> remotes/origin/tristan
   transfers: { arrival: false, departure: false, luxury: false },
   travelers: [{ age: 30 }, { age: 30 }],
   interests: ["cultural", "adventure"],

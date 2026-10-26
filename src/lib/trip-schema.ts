@@ -66,6 +66,8 @@ export const CUISINES = [
 export type Cuisine = (typeof CUISINES)[number];
 
 export const DiningSchema = z.object({
+  /** The traveler doesn't want us to plan dinners: no restaurants in the itinerary. */
+  skip: z.boolean().default(false),
   /** Empty = no preference. */
   cuisines: z.array(z.enum(CUISINES)).max(CUISINES.length).default([]),
   /** USD per person per meal. */
@@ -105,7 +107,7 @@ export const TripRequestSchema = z.object({
   restDates: z.array(z.string().regex(ISO_DATE)).max(60).optional(),
   /** Per person, USD, for the whole trip (tours + transfers) */
   budgetPerPerson: z.number().int().min(50).max(10000),
-  dining: DiningSchema.default({ cuisines: [], budgetPerMeal: 40 }),
+  dining: DiningSchema.default({ skip: false, cuisines: [], budgetPerMeal: 40 }),
   notes: z.string().trim().max(600).optional(),
 });
 export type TripRequest = z.infer<typeof TripRequestSchema>;

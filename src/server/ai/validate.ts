@@ -7,13 +7,14 @@ import {
   type ItineraryItem,
 } from "@/lib/itinerary-schema";
 import { fitsAges, priceProductForParty, round2 } from "./pricing";
-import { planDays } from "./rules";
+import { planDays, transferFor } from "./rules";
 
 /**
  * Server-side guarantees that do not depend on which engine produced the plan:
  * - every bokunId exists in the planner catalog (on-site products only)
  * - every day is inside the trip, in order, with no duplicates
  * - prices are recomputed from the catalog (the model never sets prices)
+ * - airport transfers are the zone's ride from `transferFor`
  * - totals and budget flag are recomputed
  * Returns the sanitized itinerary plus a list of what was fixed/dropped.
  */
@@ -27,6 +28,7 @@ export function validateAndRepair(
   const byId = new Map(products.filter((p) => p.onSite).map((p) => [p.bokunId, p]));
   const expectedDays = planDays(request);
   const expectedDates = new Set(expectedDays.map((d) => d.date));
+  const zoneTransfer = transferFor(products, request);
 
   const seenTours = new Set<number>();
   const days: ItineraryDay[] = parsed.days
@@ -67,7 +69,11 @@ export function validateAndRepair(
           }
           seenTours.add(item.bokunId);
         }
-        const p = byId.get(item.bokunId)!;
+        let p = byId.get(item.bokunId)!;
+        if (p.kind === "transfer" && zoneTransfer && p.bokunId !== zoneTransfer.bokunId) {
+          fixes.push(`Swapped transfer "${p.title}" on ${d.date} for "${zoneTransfer.title}".`);
+          p = zoneTransfer;
+        }
         if (!fitsAges(p, request.travelers)) {
           fixes.push(`Dropped "${item.title}" on ${d.date}: not suitable for the travelers' ages.`);
           return [];
@@ -79,6 +85,7 @@ export function validateAndRepair(
         return [
           {
             ...item,
+            bokunId: p.bokunId,
             // Transfers keep their direction name ("hotel to airport"); one product covers both legs.
             title: p.kind === "transfer" && item.kind === "transfer" ? item.title : p.title,
             kind: p.kind === "transfer" ? ("transfer" as const) : ("tour" as const),

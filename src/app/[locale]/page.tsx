@@ -1,4 +1,4 @@
-import { getLocale, getTranslations } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { brand } from "@/content/brand";
 import { BEST_RATED, BEST_RATED_ALL_URL } from "@/content/best-rated";
@@ -10,7 +10,6 @@ import {
   ArrowRightIcon,
   CalendarIcon,
   CheckIcon,
-  ClockIcon,
   ExternalIcon,
   CompassIcon,
   MapIcon,
@@ -20,34 +19,23 @@ import {
   StarIcon,
   UsersIcon,
 } from "@/components/ui/icons";
-import { formatUsd } from "@/lib/format";
-import { getFeaturedProducts, getHeroImage, hasBokunCredentials } from "@/server/catalog/service";
-import type { CatalogProduct } from "@/server/catalog/types";
+import { getHeroImage, hasBokunCredentials } from "@/server/catalog/service";
 
 export const instant = false;
 export const maxDuration = 60;
 
-function minutesText(m: number | null) {
-  if (!m) return null;
-  if (m >= 24 * 60) return `${Math.round(m / (24 * 60))}d`;
-  const h = Math.floor(m / 60);
-  return m % 60 ? `${h}h ${m % 60}m` : `${h}h`;
-}
-
-async function loadCatalog(): Promise<{ hero: string | null; featured: CatalogProduct[] }> {
-  if (!hasBokunCredentials()) return { hero: null, featured: [] };
+async function loadHero(): Promise<string | null> {
+  if (!hasBokunCredentials()) return null;
   try {
-    const [hero, featured] = await Promise.all([getHeroImage(), getFeaturedProducts(8)]);
-    return { hero, featured };
+    return await getHeroImage();
   } catch {
-    return { hero: null, featured: [] };
+    return null;
   }
 }
 
 export default async function LandingPage() {
   const t = await getTranslations("landing");
-  const locale = await getLocale();
-  const { hero, featured } = await loadCatalog();
+  const hero = await loadHero();
   const steps = ["1", "2", "3", "4"] as const;
   const stepIcons = [PlaneIcon, UsersIcon, CompassIcon, MapIcon];
   const whyBenefits = [
@@ -126,6 +114,43 @@ export default async function LandingPage() {
           </div>
         </section>
 
+<<<<<<< HEAD
+=======
+        {/* Why is it free */}
+        <section className="mx-auto max-w-5xl px-4 pt-16 sm:px-6 sm:pt-20">
+          <h2 className="text-center text-3xl font-bold sm:text-4xl">{t("freeTitle")}</h2>
+          <ol className="mt-8 grid gap-4 sm:grid-cols-2">
+            {(["1", "2"] as const).map((k) => (
+              <li
+                key={k}
+                className="flex gap-4 rounded-card border border-line bg-white p-5 shadow-sm sm:p-6"
+              >
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-soft text-lg font-bold text-primary">
+                  {k}
+                </span>
+                <div>
+                  <h3 className="text-lg font-bold leading-snug">{t(`whyFree.${k}.title`)}</h3>
+                  <p className="mt-1 text-brand-ink/70">{t(`whyFree.${k}.body`)}</p>
+                  {k === "1" ? (
+                    <p className="mt-2 text-sm font-semibold text-primary">
+                      {t("whyFree.optional")}
+                    </p>
+                  ) : null}
+                </div>
+              </li>
+            ))}
+          </ol>
+          <div className="mt-8 flex justify-center">
+            <Link
+              href="/plan"
+              className="inline-flex items-center gap-2 rounded-pill bg-primary px-7 py-3.5 text-base font-bold text-white shadow-lg shadow-primary/25 transition hover:bg-primary-hover"
+            >
+              {t("cta")} <ArrowRightIcon size={18} />
+            </Link>
+          </div>
+        </section>
+
+>>>>>>> remotes/origin/tristan
         {/* How it works: the same step rail the traveler meets on /plan */}
         <section id="how" className="mx-auto max-w-6xl px-4 pt-16 sm:px-6 sm:pt-20">
           <h2 className="text-center text-3xl font-bold sm:text-4xl">{t("howTitle")}</h2>

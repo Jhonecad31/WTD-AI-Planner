@@ -34,12 +34,16 @@
       "go": "Empezar a planear",
       "hint": "Toma unos 3 minutos · sin crear cuenta"
     },
+<<<<<<< HEAD
     "featuredTitle": "Las experiencias que más reservan los viajero",
     "featuredBody": "Cada tour de tu plan es un producto real de WhatToDo con el precio de hoy.",
     "from": "Desde {price}",
     "perPerson": "por persona",
     "viewAll": "Ver todos los tours",
     "howTitle": "Planea tu viaje ideal a Cancún en 4 sencillos pasos ",
+=======
+    "howTitle": "Cómo funciona",
+>>>>>>> remotes/origin/tristan
     "steps": {
       "1": {
         "title": "Elige tus fechas",
@@ -195,7 +199,8 @@
       "hotelSearching": "Buscando hoteles…",
       "hotelNoMatch": "No lo encontramos en la lista; puedes dejar el nombre así.",
       "recommended": "Recomendado",
-      "hotelSearchLabel": "Nombre del hotel (opcional)"
+      "hotelSearchLabel": "Nombre del hotel (opcional)",
+      "haveHotel": "Ya tengo hotel"
     },
     "travelers": {
       "title": "¿¿Cuántos viajeros vivirán esta aventura?",
@@ -211,8 +216,7 @@
       "titleLabel": "Tratamiento",
       "titles": {
         "mr": "Sr.",
-        "ms": "Sra.",
-        "none": "Ninguno"
+        "ms": "Sra."
       }
     },
     "preferences": {
@@ -242,7 +246,7 @@
       "budgetTitle": "Presupuesto por persona",
       "budgetBody": "Para tours y traslados durante tu estancia. Los restaurantes son adicionales.",
       "budgetTotal": "Aprox. {total} para {count, plural, one {# viajero} other {# viajeros}}",
-      "private": "Privados",
+      "private": "Tours privados",
       "tourDaysTitle": "Días de tour",
       "tourDays": {
         "all": "Todos los que se pueda",
@@ -265,7 +269,8 @@
         "rest": "Descanso",
         "arrival": "Llegada",
         "departure": "Salida"
-      }
+      },
+      "privateBody": "Solo tu grupo, sin otros viajeros. Suelen costar más."
     },
     "itinerary": {
       "title": "Tu itinerario",
@@ -333,7 +338,33 @@
       "totalTransfers": "Traslados",
       "regenerateConfirm": "Se perderán tus cambios.",
       "regenerateYes": "Sí, probar otra",
-      "regenerateNo": "Cancelar"
+      "regenerateNo": "Cancelar",
+      "private": "Privado",
+      "regenerateTitle": "¿No te convence?",
+      "regenerateBody": "Armamos un plan nuevo con otros tours.",
+      "summary": {
+        "title": "Tu viaje",
+        "edit": "Editar",
+        "dates": "Fechas",
+        "nights": "{count, plural, one {# noche} other {# noches}}",
+        "travelers": "Viajeros",
+        "party": "{adults, plural, one {# adulto} other {# adultos}}{children, plural, =0 {} one {, # niño} other {, # niños}}",
+        "stay": "Hospedaje",
+        "noHotel": "Aún sin hotel · {zone}",
+        "transfers": "Traslados",
+        "transferArrival": "aeropuerto a hotel",
+        "transferDeparture": "hotel a aeropuerto",
+        "luxury": "de lujo",
+        "noTransfers": "Sin traslados",
+        "style": "Estilo",
+        "pace": "{tours, plural, one {# día con tour} other {# días con tour}} · {rest, plural, =0 {sin descanso} one {# de descanso} other {# de descanso}}",
+        "budget": "{budget} por persona",
+        "private": "Tours privados",
+        "dining": "Cenas",
+        "noDining": "No planeamos tus cenas",
+        "anyCuisine": "Cualquier cocina",
+        "perDinner": "{budget} por cena"
+      }
     },
     "contact": {
       "title": "¿A dónde te lo enviamos?",
@@ -388,7 +419,10 @@
         "international": "Internacional"
       },
       "budgetTitle": "Presupuesto por cena",
-      "budgetTotal": "Aprox. {total} por cena para {count, plural, one {# persona} other {# personas}}"
-    }
+      "budgetTotal": "Aprox. {total} por cena para {count, plural, one {# persona} other {# personas}}",
+      "skip": "No planear mis cenas",
+      "skipBody": "Tu itinerario no incluirá restaurantes."
+    },
+    "backToItinerary": "Volver a mi itinerario"
   }
 }
