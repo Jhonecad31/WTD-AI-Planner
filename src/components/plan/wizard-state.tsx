@@ -44,6 +44,8 @@ export interface TravelerDraft {
 
 export interface WizardDraft {
   step: StepId;
+  /** Set by "Edit" on the itinerary summary: the step's main button goes straight back there. */
+  returnTo?: "itinerary";
   inbound: Partial<Flight>;
   outbound: Partial<Flight>;
   hotel: { zone?: HotelZone; name?: string; noHotel?: boolean };
@@ -63,7 +65,14 @@ export interface WizardDraft {
   budgetPerPerson: number;
   notes: string;
   /** Last generated itinerary (so going back/forward doesn't regenerate). */
-  itinerary?: { itinerary: Itinerary; engine: "rules" | "claude"; fallbackReason?: string };
+  itinerary?: {
+    itinerary: Itinerary;
+    engine: "rules" | "claude";
+    fallbackReason?: string;
+    edited?: boolean;
+    /** The trip request it was built from; a changed answer builds a new one. */
+    requestKey?: string;
+  };
   contact?: { email: string; phone: string };
   /** Set once the lead was sent; shows the done screen on reload. */
   submitted?: { leadId: string; ref: string; pdfUrl: string };
@@ -93,7 +102,7 @@ export const initialDraft: WizardDraft = {
   travelers: [{ age: 30 }, { age: 30 }],
   interests: [],
   preferPrivate: false,
-  dining: { cuisines: [], budgetPerMeal: 40 },
+  dining: { skip: false, cuisines: [], budgetPerMeal: 40 },
   chillDays: "none",
   tourDays: "all",
   pace: "balanced",
@@ -111,7 +120,8 @@ function reducer(state: WizardDraft, action: Action): WizardDraft {
     case "patch":
       return { ...state, ...action.patch };
     case "goto":
-      return { ...state, step: action.step };
+      // Moving with Next/Back or the sidebar is a normal walk through the wizard again.
+      return { ...state, step: action.step, returnTo: undefined };
     case "reset":
       return initialDraft;
   }

@@ -57,7 +57,7 @@ const request: TripRequest = {
   chillDays: "none",
   tourDays: "all",
   budgetPerPerson: 1000,
-  dining: { cuisines: [], budgetPerMeal: 40 },
+  dining: { skip: false, cuisines: [], budgetPerMeal: 40 },
 };
 const slot = (date: string, extra: Partial<AvailabilitySlot> = {}): AvailabilitySlot => ({
   date,
@@ -107,10 +107,11 @@ describe("verifyAvailability", () => {
     expect(tourOn(itinerary, firstTourDate)?.bokunId).not.toBe(firstId);
     const ids = itinerary.days.flatMap((d) => d.items.map((i) => i.bokunId)).filter(Boolean);
     expect(ids).toContain(firstId);
-    expect(itinerary.days.filter((d) => d.notices?.length)).toHaveLength(2);
+    // First version of the plan: no "we moved it" notice for the traveler.
+    expect(itinerary.days.filter((d) => d.notices?.length)).toHaveLength(0);
   });
 
-  it("swaps a tour sold out on every day for an available one and explains why", async () => {
+  it("swaps a tour sold out on every day for an available one, without a traveler notice", async () => {
     const lookup = async (id: number, d: string) =>
       id === firstId ? [slot(d, { soldOut: true })] : [slot(d)];
     const { itinerary, report } = await verifyAvailability(raw, request, catalog, lookup);
@@ -118,7 +119,7 @@ describe("verifyAvailability", () => {
     const t = tourOn(itinerary, firstTourDate)!;
     expect(t.bokunId).not.toBe(firstId);
     const day = itinerary.days.find((d) => d.date === firstTourDate)!;
-    expect(day.notices?.[0]).toMatch(/Cambiamos .* porque/);
+    expect(day.notices ?? []).toHaveLength(0);
     const ids = itinerary.days.flatMap((d) => d.items.map((i) => i.bokunId)).filter(Boolean);
     expect(new Set(ids).size).toBe(ids.length);
   });

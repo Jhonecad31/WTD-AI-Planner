@@ -36,6 +36,51 @@ export function StepStay() {
         <h2 className="text-2xl font-bold sm:text-3xl">{t("title")}</h2>
       </header>
 
+      {/* Hotel first: with a hotel picked, its area is filled in for them below. */}
+      <section className="flex flex-col gap-3">
+        <h3 className="text-lg font-bold">{t("hotel")}</h3>
+        <div role="radiogroup" aria-label={t("hotel")} className="grid grid-cols-2 gap-3">
+          <OptionCard
+            role="radio"
+            selected={noHotel === false}
+            onSelect={() => patch({ hotel: { ...draft.hotel, noHotel: false } })}
+            icon={<HotelIcon size={20} />}
+            title={t("haveHotel")}
+            compact
+          />
+          <OptionCard
+            role="radio"
+            selected={noHotel === true}
+            onSelect={() => patch({ hotel: { zone: draft.hotel.zone, noHotel: true } })}
+            icon={<BedIcon size={20} />}
+            title={t("noHotel")}
+            compact
+          />
+        </div>
+        {noHotel === true ? (
+          <p className="rounded-card bg-primary-soft px-4 py-3 text-sm font-semibold text-primary">
+            {t("noHotelNote")}
+          </p>
+        ) : noHotel === false ? (
+          <Field label={t("hotelSearchLabel")} htmlFor="hotel" className="max-w-md">
+            <HotelSearch
+              id="hotel"
+              value={draft.hotel.name ?? ""}
+              onChange={(name) => patch({ hotel: { ...draft.hotel, name } })}
+              onPick={(h) =>
+                patch({
+                  hotel: {
+                    ...draft.hotel,
+                    name: h.name,
+                    zone: h.zone ?? draft.hotel.zone ?? undefined,
+                  },
+                })
+              }
+            />
+          </Field>
+        ) : null}
+      </section>
+
       <section>
         <h3 className="mb-3 text-lg font-bold">{t("zone")}</h3>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -62,41 +107,6 @@ export function StepStay() {
             );
           })}
         </div>
-      </section>
-
-      <section className="flex flex-col gap-3">
-        <h3 className="text-lg font-bold">{t("hotel")}</h3>
-        <OptionCard
-          selected={!!noHotel}
-          onSelect={() =>
-            patch({ hotel: { zone: draft.hotel.zone, noHotel: !noHotel, name: undefined } })
-          }
-          icon={<BedIcon size={20} />}
-          title={t("noHotel")}
-          compact
-        />
-        {noHotel ? (
-          <p className="rounded-card bg-primary-soft px-4 py-3 text-sm font-semibold text-primary">
-            {t("noHotelNote")}
-          </p>
-        ) : (
-          <Field label={t("hotelSearchLabel")} htmlFor="hotel" className="max-w-md">
-            <HotelSearch
-              id="hotel"
-              value={draft.hotel.name ?? ""}
-              onChange={(name) => patch({ hotel: { ...draft.hotel, name } })}
-              onPick={(h) =>
-                patch({
-                  hotel: {
-                    ...draft.hotel,
-                    name: h.name,
-                    zone: draft.hotel.zone ?? h.zone ?? undefined,
-                  },
-                })
-              }
-            />
-          </Field>
-        )}
       </section>
 
       <section>

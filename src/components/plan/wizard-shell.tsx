@@ -12,7 +12,11 @@ import {
   PlaneIcon,
   UsersIcon,
 } from "@/components/ui/icons";
+import { ScrollHint } from "./scroll-hint";
+<<<<<<< HEAD
 import { STEP_PHOTOS } from "@/content/step-photos";
+=======
+>>>>>>> remotes/origin/tristan
 import { STEPS, type StepId } from "./wizard-state";
 
 const ICONS: Record<StepId, ReactNode> = {
@@ -52,6 +56,12 @@ export function WizardShell({
         {/* Sidebar */}
         <aside className="border-b border-line bg-surface px-4 pb-4 pt-4 sm:px-6 lg:border-b-0 lg:border-r lg:px-7 lg:pb-8 lg:pt-7">
           <div className="relative mb-6 hidden h-36 overflow-hidden rounded-card lg:block">
+            {sidebarImage ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={sidebarImage} alt="" className="h-full w-full object-cover" />
+            ) : (
+              <div className="h-full w-full bg-primary" />
+            )}
             <div className="h-full w-full bg-primary" />
             {/* One photo per step (src/content/step-photos.ts), cross-fading as the traveler advances. */}
             {STEPS.map((s, i) => {
@@ -89,9 +99,13 @@ export function WizardShell({
         <div className="flex min-h-[60vh] flex-col">
           <div className="flex-1 px-4 py-6 sm:px-8 sm:py-8 lg:px-12 lg:py-10">{children}</div>
           {footer ? (
-            <div className="sticky bottom-0 z-10 border-t border-line bg-white/90 px-4 py-4 backdrop-blur sm:px-8 lg:static lg:bg-transparent lg:px-12 lg:pb-10 lg:pt-0">
-              {footer}
-            </div>
+            <>
+              <ScrollHint step={current} />
+              {/* Not sticky: Continue sits at the end of the step so travelers scroll past every option. */}
+              <div className="border-t border-line px-4 py-4 sm:px-8 lg:px-12 lg:pb-10 lg:pt-0">
+                {footer}
+              </div>
+            </>
           ) : null}
         </div>
       </div>

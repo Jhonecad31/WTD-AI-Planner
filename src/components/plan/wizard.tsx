@@ -29,7 +29,7 @@ export function Wizard({ sidebarImage }: { sidebarImage?: string | null }) {
   for (const src of Object.values(INTEREST_PHOTOS)) if (src) preload(src, { as: "image" });
   const t = useTranslations("wizard");
   const tc = useTranslations("common");
-  const { draft, next, back, goto } = useWizard();
+  const { draft, next, back, goto, patch } = useWizard();
   const index = STEPS.indexOf(draft.step);
   const valid = validators[draft.step]?.(draft) ?? true;
   // The itinerary and contact steps render their own navigation.
@@ -50,10 +50,22 @@ export function Wizard({ sidebarImage }: { sidebarImage?: string | null }) {
             <Button variant="ghost" onClick={back} disabled={index === 0}>
               <ArrowLeftIcon size={18} /> {tc("back")}
             </Button>
-            <Button size="lg" onClick={next} disabled={!valid}>
-              {draft.step === "restaurants" ? t("preferences.generate") : tc("next")}
-              <ArrowRightIcon size={18} />
-            </Button>
+            {draft.returnTo === "itinerary" ? (
+              // Came from "Edit" on the itinerary: go straight back (it rebuilds if answers changed).
+              <Button
+                size="lg"
+                onClick={() => patch({ step: "itinerary", returnTo: undefined })}
+                disabled={!valid}
+              >
+                {t("backToItinerary")}
+                <ArrowRightIcon size={18} />
+              </Button>
+            ) : (
+              <Button size="lg" onClick={next} disabled={!valid}>
+                {draft.step === "restaurants" ? t("preferences.generate") : tc("next")}
+                <ArrowRightIcon size={18} />
+              </Button>
+            )}
           </div>
         )
       }

@@ -25,6 +25,8 @@ import { hasYoungKids, isParty, partyNightOk, scoreProduct, toItem } from "./rul
 const DINNER_TIME = "20:00";
 const PLACE_TIME = "10:30";
 const BUDGET_TOLERANCE = 1.15;
+/** Variety fillers may go over the meal budget, but never past this multiple of it. */
+const VARIETY_BUDGET_CAP = 1.5;
 
 type Restaurant = { p: CatalogProduct; info: RestaurantInfo };
 
@@ -48,7 +50,11 @@ export function rankRestaurants(
   const pool = [
     ...affordable,
     ...[...inZone]
-      .filter((r) => !affordable.includes(r))
+      .filter(
+        (r) =>
+          !affordable.includes(r) &&
+          r.info.avgPerPersonUsd <= request.dining.budgetPerMeal * VARIETY_BUDGET_CAP,
+      )
       .sort((a, b) => a.info.avgPerPersonUsd - b.info.avgPerPersonUsd)
       .slice(0, Math.max(0, MIN_RESTAURANT_VARIETY - affordable.length)),
   ];
@@ -224,7 +230,17 @@ export function rainyTripNote(days: ItineraryDay[], locale: "en" | "es"): string
  * Neutral one-liners shown under "Traveling with kids". The Chichén Itzá line only
  * appears when the plan actually includes a Chichén tour.
  */
-const MIN_RESTAURANT_VARIETY = 3;
+const MIN_RESTAURANT_VARIETY = 5;
+/** The first dinner starts at one of the top few picks, so every trip doesn't open with the same place. */
+const FIRST_DINNER_SPREAD = 3;
+
+/** Stable per trip (same dates, same plan), different across trips. */
+function tripSeed(request: TripRequest): number {
+  const key = `${request.inbound.date ?? ""}|${request.outbound.date ?? ""}|${request.travelers.length}`;
+  let h = 0;
+  for (const ch of key) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  return h;
+}
 
 function transferTitle(label: "arrival" | "departure", locale: "en" | "es"): string {
   if (locale === "es")
@@ -298,8 +314,18 @@ export function enrichItinerary(
   const locale = request.locale;
   const zone = effectiveZone(request);
   const product = productOf(products);
+<<<<<<< HEAD
   const restaurants = rankRestaurants(request, products, opts.ratings);
-  let nextRestaurant = 0;
+=======
+  // "Don't plan my dinners": no restaurants and no note about missing picks.
+  const skipDining = request.dining.skip;
+  const restaurants = skipDining ? [] : rankRestaurants(request, products, opts.ratings);
+>>>>>>> remotes/origin/tristan
+  // Rotate through the ranked list (no repeats until every place was used), starting at a
+  // per-trip offset among the top picks instead of always at the first one.
+  let nextRestaurant = restaurants.length
+    ? tripSeed(request) % Math.min(restaurants.length, FIRST_DINNER_SPREAD)
+    : 0;
   const dinner = () =>
     restaurants.length ? restaurantItem(restaurants[nextRestaurant++ % restaurants.length]) : null;
   const nextPlace = placePicker(request, zone);
@@ -331,12 +357,8 @@ export function enrichItinerary(
 
     if (day.label === "arrival") {
       items.push(...transfers);
-      if (request.inbound.slot === "early") {
-        const d = dinner();
-        if (d) items.push(d);
-      } else {
-        items.push(restItem(locale));
-      }
+      const d = request.inbound.slot === "early" ? dinner() : null;
+      items.push(d ?? restItem(locale));
     } else if (day.label === "departure") {
       if (request.outbound.slot === "night") {
         const place = nextPlace(day.weather?.kind === "rainy");
@@ -369,10 +391,11 @@ export function enrichItinerary(
     days,
     introWarnings: kidWarnings(request, days),
     weatherNote: rainyTripNote(days, locale),
-    diningNote: restaurants.length
-      ? undefined
-      : es
-        ? "Todavía no tenemos restaurantes recomendados en tu zona; tu especialista te sugerirá los mejores."
-        : "We don't have restaurant picks in your area yet; your specialist will suggest the best ones.",
+    diningNote:
+      restaurants.length || skipDining
+        ? undefined
+        : es
+          ? "Todavía no tenemos restaurantes recomendados en tu zona; tu especialista te sugerirá los mejores."
+          : "We don't have restaurant picks in your area yet; your specialist will suggest the best ones.",
   };
 }

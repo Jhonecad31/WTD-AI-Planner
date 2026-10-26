@@ -14,9 +14,11 @@ import {
   CompassIcon,
   ExternalIcon,
   FoodIcon,
+  KeyIcon,
   PinIcon,
   ShoppingIcon,
   SunIcon,
+  SwapIcon,
   UsersIcon,
 } from "@/components/ui/icons";
 import { TripAdvisorBadge } from "@/components/ui/tripadvisor-rating";
@@ -24,10 +26,13 @@ import { Notice, NoticeGroup, type NoticeItem } from "@/components/ui/notice";
 import { TripRequestSchema, type TripRequest } from "@/lib/trip-schema";
 import type { Itinerary, ItineraryItem } from "@/lib/itinerary-schema";
 import { formatDate, formatUsd } from "@/lib/format";
+import { isPrivateTitle } from "@/lib/item-meta";
 import { draftRestDates, useWizard } from "./wizard-state";
 import { AlternativesPanel, TourOptions, editItinerary, reasonText } from "./itinerary-editor";
 import { WeatherChip } from "./weather";
 import { seasonNotes } from "@/lib/weather";
+import { TripSummary } from "./trip-summary";
+import { ScrollHint } from "./scroll-hint";
 
 type GenerateResponse = {
   itinerary: Itinerary;
@@ -35,6 +40,8 @@ type GenerateResponse = {
   fallbackReason?: string;
   /** True once the traveler changed a tour; "try another version" asks before discarding. */
   edited?: boolean;
+  /** The trip request it was built from; a changed answer builds a new one. */
+  requestKey?: string;
 };
 
 export function buildTripRequest(
@@ -205,6 +212,11 @@ function TimelineItem({
                   <PinIcon size={14} /> {t("pickup")}
                 </span>
               ) : null}
+              {item.kind === "tour" && isPrivateTitle(item.title) ? (
+                <span className="inline-flex items-center gap-1 text-primary">
+                  <KeyIcon size={14} /> {t("private")}
+                </span>
+              ) : null}
             </div>
             <h4 className="text-base font-bold leading-snug">{item.title}</h4>
             <TripAdvisorBadge rating={item.tripadvisor} locale={locale} label={t("taReviews")} />
@@ -262,19 +274,24 @@ export function StepItinerary() {
   const tc = useTranslations("common");
   const locale = useLocale();
   const { draft, back, patch } = useWizard();
+  const request = buildTripRequest(draft, locale);
+  const requestKey = request ? JSON.stringify(request) : undefined;
+  // Reuse the saved itinerary only if the answers it was built from didn't change.
+  const saved =
+    draft.itinerary && draft.itinerary.requestKey === requestKey ? draft.itinerary : undefined;
   const [state, setState] = useState<{
     status: "idle" | "loading" | "done" | "error";
     data?: GenerateResponse;
     error?: string;
-  }>(draft.itinerary ? { status: "done", data: draft.itinerary } : { status: "idle" });
+  }>(saved ? { status: "done", data: saved } : { status: "idle" });
   const started = useRef(false);
   const [busy, setBusy] = useState(false);
   const [optionsFor, setOptionsFor] = useState<string | null>(null);
   const [notice, setNotice] = useState<{ kind: "ok" | "error"; text: string } | null>(null);
   const [confirmRegen, setConfirmRegen] = useState(false);
 
-  async function generate() {
-    const request = buildTripRequest(draft, locale);
+  /** `avoid`: tours of the current version, so "try another version" really changes the plan. */
+  async function generate(avoid?: number[]) {
     if (!request) {
       setState({ status: "error", error: t("invalid") });
       return;
@@ -286,12 +303,13 @@ export function StepItinerary() {
       const r = await fetch("/api/itinerary", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify(request),
+        body: JSON.stringify({ ...request, avoid }),
       });
       const j = (await r.json()) as GenerateResponse & { error?: string };
       if (!r.ok || !j.itinerary) throw new Error(j.error ?? "error");
-      setState({ status: "done", data: j });
-      patch({ itinerary: j });
+      const data = { ...j, requestKey };
+      setState({ status: "done", data });
+      patch({ itinerary: data });
     } catch (e) {
       setState({ status: "error", error: e instanceof Error ? e.message : t("failed") });
     }
@@ -306,7 +324,13 @@ export function StepItinerary() {
   }, []);
 
   const it = state.data?.itinerary;
-  const request = buildTripRequest(draft, locale);
+
+  function anotherVersion() {
+    const tours = it?.days.flatMap((d) =>
+      d.items.filter((i) => i.kind === "tour" && i.bokunId).map((i) => i.bokunId as number),
+    );
+    void generate(tours);
+  }
 
   async function applyEdit(
     action:
@@ -390,36 +414,6 @@ export function StepItinerary() {
         <div>
           <h2 className="text-2xl font-bold sm:text-3xl">{t("title")}</h2>
         </div>
-        {state.status === "done" && !confirmRegen && (
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => (state.data?.edited ? setConfirmRegen(true) : generate())}
-            disabled={busy}
-          >
-            {t("regenerate")}
-          </Button>
-        )}
-        {state.status === "done" && confirmRegen ? (
-          <div
-            role="alert"
-            className="flex w-full flex-wrap items-center gap-2 rounded-card border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-950 sm:w-auto"
-          >
-            <span className="font-semibold">{t("regenerateConfirm")}</span>
-            <Button
-              size="sm"
-              onClick={() => {
-                setConfirmRegen(false);
-                void generate();
-              }}
-            >
-              {t("regenerateYes")}
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => setConfirmRegen(false)}>
-              {t("regenerateNo")}
-            </Button>
-          </div>
-        ) : null}
       </header>
 
       {state.status === "loading" && (
@@ -439,13 +433,15 @@ export function StepItinerary() {
             <Button variant="ghost" onClick={back}>
               <ArrowLeftIcon size={18} /> {tc("back")}
             </Button>
-            <Button onClick={generate}>{t("retry")}</Button>
+            <Button onClick={() => generate()}>{t("retry")}</Button>
           </div>
         </div>
       )}
 
       {it && state.status === "done" && (
         <>
+          <TripSummary />
+
           <NoticeGroup notices={tripNotices} label={tn("group")} />
 
           <section className="overflow-hidden rounded-card bg-primary text-white shadow-card">
@@ -493,6 +489,44 @@ export function StepItinerary() {
               ) : null}
             </div>
           </section>
+
+          <div className="flex flex-col gap-3 rounded-card border border-primary/25 bg-primary-soft px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+            {confirmRegen ? (
+              <>
+                <p role="alert" className="text-sm font-semibold text-heading">
+                  {t("regenerateConfirm")}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    onClick={() => {
+                      setConfirmRegen(false);
+                      anotherVersion();
+                    }}
+                  >
+                    <SwapIcon size={18} /> {t("regenerateYes")}
+                  </Button>
+                  <Button variant="ghost" onClick={() => setConfirmRegen(false)}>
+                    {t("regenerateNo")}
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div>
+                  <p className="font-bold text-heading">{t("regenerateTitle")}</p>
+                  <p className="text-sm text-brand-ink/70">{t("regenerateBody")}</p>
+                </div>
+                <Button
+                  size="lg"
+                  className="shrink-0"
+                  onClick={() => (state.data?.edited ? setConfirmRegen(true) : anotherVersion())}
+                  disabled={busy}
+                >
+                  <SwapIcon size={18} /> {t("regenerate")}
+                </Button>
+              </>
+            )}
+          </div>
 
           {notice ? (
             <p
@@ -621,7 +655,9 @@ export function StepItinerary() {
             })}
           </ol>
 
-          <div className="sticky bottom-0 -mx-4 flex items-center justify-between gap-3 border-t border-line bg-white/90 px-4 py-4 backdrop-blur sm:static sm:mx-0 sm:border-0 sm:bg-transparent sm:px-0">
+          <ScrollHint step={0} />
+          {/* Not sticky: like the other steps, the buttons sit after the whole itinerary. */}
+          <div className="-mx-4 flex items-center justify-between gap-3 border-t border-line px-4 py-4 sm:mx-0 sm:border-0 sm:px-0">
             <Button variant="ghost" onClick={back}>
               <ArrowLeftIcon size={18} /> {tc("back")}
             </Button>

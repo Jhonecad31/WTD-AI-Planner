@@ -10,6 +10,7 @@ import { buildRulesItinerary } from "./rules";
 import { draftToItinerary, generateWithClaude } from "./claude";
 import { validateAndRepair } from "./validate";
 import { enrichItinerary } from "./enrich";
+import { fitBudget } from "./budget";
 import { verifyAvailability } from "./availability-check";
 import { getAvailability } from "@/server/catalog/availability";
 import { getRatings, withTripAdvisor } from "@/server/tripadvisor";
@@ -22,7 +23,10 @@ export interface GenerateResult {
   usage?: { inputTokens: number; outputTokens: number; cacheRead: number };
 }
 
-export async function generateItinerary(request: TripRequest): Promise<GenerateResult> {
+export async function generateItinerary(
+  request: TripRequest,
+  opts: { avoid?: number[] } = {},
+): Promise<GenerateResult> {
   const [products, weather] = await Promise.all([
     getPlannerProducts(),
     getTripWeather({
@@ -33,10 +37,13 @@ export async function generateItinerary(request: TripRequest): Promise<GenerateR
   ]);
   // Tripadvisor ratings (cached; empty without a key) break ties between similar picks.
   const ratings = await getRatings(products.map((p) => p.bokunId));
-  const result = await generateWithEngines(request, products, weather, ratings);
+  const result = await generateWithEngines(request, products, weather, ratings, opts.avoid);
   // Trip rules (dinners, beach/shopping, arrival/departure, party nights), then re-total.
   // Weather goes on first so rainy days swap the beach for shopping.
-  const enriched = enrichItinerary(withWeather(result.itinerary, weather), request, products, {
+  // The engine is only asked to respect the budget: enforce it before the seats check,
+  // so any tour swapped in here is verified in Bokun too.
+  const withinBudget = fitBudget(withWeather(result.itinerary, weather), request, products);
+  const enriched = enrichItinerary(withinBudget, request, products, {
     ratings,
   });
   // Live seats check in Bokun; swap sold-out tours, then re-apply dinners/places if anything changed.
@@ -67,12 +74,17 @@ async function generateWithEngines(
   products: CatalogProduct[],
   weather: Record<string, DayWeather>,
   ratings: Record<number, TripAdvisorRating>,
+  avoid?: number[],
 ): Promise<GenerateResult> {
   const wantClaude = flags.aiProvider() === "claude" && !!env().ANTHROPIC_API_KEY;
 
   if (wantClaude) {
     try {
-      const { draft, usage } = await generateWithClaude(request, products, { weather, ratings });
+      const { draft, usage } = await generateWithClaude(request, products, {
+        weather,
+        ratings,
+        avoid,
+      });
       const { itinerary } = validateAndRepair(
         draftToItinerary(draft, request, products),
         request,
@@ -96,7 +108,7 @@ async function generateWithEngines(
             : String(e);
       console.warn("[ai] Claude failed, falling back to rules:", reason);
       const { itinerary } = validateAndRepair(
-        buildRulesItinerary({ request, products, weather }),
+        buildRulesItinerary({ request, products, weather, avoid }),
         request,
         products,
       );
@@ -105,7 +117,7 @@ async function generateWithEngines(
   }
 
   const { itinerary } = validateAndRepair(
-    buildRulesItinerary({ request, products, weather }),
+    buildRulesItinerary({ request, products, weather, avoid }),
     request,
     products,
   );
