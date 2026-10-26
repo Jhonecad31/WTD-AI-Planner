@@ -11,7 +11,7 @@ export async function SiteHeader() {
       <div className="mx-auto flex h-18 max-w-6xl items-center justify-between gap-2 px-4 sm:gap-4 sm:px-6">
         <Link href="/" className="flex min-h-11 min-w-0 items-center gap-2">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/whattodo-logo.webp" alt="WhatToDo Logo" className="h-10 w-auto shrink-0" />
+          <img src="/logo-PMC.png" alt="WhatToDo Logo" className="h-10 w-auto shrink-0" />
           <span className="flex min-w-0 flex-col">
             <span className="whitespace-nowrap text-[15px] font-bold leading-tight text-heading sm:text-lg">
               {brand.name}

@@ -37,7 +37,7 @@ export function SiteFooter() {
         <div className="md:col-span-2 lg:col-span-1">
           <Link href="/" className="inline-flex items-center gap-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/whattodo-logo.webp" alt="WhatToDo Logo" className="h-14 w-auto shrink-0" />
+            <img src="/logo-PMC.png" alt="WhatToDo Logo" className="h-14 w-auto shrink-0" />
             <span className="flex flex-col">
               <span className="text-2xl font-bold leading-tight text-heading sm:text-[1.75rem]">
                 {brand.name}
