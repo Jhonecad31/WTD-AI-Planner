@@ -70,10 +70,7 @@ export function pickCandidates(
       }),
     }))
     .sort((a, b) => b.score - a.score);
-<<<<<<< HEAD
-=======
   lastIfAvoided(scored, opts.avoid, (x) => x.p.bokunId);
->>>>>>> remotes/origin/tristan
   // Only tours that match the traveler's interests, so a famous name (Coco Bongo) isn't on
   // the menu of someone who never asked for it. Fillers never include night life unless
   // the traveler picked "party".

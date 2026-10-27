@@ -34,16 +34,7 @@
       "go": "Start planning",
       "hint": "Takes about 3 minutes · no account needed"
     },
-<<<<<<< HEAD
-    "featuredTitle": "Experiences travelers book the most",
-    "featuredBody": "Every tour in your plan is a real WhatToDo product with today's price.",
-    "from": "From {price}",
-    "perPerson": "per person",
-    "viewAll": "See all tours",
-    "howTitle": "Plan Your Ideal Cancun Trip in 4 Easy Steps",
-=======
     "howTitle": "How it works",
->>>>>>> remotes/origin/tristan
     "steps": {
       "1": {
         "title": "Choose Your Dates",
@@ -126,7 +117,8 @@
     "whyFree": {
       "1": {
         "title": "Your adventure, our commitment",
-        "body": "Plan your trip your way. If you choose to book your experiences with us, you're helping us keep creating helpful tools for travelers like you"
+        "body": "Plan your trip your way. If you choose to book your experiences with us, you're helping us keep creating helpful tools for travelers like you",
+         "optional": "Optional"
       },
       "2": {
         "title": "Less time planning, more unforgettable moments",

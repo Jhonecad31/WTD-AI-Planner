@@ -314,13 +314,9 @@ export function enrichItinerary(
   const locale = request.locale;
   const zone = effectiveZone(request);
   const product = productOf(products);
-<<<<<<< HEAD
-  const restaurants = rankRestaurants(request, products, opts.ratings);
-=======
   // "Don't plan my dinners": no restaurants and no note about missing picks.
   const skipDining = request.dining.skip;
   const restaurants = skipDining ? [] : rankRestaurants(request, products, opts.ratings);
->>>>>>> remotes/origin/tristan
   // Rotate through the ranked list (no repeats until every place was used), starting at a
   // per-trip offset among the top picks instead of always at the first one.
   let nextRestaurant = restaurants.length

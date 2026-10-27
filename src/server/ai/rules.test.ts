@@ -322,8 +322,6 @@ describe("pickCandidates (Claude's menu)", () => {
     expect(ids({ ...request, interests: ["party"] })).not.toContain(4);
   });
 });
-<<<<<<< HEAD
-=======
 
 describe("airport transfer by zone", () => {
   const ride = (id: number, title: string) =>
@@ -405,4 +403,3 @@ describe("shared tickets", () => {
     expect(p.priceTotalUsd).toBe(126);
   });
 });
->>>>>>> remotes/origin/tristan
