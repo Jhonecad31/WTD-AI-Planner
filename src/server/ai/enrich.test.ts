@@ -170,6 +170,13 @@ describe("enrichItinerary", () => {
     expect(it.totals.diningEstimateUsd).toBe(0);
   });
 
+  it("no restaurants and no dining note when the traveler skips dinners", () => {
+    const it = plan({ ...base, dining: { ...base.dining, skip: true } });
+    expect(it.days.flatMap((d) => d.items).some((i) => i.kind === "restaurant")).toBe(false);
+    expect(it.diningNote).toBeUndefined();
+    expect(it.totals.diningEstimateUsd).toBe(0);
+  });
+
   it("restaurants follow cuisine, budget and kids", () => {
     const italian = rankRestaurants(
       { ...base, dining: { skip: false, cuisines: ["italian"], budgetPerMeal: 60 } },

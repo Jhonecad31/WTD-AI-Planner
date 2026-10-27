@@ -31,6 +31,7 @@ import { draftRestDates, useWizard } from "./wizard-state";
 import { AlternativesPanel, TourOptions, editItinerary, reasonText } from "./itinerary-editor";
 import { WeatherChip } from "./weather";
 import { seasonNotes } from "@/lib/weather";
+import { TripSummary } from "./trip-summary";
 import { ScrollHint } from "./scroll-hint";
 import { TripSummary } from "./trip-summary";
 

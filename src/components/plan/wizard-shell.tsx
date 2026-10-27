@@ -13,7 +13,10 @@ import {
   UsersIcon,
 } from "@/components/ui/icons";
 import { ScrollHint } from "./scroll-hint";
+<<<<<<< HEAD
 import { STEP_PHOTOS } from "@/content/step-photos";
+=======
+>>>>>>> remotes/origin/tristan
 import { STEPS, type StepId } from "./wizard-state";
 
 const ICONS: Record<StepId, ReactNode> = {
