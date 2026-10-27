@@ -33,7 +33,7 @@ async function loadHero(): Promise<string | null> {
 export default async function LandingPage() {
   const t = await getTranslations("landing");
   const hero = await loadHero();
-  const steps = ["curated", "experts", "tailored", "allInOne"] as const;
+  const steps = ["1", "2", "3", "4"] as const;
   const stepIcons = [PlaneIcon, UsersIcon, CompassIcon, MapIcon];
   const whyIcons = [StarIcon, UsersIcon, ShieldIcon, PinIcon];
 
