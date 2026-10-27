@@ -11,16 +11,7 @@ export async function SiteHeader() {
       <div className="mx-auto flex h-18 max-w-6xl items-center justify-between gap-2 px-4 sm:gap-4 sm:px-6">
         <Link href="/" className="flex min-h-11 min-w-0 items-center gap-2">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo-PMC.png" alt="WhatToDo Logo" className="h-10 w-auto shrink-0" />
-          <span className="flex min-w-0 flex-col">
-            <span className="whitespace-nowrap text-[15px] font-bold leading-tight text-heading sm:text-lg">
-              {brand.name}
-            </span>
-            {/* Offset to the right of the title on purpose. */}
-            <span className="ml-3 whitespace-nowrap text-[10px] font-bold leading-tight text-muted sm:text-xs">
-              powered by {brand.poweredBy}
-            </span>
-          </span>
+          <img width="80%" src="/logo-PMC.svg" alt="WhatToDo Logo" className="h-16 w-auto shrink-0" />
         </Link>
         <nav className="flex shrink-0 items-center gap-3">
           <LocaleSwitch current={locale} />
