@@ -1,4 +1,4 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { brand } from "@/content/brand";
 import { BEST_RATED, BEST_RATED_ALL_URL } from "@/content/best-rated";
@@ -37,7 +37,7 @@ async function loadHero(): Promise<string | null> {
 export default async function LandingPage() {
   const t = await getTranslations("landing");
   const locale = await getLocale();
-  const { hero, featured } = await loadCatalog();
+  const hero = await loadHero();
   const steps = ["1", "2", "3", "4"] as const;
   const stepIcons = [PlaneIcon, UsersIcon, CompassIcon, MapIcon];
   const whyBenefits = [

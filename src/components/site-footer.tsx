@@ -37,16 +37,7 @@ export function SiteFooter() {
         <div className="md:col-span-2 lg:col-span-1">
           <Link href="/" className="inline-flex items-center gap-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-PMC.png" alt="WhatToDo Logo" className="h-14 w-auto shrink-0" />
-            <span className="flex flex-col">
-              <span className="text-2xl font-bold leading-tight text-heading sm:text-[1.75rem]">
-                {brand.name}
-              </span>
-              {/* Offset to the right of the title on purpose, as in the navbar. */}
-              <span className="ml-4 text-xs font-bold leading-tight text-muted sm:text-sm">
-                powered by {brand.poweredBy}
-              </span>
-            </span>
+            <img src="/logo-PMC.svg" alt="WhatToDo Logo" className="h-20 w-auto shrink-0" />
           </Link>
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-brand-ink/65">{t("tagline")}</p>
         </div>

@@ -283,7 +283,7 @@ export function CustomerTripEmail({
               {es ? "Itinerario por" : "Itinerary by"}
             </Text>
             <Img
-              src={`${appUrl}/logo-PMC.png`}
+              src={`${appUrl}/logo-PMC.svg`}
               alt={brand.poweredBy}
               width={120}
               style={{ margin: "6px auto 0" }}

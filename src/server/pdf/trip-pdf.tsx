@@ -483,7 +483,7 @@ export async function renderTripPdf(args: {
   request: TripRequest;
   itinerary: Itinerary;
 }): Promise<Uint8Array> {
-  const logoPath = path.join(process.cwd(), "public", "logo-PMC.png");
+  const logoPath = path.join(process.cwd(), "public", "logo-PMC.svg");
   const heroImage =
     args.itinerary.days.flatMap((d) => d.items).find((i) => i.kind === "tour" && i.imageUrl)
       ?.imageUrl ?? null;

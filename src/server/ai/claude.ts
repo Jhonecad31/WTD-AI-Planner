@@ -136,7 +136,7 @@ export function buildPrompt(
   avoid: number[] = [],
 ) {
   const rainy = Object.values(weather).some((w) => w.kind === "rainy");
-  const { tours, transfers } = pickCandidates(request, products, { rainy, avoid, avoid });
+  const { tours, transfers } = pickCandidates(request, products, { rainy, avoid });
   const days = planDays(request).map((d) => {
     const w = weather[d.date];
     return w
@@ -160,11 +160,6 @@ You build day-by-day itineraries using ONLY the products in the candidate list. 
 ${request.preferPrivate ? "- The traveler prefers PRIVATE tours: when similar options exist, pick the one with Private/Privado in the title.\n" : ""}- If the traveler asked for transfers, place the transfer item on the arrival day and/or departure day using a transfer bokunId, startTime null.
 - Each item note: one short, warm, specific sentence (max ~20 words) in ${lang} about why it fits this group. Day titles short (2-5 words), in ${lang}. Summary: one sentence in ${lang}, max 25 words.
 - Weather: each skeleton day may carry weather {kind, source}. On every "rainy" day, in date order, use a not-yet-used candidate with rainyFavorite=true (WhatToDo's Extreme Adventuring and Cenote Adventuring parks) as long as it fits budget and ages. This rule outranks interest coverage and ratings. Only when no unused rainyFavorite candidate fits, prefer cenotes, ruins, food or other non-sea tours. On "rainy" or "windy" days never pick a tour with seaTour=true when another option fits. Save rainyFavorite tours for rainy days when the trip has any. Mention the weather in that day's note only when it changed the choice. "typical" weather is a monthly average, not a forecast: do not change plans because of it.
-- Output every day in the skeleton, in order, even if a day has only a free item.${
-    avoid.length
-      ? `\n- The traveler asked for ANOTHER VERSION of the trip: do not use these bokunIds (from the previous version) unless no other candidate fits: ${avoid.join(", ")}. Choose a noticeably different set of experiences.`
-      : ""
-  }`;
 - Output every day in the skeleton, in order, even if a day has only a free item.${
     avoid.length
       ? `\n- The traveler asked for ANOTHER VERSION of the trip: do not use these bokunIds (from the previous version) unless no other candidate fits: ${avoid.join(", ")}. Choose a noticeably different set of experiences.`
@@ -204,7 +199,6 @@ export async function generateWithClaude(
     weather?: Record<string, DayWeather>;
     ratings?: Record<number, TripAdvisorRating>;
     avoid?: number[];
-    avoid?: number[];
   } = {},
 ): Promise<{ draft: DraftItinerary; usage: Anthropic.Usage }> {
   const e = env();
@@ -216,7 +210,7 @@ export async function generateWithClaude(
         ? { "anthropic-workspace-id": e.ANTHROPIC_WORKSPACE_ID }
         : undefined,
     });
-  const { system, user } = buildPrompt(request, products, opts.weather, opts.ratings, opts.avoid, opts.avoid);
+  const { system, user } = buildPrompt(request, products, opts.weather, opts.ratings, opts.avoid);
 
   const response = await client.messages.parse({
     model: e.ANTHROPIC_MODEL,
