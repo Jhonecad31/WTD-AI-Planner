@@ -1,6 +1,6 @@
 {
   "meta": {
-    "title": "My Cancun Plan AI · Your ideal trip starts here",
+    "title": "Plan my Cancun · Your ideal trip starts here",
     "description": "The official AI planner of WhatToDoInCancun.com: 500+ activities, restaurants and excursions, built by local experts with 35+ years in Cancún. Free."
   },
   "common": {
@@ -14,9 +14,18 @@
     "loading": "Loading…",
     "language": "Language"
   },
+    "footer": {
+      "tagline": "Your smart trip planner to discover the best of Cancun and the Riviera Maya.",
+      "contact": "Contact",
+      "follow": "Follow us",
+      "email": "Email",
+      "phone": "Phone",
+      "website": "Website",
+      "rights": "All rights reserved."
+    },
   "landing": {
-    "title": "Your ideal trip starts here.",
-    "subtitle": "The official AI planner of WhatToDoInCancun.com.",
+    "title": "Discover, explore, and experience Cancun your way",
+    "subtitle": "Create your personalized itinerary with the help of AI and discover the best Cancun experiences based on your interests, preferences, and travel style.",
     "cta": "Create my itinerary",
     "quick": {
       "arrival": "Arrival",
@@ -28,74 +37,94 @@
     "howTitle": "How it works",
     "steps": {
       "1": {
-        "title": "Your dates",
-        "body": "Tell us the day you arrive and the day you leave so every day counts."
+        "title": "Choose Your Dates",
+        "body": "Tell us when you'll be visiting Cancun so we can plan the best experiences throughout your stay"
       },
       "2": {
-        "title": "Your crew & budget",
-        "body": "Adults, kids and their ages, plus a budget per person."
+        "title": "Personalize Your Trip",
+        "body": "Share how many people are traveling with you and your budget per person."
       },
       "3": {
-        "title": "What you love",
-        "body": "Adventure, culture, food, beach, party… and chill days if you want them."
+        "title": "Select Your Interests",
+        "body": "Choose from adventure, culture, food, beaches, and other experiences you'd love to enjoy"
       },
       "4": {
-        "title": "Your itinerary",
-        "body": "A beautiful PDF in your inbox and a specialist ready to book it."
+        "title": "Get Your Itinerary",
+        "body": "Receive a personalized travel plan in PDF format and assistance booking your experiences with a WhatToDo In Cancun specialist"
       }
     },
-    "whyTitle": "Why plan with WhatToDo",
-    "why": {
-      "1": {
-        "title": "Real prices, no surprises",
-        "body": "Every price comes straight from our booking system, in USD."
+    "whyPlan": {
+      "eyebrow": "Your trip in good hands",
+      "title": "Why plan with {brand}?",
+      "body": "We combine smart technology with local expertise to help you discover Cancun and build a trip that's made for you.",
+      "benefits": {
+        "curated": {
+          "title": "Handpicked experiences",
+          "body": "Tours and activities chosen by our local team."
+        },
+        "experts": {
+          "title": "Destination experts",
+          "body": "Over 35 years of experience in Cancun and the Riviera Maya."
+        },
+        "tailored": {
+          "title": "Tailor-made itineraries",
+          "body": "Recommendations based on your interests, budget and travel style."
+        },
+        "allInOne": {
+          "title": "Everything in one place",
+          "body": "Activities, transportation, restaurants and more, so planning your trip is easy and complete."
+        }
       },
-      "2": {
-        "title": "A human books it",
-        "body": "A Cancun travel specialist confirms every detail with you by email or phone."
+      "trustTitle": "The {brand} experience behind every trip",
+      "trustBody": "Thousands of travelers trust us every year to discover everything that makes Cancun and the Riviera Maya special.",
+      "trustTitleShort": "Backed by the {brand} team",
+      "trustBodyShort": "Thousands of travelers trust our expertise to discover the best of Cancun.",
+      "stats": {
+        "years": "years in business",
+        "travelers": "travelers served",
+        "rating": "average rating",
+        "tours": "tours & experiences"
       },
-      "3": {
-        "title": "Family-safe picks",
-        "body": "Age limits are checked for every traveler, so kids never get a nightclub."
-      },
-      "4": {
-        "title": "Pickup included",
-        "body": "Hotel pickup and airport transfers planned around your travel dates."
-      }
+      "ratingLabel": "{value} out of 5"
     },
-    "trustTitle": "Backed by the team behind WhatToDo In Cancun",
-    "trustBody": "Thousands of travelers book with WhatToDo every year. Your plan uses the same tours, operators and prices.",
-    "awardsTitle": "Awards & recognition",
-    "partnersTitle": "Our partners & operators",
-    "finalTitle": "Ready when you are",
-    "finalBody": "Build your itinerary now and have it in your inbox in minutes.",
-    "sisterSites": "Also planning Mexico City or Madrid?",
-    "award": "World Travel Award: Mexico's Travel Agency 2026 Winner",
+    
     "benefits": {
       "1": {
-        "title": "<big>500</big>+ options",
-        "body": "Activities, restaurants and excursions."
+        "title": "More than <big>100</big>+ experiences to discover",
+        "body": "Tours, adventures, and hidden gems in Cancun"
       },
       "2": {
-        "title": "Local experts",
-        "body": "35+ years in tourism in Cancún and the Riviera Maya."
+        "title": "Local Cancun Experts",
+        "body": "Experiences curated by destination professionals"
       },
       "3": {
-        "title": "Top rated",
-        "body": "Recommendations kept up to date with Tripadvisor reviews."
+        "title": "A Trip Made Just for You",
+        "body": "Personalized recommendations based on your interests and travel style"
       }
     },
-    "freeTitle": "Free Planner. Why is it free?",
+    "bestRated": {
+      "title": "Best rated activities",
+      "seeAll": "See all tours",
+      "items": {
+        "atv": "ATV Jungle Adventure, Zipline, Cenote & Tequila Tasting",
+        "chichen": "Chichen Itza Classic Cenote & Valladolid Tour",
+        "snorkel": "Puerto Morelos Reef Snorkel Experience",
+        "cenotes": "Semi Private Cenotes Experience",
+        "cocoBongo": "Coco Bongo Bar Disco & Show"
+      }
+    },
+    "freeTitle": "Your free experience planner",
     "whyFree": {
       "1": {
-        "title": "You book. We earn.",
-        "body": "We earn a commission when you book tours through us. If you love your itinerary, give us the opportunity to book it for you!"
+        "title": "Your adventure, our commitment",
+        "body": "Plan your trip your way. If you choose to book your experiences with us, you're helping us keep creating helpful tools for travelers like you",
+         "optional": "Optional"
       },
       "2": {
-        "title": "Great planning. Unforgettable memories.",
-        "body": "We believe a well-planned trip creates unforgettable experiences that make you want to return to Cancún and the Riviera Maya."
-      },
-      "optional": "(Optional)"
+        "title": "Less time planning, more unforgettable moments",
+        "body": "Make the most of every moment in Cancun. We'll help you organize your days with experiences tailored to your interests and travel style"
+      }
+      
     }
   },
   "wizard": {
@@ -103,7 +132,7 @@
     "stepOf": "Step {current} of {total}",
     "steps": {
       "flights": "Flights",
-      "stay": "Stay & transfers",
+      "stay": "Hotel & transfers",
       "travelers": "Travelers",
       "preferences": "Preferences",
       "itinerary": "Itinerary",
@@ -129,11 +158,11 @@
       }
     },
     "stay": {
-      "title": "Where are you staying?",
-      "zone": "Which area do you want to stay in?",
+      "title": "Where will you be staying during your trip?",
+      "zone": "Which area would you like to stay in?",
       "hotel": "Your hotel",
-      "transfersTitle": "Airport transfers",
-      "transfersBody": "Private, with WhatToDo.",
+      "transfersTitle": "Airport transportation",
+      "transfersBody": "Do you need airport transfers?",
       "arrivalTransfer": "Airport to hotel",
       "departureTransfer": "Hotel to airport",
       "luxury": "Luxury vehicle",
@@ -156,7 +185,7 @@
         "tulum": "1 h 40 min"
       },
       "noHotel": "I don't have a hotel yet",
-      "noHotelNote": "We'll use the area and a specialist helps you find a hotel.",
+      "noHotelNote": "We'll use the area as a reference and a specialist helps you find a hotel.",
       "hotelPlaceholder": "Search your hotel or type its name",
       "noTransfers": "I don't need transfers",
       "hotelSearching": "Searching hotels…",
@@ -166,15 +195,15 @@
       "haveHotel": "I have a hotel"
     },
     "travelers": {
-      "title": "Who's coming?",
-      "subtitle": "Ages set the price.",
+      "title": "How many travelers will be part of this adventure??",
+      "subtitle": "Tell us how many adults and children are traveling so we can find the best experiences for everyone.",
       "adults": "Adults (13+)",
       "children": "Children (0–12)",
       "childAge": "Age of child {n}",
       "names": "Names",
       "namesHint": "Optional, for your PDF",
       "traveler": "Traveler {n}",
-      "leadName": "Your name",
+      "leadName": "Please enter the name of the lead traveler",
       "agesTitle": "How old are the kids?",
       "titleLabel": "Title",
       "titles": {
@@ -183,8 +212,8 @@
       }
     },
     "preferences": {
-      "title": "What’s your travel style?",
-      "subtitle": "Pick several.",
+      "title": "What interests define your travel style?",
+      "subtitle": "Select your interests and preferences to discover experiences that match your travel style. You can choose more than one.",
       "interests": {
         "adventure": "Adventure",
         "cultural": "Culture & Mayan ruins",
@@ -207,7 +236,7 @@
       "notes": "Anything else?",
       "generate": "Build my itinerary",
       "budgetTitle": "Budget per person",
-      "budgetBody": "Tours and transfers, whole trip.",
+      "budgetBody": "For tours and transfers throughout your stay. Restaurants are extra.",
       "budgetTotal": "About {total} for {count, plural, one {# traveler} other {# travelers}}",
       "private": "Private tours",
       "tourDaysTitle": "Tour days",
@@ -221,7 +250,7 @@
       "kidsPartyTitle": "Traveling with kids",
       "kidsParty": "Coco Bongo and night clubs don't admit minors; we'll plan other fun nights for everyone.",
       "pace": {
-        "title": "What pace do you want?",
+        "title": "What pace would you like for your trip?",
         "relaxed": "Relaxed",
         "balanced": "Balanced",
         "intense": "Packed",
@@ -367,7 +396,7 @@
       }
     },
     "restaurants": {
-      "title": "Let’s plan your dinners",
+      "title": "What are your dining preferences?",
       "any": "Anything",
       "cuisines": {
         "mexican": "Mexican",

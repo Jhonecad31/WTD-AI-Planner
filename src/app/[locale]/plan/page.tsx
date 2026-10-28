@@ -1,6 +1,5 @@
 import { getTranslations } from "next-intl/server";
 import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
 import { Wizard } from "@/components/plan/wizard";
 import { WizardProvider } from "@/components/plan/wizard-state";
 import { getPlannerProducts, hasBokunCredentials } from "@/server/catalog/service";
@@ -36,7 +35,6 @@ export default async function PlanPage() {
           <Wizard sidebarImage={image} />
         </WizardProvider>
       </main>
-      <SiteFooter />
     </>
   );
 }

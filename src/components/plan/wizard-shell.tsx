@@ -13,6 +13,7 @@ import {
   UsersIcon,
 } from "@/components/ui/icons";
 import { ScrollHint } from "./scroll-hint";
+import { STEP_PHOTOS } from "@/content/step-photos";
 import { STEPS, type StepId } from "./wizard-state";
 
 const ICONS: Record<StepId, ReactNode> = {
@@ -58,6 +59,25 @@ export function WizardShell({
             ) : (
               <div className="h-full w-full bg-primary" />
             )}
+            <div className="h-full w-full bg-primary" />
+            {/* One photo per step (src/content/step-photos.ts), cross-fading as the traveler advances. */}
+            {STEPS.map((s, i) => {
+              const src = STEP_PHOTOS[s] || sidebarImage;
+              if (!src) return null;
+              return (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  key={s}
+                  src={src}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 motion-reduce:transition-none ${
+                    i === current ? "opacity-100" : "opacity-0"
+                  }`}
+                />
+              );
+            })}
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
             <div className="absolute bottom-3 left-3 right-3">
               <p className="text-base font-bold leading-tight text-white">{t("title")}</p>

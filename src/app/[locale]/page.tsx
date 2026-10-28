@@ -127,7 +127,7 @@ export default async function LandingPage() {
                   <p className="mt-1 text-brand-ink/70">{t(`whyFree.${k}.body`)}</p>
                   {k === "1" ? (
                     <p className="mt-2 text-sm font-semibold text-primary">
-                      {t("whyFree.optional")}
+                      {t(`whyFree.${k}.optional`)}
                     </p>
                   ) : null}
                 </div>
@@ -182,29 +182,36 @@ export default async function LandingPage() {
         <section className="bg-white">
           <div className="mx-auto grid max-w-6xl gap-12 px-4 py-16 sm:px-6 sm:py-24 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
             <div>
-              <h2 className="text-3xl font-bold sm:text-4xl">{t("whyTitle")}</h2>
+              <h2 className="text-3xl font-bold sm:text-4xl">{t("whyPlan.title", { brand: "WhatToDo" })}</h2>
               <ul className="mt-8 grid gap-6 sm:grid-cols-2">
-                {(["1", "2", "3", "4"] as const).map((n, i) => {
-                  const Icon = whyIcons[i];
-                  return (
-                    <li key={n} className="flex gap-4">
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-soft text-primary">
-                        <Icon size={20} />
-                      </span>
-                      <div>
-                        <h3 className="font-bold">{t(`why.${n}.title`)}</h3>
-                        <p className="mt-1 text-sm leading-relaxed text-brand-ink/70">
-                          {t(`why.${n}.body`)}
-                        </p>
-                      </div>
-                    </li>
-                  );
-                })}
+                {(
+  ["curated", "experts", "tailored", "allInOne"] as const
+).map((key, i) => {
+  const Icon = whyIcons[i];
+
+  return (
+    <li key={key} className="flex gap-4">
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-soft text-primary">
+        <Icon size={20} />
+      </span>
+
+      <div>
+        <h3 className="font-bold">
+          {t(`whyPlan.benefits.${key}.title`)}
+        </h3>
+
+        <p className="mt-1 text-sm leading-relaxed text-brand-ink/70">
+          {t(`whyPlan.benefits.${key}.body`)}
+        </p>
+      </div>
+    </li>
+  );
+})}
               </ul>
             </div>
             <div className="rounded-[20px] bg-primary p-7 text-white shadow-card sm:p-9">
-              <h2 className="text-2xl font-bold sm:text-3xl">{t("trustTitle")}</h2>
-              <p className="mt-3 text-white/85">{t("trustBody")}</p>
+              <h2 className="text-2xl font-bold sm:text-3xl">{t("whyPlan.trustTitle", { brand: "WhatToDo" })}</h2>
+              <p className="mt-3 text-white/85"> {t("whyPlan.trustBody")}</p>
               <p className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm text-white/85">
                 {brand.stats.map((s) => (
                   <span key={s.label} className="inline-flex items-baseline gap-1.5">
