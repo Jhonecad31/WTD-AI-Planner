@@ -4,7 +4,6 @@ import type { DayWeather, Itinerary, ItineraryDay, ItineraryItem } from "@/lib/i
 import { fitsAges, priceProductForParty, round2 } from "./pricing";
 import { planDays, type DaySlot } from "@/lib/plan-days";
 import { isPrivateTitle } from "@/lib/item-meta";
-import { variety, type Variety } from "./similarity";
 
 export { planDays, type DaySlot } from "@/lib/plan-days";
 
@@ -224,7 +223,6 @@ export function buildRulesItinerary(inputs: PlanInputs): Itinerary {
   const used = new Set<number>();
   const coveredInterests = new Set<Interest>();
   const days: ItineraryDay[] = [];
-  const chosen: CatalogProduct[] = [];
 
   // Keep Extreme Adventure for rainy days when the forecast shows any.
   const rainyDaysAhead = slots.filter((x) => inputs.weather?.[x.date]?.kind === "rainy").length;
@@ -253,51 +251,37 @@ export function buildRulesItinerary(inputs: PlanInputs): Itinerary {
         fitsDay(p, slot, request) &&
         inputs.isAvailable?.(p.bokunId, slot.date) !== false &&
         priceProductForParty(p, request.travelers).priceTotalUsd <= remaining;
-      // Rainy days go to WhatToDo's parks, unless that repeats the same kind of day.
-      const rainyPick =
-        w?.kind === "rainy"
-          ? rainyPool.find((p) => variety(p, chosen) >= 1 && fitsHere(p))
-          : undefined;
-      // Variety first: a tour unlike the trip's other days, then one with a different main
-      // kind, and only when nothing else fits, the same kind of day again.
-      const pickWith = (min: Variety) => {
-        const varied = (p: CatalogProduct) => variety(p, chosen) >= min;
-        return (
-          candidates.find(({ p }) => {
-            if (!varied(p)) return false;
-            if (used.has(p.bokunId)) return false;
-            if (badWeather && isSeaTour(p)) return false;
-            if (!partyOk && isParty(p)) return false;
-            if (rainyDaysAhead > 0 && w?.kind !== "rainy" && isRainyFavorite(p)) return false;
-            if (!fitsDay(p, slot, request)) return false;
-            const avail = inputs.isAvailable?.(p.bokunId, slot.date);
-            if (avail === false) return false;
-            const cost = priceProductForParty(p, request.travelers).priceTotalUsd;
-            if (cost > remaining) return false;
-            const fresh = p.interests.some(
-              (i) => request.interests.includes(i) && !coveredInterests.has(i),
-            );
-            return fresh || coverable.every((i) => coveredInterests.has(i));
-          }) ??
-          candidates.find(({ p }) => varied(p) && !(badWeather && isSeaTour(p)) && fitsHere(p)) ??
-          candidates.find(({ p }) => {
-            if (!varied(p)) return false;
-            if (used.has(p.bokunId) || !fitsDay(p, slot, request)) return false;
-            if (!partyOk && isParty(p)) return false;
-            if (inputs.isAvailable?.(p.bokunId, slot.date) === false) return false;
-            return priceProductForParty(p, request.travelers).priceTotalUsd <= budgetTotal - spent;
-          })
-        );
-      };
+      const rainyPick = w?.kind === "rainy" ? rainyPool.find((p) => fitsHere(p)) : undefined;
       const pick =
-        (rainyPick ? { p: rainyPick } : undefined) ?? pickWith(2) ?? pickWith(1) ?? pickWith(0);
+        (rainyPick ? { p: rainyPick } : undefined) ??
+        candidates.find(({ p }) => {
+          if (used.has(p.bokunId)) return false;
+          if (badWeather && isSeaTour(p)) return false;
+          if (!partyOk && isParty(p)) return false;
+          if (rainyDaysAhead > 0 && w?.kind !== "rainy" && isRainyFavorite(p)) return false;
+          if (!fitsDay(p, slot, request)) return false;
+          const avail = inputs.isAvailable?.(p.bokunId, slot.date);
+          if (avail === false) return false;
+          const cost = priceProductForParty(p, request.travelers).priceTotalUsd;
+          if (cost > remaining) return false;
+          const fresh = p.interests.some(
+            (i) => request.interests.includes(i) && !coveredInterests.has(i),
+          );
+          return fresh || coverable.every((i) => coveredInterests.has(i));
+        }) ??
+        candidates.find(({ p }) => !(badWeather && isSeaTour(p)) && fitsHere(p)) ??
+        candidates.find(({ p }) => {
+          if (used.has(p.bokunId) || !fitsDay(p, slot, request)) return false;
+          if (!partyOk && isParty(p)) return false;
+          if (inputs.isAvailable?.(p.bokunId, slot.date) === false) return false;
+          return priceProductForParty(p, request.travelers).priceTotalUsd <= budgetTotal - spent;
+        });
 
       if (pick) {
         const it = toItem(pick.p, request, slot);
         items.push(it);
         spent += it.priceTotalUsd;
         used.add(pick.p.bokunId);
-        chosen.push(pick.p);
         pick.p.interests.forEach((i) => request.interests.includes(i) && coveredInterests.add(i));
       } else if (slot.label === "full") {
         items.push({

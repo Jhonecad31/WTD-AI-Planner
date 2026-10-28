@@ -11,7 +11,6 @@ import { draftToItinerary, generateWithClaude } from "./claude";
 import { validateAndRepair } from "./validate";
 import { enrichItinerary } from "./enrich";
 import { fitBudget } from "./budget";
-import { diversify } from "./diversify";
 import { verifyAvailability } from "./availability-check";
 import { getAvailability } from "@/server/catalog/availability";
 import { getRatings, withTripAdvisor } from "@/server/tripadvisor";
@@ -43,9 +42,7 @@ export async function generateItinerary(
   // Weather goes on first so rainy days swap the beach for shopping.
   // The engine is only asked to respect the budget: enforce it before the seats check,
   // so any tour swapped in here is verified in Bokun too.
-  // Same for variety: no two days of the same kind of experience, whatever the engine chose.
-  const varied = diversify(withWeather(result.itinerary, weather), request, products, opts.avoid);
-  const withinBudget = fitBudget(varied, request, products);
+  const withinBudget = fitBudget(withWeather(result.itinerary, weather), request, products);
   const enriched = enrichItinerary(withinBudget, request, products, {
     ratings,
   });
