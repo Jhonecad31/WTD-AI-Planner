@@ -22,6 +22,7 @@ import {
   transferFor,
 } from "./rules";
 import { fitsAges, priceProductForParty } from "./pricing";
+import { experienceKinds } from "./similarity";
 
 /**
  * Claude engine. Claude only *chooses and explains*; it never invents products
@@ -125,6 +126,8 @@ function compact(
       ? { rating: ratings[p.bokunId].rating, reviews: ratings[p.bokunId].reviews }
       : null,
     partyNight: isParty(p),
+    // Kind of experience; the first one is the main kind.
+    kinds: experienceKinds(p),
   };
 }
 
@@ -154,6 +157,7 @@ You build day-by-day itineraries using ONLY the products in the candidate list. 
 - "arrival" and "departure" days never get a tour: only the transfer item when the traveler asked for it. "chill" days get a single {kind:"free"} item and nothing else.
 - A tour with partyNight=true (night life) goes ONLY on a "full" day whose next day in the skeleton is "chill" or "departure", so a tour day always follows a dinner or rest night. If no such day is left, do not use party tours.
 - Respect the party budget: sum of partyPriceUsd over chosen items must be <= ${budgetTotal} USD (${request.budgetPerPerson} per person x ${request.travelers.length}).
+- VARIETY: never pick two tours with the same main kind (the first value in "kinds"), and prefer tours whose kinds don't overlap with the tours already chosen (no second cenote, ATV, park or catamaran day). This rule outranks interest coverage and ratings.
 - Cover every requested interest that has tours at least once before repeating an interest (shopping has no tours). Prefer higher rating/reviews when similar (use the tripadvisor rating when present).
 - When ratings are null, do not fall back on how famous a tour is: choose by fit with this group (interests, ages, budget, pace) and vary the kind of experience across days. At most one partyNight tour per trip, unless "party" is among the interests and the trip has 5+ full days.
 - Children: check minAge against the youngest traveler. With kids under 12, avoid tours of ${LONG_TOUR_MINUTES / 60}+ hours (e.g. Chichén Itzá day trips) unless nothing else fits.

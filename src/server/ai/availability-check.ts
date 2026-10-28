@@ -2,6 +2,7 @@ import type { CatalogProduct } from "@/server/catalog/types";
 import type { TripRequest } from "@/lib/trip-schema";
 import type { Itinerary, ItineraryItem } from "@/lib/itinerary-schema";
 import { fitsAges, priceProductForParty } from "./pricing";
+import { variety } from "./similarity";
 import {
   fitsDay,
   hasYoungKids,
@@ -152,6 +153,7 @@ export async function verifyAvailability(
       .filter((i) => (i.kind === "tour" || i.kind === "transfer") && i !== item)
       .reduce((s, i) => s + i.priceTotalUsd, 0);
     const slot = slots.find((s) => s.date === d.date);
+    const otherTours = days.flatMap((x) => x.items).filter((i) => i.kind === "tour" && i !== item);
     const partyOk = partyNightOk(days, index);
     const badWeather = !!d.weather && d.weather.kind !== "good";
     const candidates = products
@@ -175,7 +177,9 @@ export async function verifyAvailability(
         }),
       }))
       .filter((x) => x.score > 0)
-      .sort((a, b) => b.score - a.score)
+      // A replacement unlike the trip's other days first, then by fit.
+      .map((x) => ({ ...x, variety: variety(x.p, otherTours) }))
+      .sort((a, b) => b.variety - a.variety || b.score - a.score)
       .slice(0, MAX_ALTERNATIVES_CHECKED);
 
     let replacement: { p: CatalogProduct; check: DayCheck } | null = null;

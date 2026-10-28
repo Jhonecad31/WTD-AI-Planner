@@ -11,20 +11,7 @@ import {
   scoreProduct,
   toItem,
 } from "./rules";
-
-/** Kinds of experience a title names, to avoid two days of the same thing. */
-const EXPERIENCE_KINDS: [string, RegExp][] = [
-  ["atv", /\batv\b|buggy|buggies|cuatrimoto/i],
-  ["zipline", /zip-?line|tirolesa/i],
-  ["cenote", /cenote/i],
-  ["ruins", /ruin|ruinas|chich[eé]n|cob[aá]|tulum|ek balam/i],
-  ["sea", /catamar[aá]n|sail|velero|yacht|yate|snorkel|isla mujeres/i],
-  ["park", /xcaret|xel-?h[aá]|xplor|xenses|xavage/i],
-  ["dolphin", /dolphin|delf[ií]n/i],
-];
-function experienceKinds(title: string): string[] {
-  return EXPERIENCE_KINDS.filter(([, re]) => re.test(title)).map(([k]) => k);
-}
+import { experienceKinds } from "./similarity";
 
 /**
  * Budget guard after the engine (Claude is only *asked* to respect the budget).
@@ -77,7 +64,7 @@ export function fitBudget(
       const otherKinds = new Set(
         tours()
           .filter((t) => t.item !== item)
-          .flatMap((t) => experienceKinds(t.item.title)),
+          .flatMap((t) => experienceKinds(t.item)),
       );
       const cheaper = products
         .filter(
@@ -99,7 +86,7 @@ export function fitBudget(
           // Keeps what would otherwise vanish from the trip (e.g. the only ruins day).
           keepsLost: Number(p.interests.some((i) => lost.includes(i))),
           // A second ATV or cenote day reads as a repeat, whatever the interest tags say.
-          fresh: Number(!experienceKinds(p.title).some((k) => otherKinds.has(k))),
+          fresh: Number(!experienceKinds(p).some((k) => otherKinds.has(k))),
           // Same kind of day as the tour it replaces (ruins for ruins, adventure for adventure).
           sameTheme: Number(p.interests.some((i) => original?.interests.includes(i))),
         }))
