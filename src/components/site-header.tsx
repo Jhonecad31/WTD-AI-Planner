@@ -11,7 +11,7 @@ export async function SiteHeader() {
       <div className="mx-auto flex h-18 max-w-6xl items-center justify-between gap-2 px-4 sm:gap-4 sm:px-6">
         <Link href="/" className="flex min-h-11 min-w-0 items-center gap-2">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img width="80%" src="/logo-PMC.svg" alt="WhatToDo Logo" className="h-16 w-auto shrink-0" />
+          <img src="/logo-PMC2.svg" alt="WhatToDo Logo" className="h-16 w-auto shrink-0" />
         </Link>
         <nav className="flex shrink-0 items-center gap-3">
           <LocaleSwitch current={locale} />

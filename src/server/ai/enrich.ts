@@ -388,10 +388,11 @@ export function enrichItinerary(
     introWarnings: kidWarnings(request, days),
     weatherNote: rainyTripNote(days, locale),
     diningNote:
-      restaurants.length || skipDining
-        ? undefined
-        : es
-          ? "Todavía no tenemos restaurantes recomendados en tu zona; tu especialista te sugerirá los mejores."
-          : "We don't have restaurant picks in your area yet; your specialist will suggest the best ones.",
+     
+      restaurants.length || skipDining || skipDining
+          ? undefined
+          : es
+            ? "Todavía no tenemos restaurantes recomendados en tu zona; tu especialista te sugerirá los mejores."
+            : "We don't have restaurant picks in your area yet; your specialist will suggest the best ones.",
   };
 }

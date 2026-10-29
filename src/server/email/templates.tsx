@@ -284,6 +284,7 @@ export function CustomerTripEmail({
             </Text>
             <Img
               src={`${appUrl}/logo-PMC.svg`}
+              alt={brand.poweredBy}
               width={120}
               style={{ margin: "6px auto 0" }}
             />

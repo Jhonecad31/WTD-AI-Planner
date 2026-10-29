@@ -244,7 +244,6 @@ Todas las llaves se guardan solo como variables de entorno (`.env` en local, sec
   - derecho de borrado desde el panel
   - los menores solo se registran por edad, sin nombres obligatorios
 - Dependabot y `npm audit` en CI. Antes de lanzar se corre `/security-review`.
-
 ---
 
 ## Estructura del repo (nuevo)
