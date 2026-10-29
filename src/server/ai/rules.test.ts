@@ -2,8 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { CatalogProduct } from "@/server/catalog/types";
 import type { TripRequest } from "@/lib/trip-schema";
 import { ItinerarySchema } from "@/lib/itinerary-schema";
-import { buildRulesItinerary, isRainyFavorite, isSeaTour, planDays, transferFor, transferFor } from "./rules";
-import { validateAndRepair } from "./validate";
+import { buildRulesItinerary, isRainyFavorite, isSeaTour, planDays, transferFor } from "./rules";
 import { validateAndRepair } from "./validate";
 import type { DayWeather } from "@/lib/itinerary-schema";
 import { categoryForAge, fitsAges, priceProductForParty } from "./pricing";
@@ -104,7 +103,7 @@ const request: TripRequest = {
   outbound: { date: "2026-12-15", time: "16:00", source: "manual" },
   hotel: { noHotel: false, zone: "cancun" },
   preferPrivate: false,
-  dining: { skip: false, skip: false, cuisines: [], budgetPerMeal: 40 },
+  dining: { skip: false, cuisines: [], budgetPerMeal: 40 },
   transfers: { arrival: true, departure: true, luxury: false },
   travelers: [{ age: 30 }, { age: 30 }, { age: 8 }],
   interests: ["adventure", "cultural", "water"],
