@@ -122,7 +122,8 @@
     "whyFree": {
       "1": {
         "title": "Tu aventura, nuestro compromiso.",
-        "body": "Planea tu viaje con libertad. Si decides reservar tus experiencias con nosotros, nos ayudas a seguir creando herramientas para viajeros como tú."
+        "body": "Planea tu viaje con libertad. Si decides reservar tus experiencias con nosotros, nos ayudas a seguir creando herramientas para viajeros como tú.",
+        "optional": "Opcional"
       },
       "2": {
         "title": "Buena planeación. Recuerdos inolvidables.",
