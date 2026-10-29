@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
     const products = await getPlannerProducts();
     const { itinerary } = validateAndRepair(rawItinerary, trip, products);
 
-    const store = getLeadStore();
+    /*const store = getLeadStore();
     const now = new Date().toISOString();
     const lead: LeadRecord = {
       id: newId(),
@@ -68,7 +68,53 @@ export async function POST(request: NextRequest) {
     lead.pdfPath = await store.savePdf(lead.id, pdf);
     await store.updateLead(lead.id, { pdfPath: lead.pdfPath });
 
-    const emails = await sendLeadEmails(lead);
+    const emails = await sendLeadEmails(lead);*/
+
+    /*Cambiamos el bloque del llamado de la api para que no marque ese error*/
+    const store = getLeadStore();
+const isVercel = process.env.VERCEL === "1";
+
+const now = new Date().toISOString();
+
+const lead: LeadRecord = {
+  id: newId(),
+  ref: newRef(),
+  token: newToken(),
+  createdAt: now,
+  status: "new",
+  name: input.name,
+  email: input.email.toLowerCase(),
+  phone: input.phone || null,
+  locale: input.locale,
+  consentAt: now,
+  request: trip,
+  itinerary,
+  engine: engine ?? null,
+  totalUsd: itinerary.totals.totalUsd,
+  pdfPath: null,
+  notes: [],
+  bokunConfirmationCodes: [],
+};
+
+// En local seguimos guardando el lead como antes.
+// En Vercel omitimos la escritura temporal en disco.
+if (!isVercel) {
+  await store.createLead(lead);
+}
+
+const pdf = await renderTripPdf({
+  name: lead.name,
+  ref: lead.ref,
+  request: trip,
+  itinerary,
+});
+
+if (!isVercel) {
+  lead.pdfPath = await store.savePdf(lead.id, pdf);
+  await store.updateLead(lead.id, { pdfPath: lead.pdfPath });
+}
+
+const emails = await sendLeadEmails(lead, pdf);
 
     return Response.json({
       ok: true,

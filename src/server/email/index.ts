@@ -13,7 +13,13 @@ import { AgentLeadEmail, CustomerTripEmail } from "./templates";
 
 export interface EmailProvider {
   readonly name: "db" | "resend";
-  send(email: OutboundEmail): Promise<{ ok: true; id?: string } | { ok: false; error: string }>;
+  /*send(email: OutboundEmail): Promise<{ ok: true; id?: string } | { ok: false; error: string }>;*/
+  /*Actualice este export para poder generar el PDF desde memoria saltando el paso de guardarlo antes
+  para un mejor funcionamiento*/ 
+  send(
+  email: OutboundEmail,
+  pdfBytes?: Uint8Array,
+): Promise<{ ok: true; id?: string } | { ok: false; error: string }>;
 }
 
 const dbProvider: EmailProvider = {
@@ -23,7 +29,7 @@ const dbProvider: EmailProvider = {
   },
 };
 
-function resendProvider(): EmailProvider {
+/*function resendProvider(): EmailProvider {
   return {
     name: "resend",
     async send(email) {
@@ -49,6 +55,42 @@ function resendProvider(): EmailProvider {
       return { ok: true, id: data?.id };
     },
   };
+}*/
+/*Ocultamos la version de resendprovider para el envio directo de resent */
+
+function resendProvider(): EmailProvider {
+  return {
+    name: "resend",
+
+    async send(email, pdfBytes) {
+      const { Resend } = await import("resend");
+      const client = new Resend(env().RESEND_API_KEY);
+
+      const attachments = pdfBytes
+        ? [
+            {
+              filename:
+                email.attachments[0]?.filename ?? "WhatToDo-itinerary.pdf",
+              content: Buffer.from(pdfBytes),
+            },
+          ]
+        : [];
+
+      const { data, error } = await client.emails.send({
+        from: env().EMAIL_FROM,
+        to: email.to,
+        replyTo: email.replyTo ?? undefined,
+        subject: email.subject,
+        html: email.html,
+        text: email.text,
+        attachments,
+      });
+
+      if (error) return { ok: false, error: error.message };
+
+      return { ok: true, id: data?.id };
+    },
+  };
 }
 
 export function getEmailProvider(): EmailProvider {
@@ -66,7 +108,13 @@ export function pdfUrlFor(lead: LeadRecord): string {
 }
 
 /** Builds, stores and (if enabled) sends the customer + agent emails for a lead. */
-export async function sendLeadEmails(lead: LeadRecord): Promise<OutboundEmail[]> {
+/*export async function sendLeadEmails(lead: LeadRecord): Promise<OutboundEmail[]> {*/
+/*Actualizamos el promise para evitar el duplicado y mejorar el envio*/
+export async function sendLeadEmails(
+  lead: LeadRecord,
+  pdfBytes?: Uint8Array,
+): Promise<OutboundEmail[]> {
+
   const e = env();
   const provider = getEmailProvider();
   const store = getLeadStore();
@@ -129,7 +177,7 @@ export async function sendLeadEmails(lead: LeadRecord): Promise<OutboundEmail[]>
     },
   ];
 
-  for (const email of emails) {
+  /*for (const email of emails) {
     await store.enqueueEmail(email);
     if (provider.name === "db") continue; // dev: stays pending, visible in the outbox
     const result = await provider.send(email);
@@ -138,6 +186,28 @@ export async function sendLeadEmails(lead: LeadRecord): Promise<OutboundEmail[]>
       : { status: "failed", error: result.error };
     Object.assign(email, patch);
     await store.updateEmail(email.id, patch);
+  }*/
+ /*Con esto evitamos archivos locales y todo se envia directo con almacenamiento temporal0*/
+ for (const email of emails) {
+  // En desarrollo conservamos el comportamiento actual del outbox.
+  // En Vercel no escribimos archivos locales.
+  if (process.env.VERCEL !== "1") {
+    await store.enqueueEmail(email);
   }
+
+  if (provider.name === "db") continue;
+
+  const result = await provider.send(email, pdfBytes);
+
+  const patch: Partial<OutboundEmail> = result.ok
+    ? { status: "sent", sentAt: new Date().toISOString() }
+    : { status: "failed", error: result.error };
+
+  Object.assign(email, patch);
+
+  if (process.env.VERCEL !== "1") {
+    await store.updateEmail(email.id, patch);
+  }
+}
   return emails;
 }

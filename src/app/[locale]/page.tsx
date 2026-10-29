@@ -100,14 +100,6 @@ export default async function LandingPage() {
                   );
                 })}
               </ul>
-              <div className="flex flex-wrap items-center gap-3">
-                <Link
-                  href="/plan"
-                  className="inline-flex items-center gap-2 rounded-pill bg-primary px-7 py-3.5 text-base font-bold text-white shadow-lg shadow-black/25 transition hover:bg-primary-hover"
-                >
-                  {t("cta")} <ArrowRightIcon size={18} />
-                </Link>
-              </div>
             </div>
           </div>
           {/* Floating quick-start */}
@@ -157,101 +149,9 @@ export default async function LandingPage() {
           </ol>
         </section>
 
-        {/* Best rated activities: swipe on phones/tablets, all five in a row on desktop */}
-        <section className="mx-auto flex max-w-6xl flex-col py-16 sm:py-20">
-          <h2 className="px-4 text-center text-3xl font-bold sm:px-6 sm:text-4xl">
-            {t("bestRated.title")}
-          </h2>
-          {/* One button: below the cards on phones/tablets, top right on desktop. */}
-          <div className="order-last mt-6 flex justify-start px-4 sm:px-6 lg:order-none lg:justify-end">
-            <a
-              href={BEST_RATED_ALL_URL}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-pill bg-primary px-6 py-3 text-base font-bold text-white shadow-sm transition hover:bg-primary-hover"
-            >
-              {t("bestRated.seeAll")} <ArrowRightIcon size={18} />
-            </a>
-          </div>
-          <ul className="mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-4 px-4 pb-2 sm:scroll-px-6 sm:px-6 lg:grid lg:grid-cols-5 lg:overflow-visible lg:pb-0">
-            {BEST_RATED.map((a) => {
-              const image: string = a.image;
-              const price: number | null = a.priceUsd;
-              const url: string | undefined = "url" in a ? a.url : undefined;
-              const card = (
-                <>
-                  <div className="aspect-[3/4] overflow-hidden rounded-card bg-black/5 shadow-sm">
-                    {image ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={image}
-                        alt=""
-                        loading="lazy"
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                    ) : (
-                      <div className="flex h-full w-full items-center justify-center text-brand-ink/25">
-                        <PinIcon size={32} />
-                      </div>
-                    )}
-                  </div>
-                  <h3 className="mt-3 font-bold leading-snug transition-colors group-hover:text-primary">
-                    {t(`bestRated.items.${a.id}`)}
-                  </h3>
-                  {price !== null && (
-                    // mt-auto pins the price to the bottom so all prices line up.
-                    <p className="mt-auto pt-1.5 text-sm">
-                      <span className="text-xl font-bold text-primary sm:text-2xl">
-                        {t("from", { price: formatUsd(price, locale) })}
-                      </span>{" "}
-                      <span className="text-brand-ink/60">{t("perPerson")}</span>
-                    </p>
-                  )}
-                </>
-              );
-              return (
-                <li key={a.id} className="flex w-[85%] shrink-0 snap-start sm:w-[45%] lg:w-auto">
-                  {/* Cards without a url in best-rated.ts render the same, just not clickable. */}
-                  {url ? (
-                    <a
-                      href={url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="group flex w-full cursor-pointer flex-col rounded-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
-                    >
-                      {card}
-                    </a>
-                  ) : (
-                    <div className="flex w-full flex-col">{card}</div>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-        </section>
-
         {/* Why is it free */}
         <section className="mx-auto max-w-5xl px-4 pb-16 sm:px-6 sm:pb-20">
-          <h2 className="text-center text-3xl font-bold sm:text-4xl">{t("freeTitle")}</h2>
-          <ol className="mt-8 grid gap-4 sm:grid-cols-2">
-            {(["1", "2"] as const).map((k) => (
-              <li
-                key={k}
-                className="flex gap-4 rounded-card border border-line bg-white p-5 shadow-sm sm:p-6"
-              >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-soft text-lg font-bold text-primary">
-                  {k}
-                </span>
-                <div>
-                  <h3 className="text-lg font-bold leading-snug">{t(`whyFree.${k}.title`)}</h3>
-                  <p className="mt-1 text-brand-ink/70">{t(`whyFree.${k}.body`)}</p>
-                  
-                  
-                
-                </div>
-              </li>
-            ))}
-          </ol>
+          {/*Secccion de espacio para no colapsar todo el contenido*/}
         </section>
 
 
