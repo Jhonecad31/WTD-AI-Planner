@@ -124,7 +124,7 @@ const emails = await sendLeadEmails(lead, pdf);
       emails: emails.map((e) => ({ kind: e.kind, status: e.status, provider: e.provider })),
     });
   } catch (e) {
-    console.error("[api/lead]", e);
+    console.error("[api/lead]", e); 
     return Response.json(
       { error: "We couldn't save your itinerary. Please try again." },
       { status: 500 },
