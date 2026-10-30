@@ -14,9 +14,15 @@ import { EXCLUDED_BOKUN_IDS } from "@/content/excluded-products";
  */
 
 // On Vercel the project directory is read-only; /tmp is the only writable disk.
-const CACHE_DIR =
+/*const CACHE_DIR =
   process.env.CATALOG_CACHE_DIR ??
-  (process.env.VERCEL ? "/tmp/wtd-cache" : path.join(process.cwd(), ".cache"));
+  (process.env.VERCEL ? "/tmp/wtd-cache" : path.join(process.cwd(), ".cache"));*/
+  /*Actualizacion de envio para elinar en ENV*/
+  const CACHE_DIR =
+  process.env.CATALOG_CACHE_DIR?.trim() ||
+  (process.env.VERCEL
+    ? "/tmp/wtd-cache"
+    : path.join(process.cwd(), ".cache"));
 const CACHE_FILE = path.join(CACHE_DIR, "catalog.json");
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 const CONCURRENCY = 6;
