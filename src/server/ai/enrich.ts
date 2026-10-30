@@ -18,7 +18,8 @@ import { hasYoungKids, isParty, partyNightOk, scoreProduct, toItem } from "./rul
  *  - arrival: dinner if landing before 4 pm, otherwise rest at the hotel
  *  - departure: beach or shopping on a night flight, never a tour
  *  - chill days: beach or shopping near the hotel
- *  - one dinner per night, matched to cuisine, budget, zone and kids; Grupo Anderson first
+ *  - one dinner every 3 days (never the same place twice), spread over the trip and
+ *    matched to cuisine, budget, zone and kids; Grupo Anderson first
  *  - a warning after the greeting when kids travel and party/cultural was chosen
  */
 
@@ -234,6 +235,20 @@ const MIN_RESTAURANT_VARIETY = 5;
 /** The first dinner starts at one of the top few picks, so every trip doesn't open with the same place. */
 const FIRST_DINNER_SPREAD = 3;
 
+/** One dinner pick every 3 days: under 4 days 1, 4–6 days 2, 7–9 days 3, and so on. */
+export function dinnerCount(tripDays: number): number {
+  return Math.ceil(Math.max(0, tripDays) / 3);
+}
+
+/** Picks `count` of the eligible night indexes, evenly spread and starting at the first one. */
+function spreadNights(eligible: number[], count: number): Set<number> {
+  if (count <= 0 || !eligible.length) return new Set();
+  if (count >= eligible.length) return new Set(eligible);
+  if (count === 1) return new Set([eligible[0]]);
+  const step = (eligible.length - 1) / (count - 1);
+  return new Set(Array.from({ length: count }, (_, k) => eligible[Math.round(k * step)]));
+}
+
 /** Stable per trip (same dates, same plan), different across trips. */
 function tripSeed(request: TripRequest): number {
   const key = `${request.inbound.date ?? ""}|${request.outbound.date ?? ""}|${request.travelers.length}`;
@@ -317,13 +332,6 @@ export function enrichItinerary(
   // "Don't plan my dinners": no restaurants and no note about missing picks.
   const skipDining = request.dining.skip;
   const restaurants = skipDining ? [] : rankRestaurants(request, products, opts.ratings);
-  // Rotate through the ranked list (no repeats until every place was used), starting at a
-  // per-trip offset among the top picks instead of always at the first one.
-  let nextRestaurant = restaurants.length
-    ? tripSeed(request) % Math.min(restaurants.length, FIRST_DINNER_SPREAD)
-    : 0;
-  const dinner = () =>
-    restaurants.length ? restaurantItem(restaurants[nextRestaurant++ % restaurants.length]) : null;
   const nextPlace = placePicker(request, zone);
 
   // Manual edits keep the traveler's own day order.
@@ -332,7 +340,35 @@ export function enrichItinerary(
       ? itinerary.days
       : placePartyNights(itinerary.days, request, products);
 
-  const days = arranged.map((day) => {
+  const isPartyNight = (day: ItineraryDay) =>
+    day.items.some((i) => {
+      const p = i.kind === "tour" ? product(i) : undefined;
+      return !!p && isParty(p);
+    });
+  // Nights that can take a dinner: early arrival, chill days, and tour days without a party night.
+  const eligible = arranged.flatMap((day, i) =>
+    (day.label === "arrival" && request.inbound.slot === "early") ||
+    day.label === "chill" ||
+    (day.label !== "arrival" && day.label !== "departure" && !isPartyNight(day))
+      ? [i]
+      : [],
+  );
+  // The catalog per zone is small, so only one dinner every 3 days, each at a different place.
+  const dinnerNights = spreadNights(
+    eligible,
+    Math.min(dinnerCount(arranged.length), restaurants.length),
+  );
+  // Walk the ranked list starting at a per-trip offset among the top picks, so every trip
+  // doesn't open with the same place.
+  let nextRestaurant = restaurants.length
+    ? tripSeed(request) % Math.min(restaurants.length, FIRST_DINNER_SPREAD)
+    : 0;
+  const dinner = (dayIndex: number) =>
+    dinnerNights.has(dayIndex)
+      ? restaurantItem(restaurants[nextRestaurant++ % restaurants.length])
+      : null;
+
+  const days = arranged.map((day, dayIndex) => {
     // Drop blocks a previous enrichment added, so this is safe to run twice.
     const base = day.items.filter(
       (i) => i.kind === "tour" || i.kind === "transfer" || i.kind === "free",
@@ -353,7 +389,7 @@ export function enrichItinerary(
 
     if (day.label === "arrival") {
       items.push(...transfers);
-      const d = request.inbound.slot === "early" ? dinner() : null;
+      const d = request.inbound.slot === "early" ? dinner(dayIndex) : null;
       items.push(d ?? restItem(locale));
     } else if (day.label === "departure") {
       if (request.outbound.slot === "night") {
@@ -365,18 +401,12 @@ export function enrichItinerary(
       const place = nextPlace(day.weather?.kind === "rainy");
       if (place) items.push(placeItem(place, locale));
       else items.push(...base.filter((i) => i.kind === "free"));
-      const d = dinner();
+      const d = dinner(dayIndex);
       if (d) items.push(d);
     } else {
       items.push(...tours, ...base.filter((i) => i.kind === "free" && !tours.length));
-      const partyNight = tours.some((t) => {
-        const p = product(t);
-        return !!p && isParty(p);
-      });
-      if (!partyNight) {
-        const d = dinner();
-        if (d) items.push(d);
-      }
+      const d = dinner(dayIndex);
+      if (d) items.push(d);
     }
     return { ...day, items, title: dayTitle(day, items, locale) };
   });
@@ -388,11 +418,10 @@ export function enrichItinerary(
     introWarnings: kidWarnings(request, days),
     weatherNote: rainyTripNote(days, locale),
     diningNote:
-     
-      restaurants.length || skipDining || skipDining
-          ? undefined
-          : es
-            ? "Todavía no tenemos restaurantes recomendados en tu zona; tu especialista te sugerirá los mejores."
-            : "We don't have restaurant picks in your area yet; your specialist will suggest the best ones.",
+      restaurants.length || skipDining
+        ? undefined
+        : es
+          ? "Todavía no tenemos restaurantes recomendados en tu zona; tu especialista te sugerirá los mejores."
+          : "We don't have restaurant picks in your area yet; your specialist will suggest the best ones.",
   };
 }

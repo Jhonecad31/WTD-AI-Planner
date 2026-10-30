@@ -3,7 +3,13 @@ import type { CatalogProduct } from "@/server/catalog/types";
 import type { TripRequest } from "@/lib/trip-schema";
 import { ItinerarySchema } from "@/lib/itinerary-schema";
 import { buildRulesItinerary, isRainyFavorite, scoreProduct } from "./rules";
-import { enrichItinerary, kidWarnings, placePartyNights, rankRestaurants } from "./enrich";
+import {
+  dinnerCount,
+  enrichItinerary,
+  kidWarnings,
+  placePartyNights,
+  rankRestaurants,
+} from "./enrich";
 import { validateAndRepair } from "./validate";
 
 function product(
@@ -131,16 +137,46 @@ describe("enrichItinerary", () => {
     expect(it_.diningNote).toBeTruthy();
   });
 
-  it("one dinner per tour night, Grupo Anderson included, rotating without repeats", () => {
-    const it_ = plan(base);
+  it("one dinner every 3 days, Grupo Anderson included, never repeated", () => {
+    const it_ = plan(base); // 6 days
     const dinners = it_.days.flatMap((d) => d.items).filter((i) => i.kind === "restaurant");
-    expect(dinners.length).toBeGreaterThanOrEqual(3);
-    expect(dinners.some((d) => [911208, 994813].includes(d.bokunId ?? 0))).toBe(true);
-    expect(new Set(dinners.slice(0, 4).map((d) => d.bokunId)).size).toBe(
-      Math.min(4, dinners.length),
-    );
+    expect(dinners.length).toBe(2);
+    // Grupo Anderson ranks first among the picks.
+    expect(
+      rankRestaurants(base, catalog)
+        .slice(0, 2)
+        .map((r) => r.info.group),
+    ).toEqual(["anderson", "anderson"]);
+    expect(new Set(dinners.map((d) => d.bokunId)).size).toBe(dinners.length);
     expect(it_.totals.diningEstimateUsd).toBeGreaterThan(0);
     expect(it_.totals.totalUsd).toBe(it_.totals.toursUsd + it_.totals.transfersUsd);
+  });
+
+  it("dinner count follows trip length: under 4 days 1, 4-6 days 2, 7-9 days 3", () => {
+    expect([1, 2, 3, 4, 6, 7, 9, 10].map(dinnerCount)).toEqual([1, 1, 1, 2, 2, 3, 3, 4]);
+    const trip = (leave: string) =>
+      plan({
+        ...base,
+        interests: ["adventure", "cultural", "water"],
+        outbound: { ...base.outbound, date: leave },
+      })
+        .days.flatMap((d) => d.items)
+        .filter((i) => i.kind === "restaurant");
+    expect(trip("2026-12-12")).toHaveLength(1); // 3 days
+    expect(trip("2026-12-14")).toHaveLength(2); // 5 days
+    const eight = trip("2026-12-17"); // 8 days
+    expect(eight).toHaveLength(3);
+    expect(new Set(eight.map((d) => d.bokunId)).size).toBe(3);
+  });
+
+  it("never repeats a restaurant when the zone has fewer places than dinner nights", () => {
+    const small = catalog.filter(
+      (p) => p.kind !== "restaurant" || [911208, 994805].includes(p.bokunId),
+    );
+    const it_ = plan({ ...base, outbound: { ...base.outbound, date: "2026-12-18" } }, small); // 9 days
+    const dinners = it_.days.flatMap((d) => d.items).filter((i) => i.kind === "restaurant");
+    expect(dinners).toHaveLength(2);
+    expect(new Set(dinners.map((d) => d.bokunId)).size).toBe(2);
   });
 
   it("the first dinner isn't always the same place across trips", () => {
