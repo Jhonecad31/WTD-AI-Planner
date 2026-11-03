@@ -33,11 +33,13 @@ function experienceKinds(title: string): string[] {
  * swap helps, drop the priciest tour (the day becomes free), keeping at least one tour.
  * Transfers are never touched: the traveler asked for them. No traveler notice: this is
  * their first version of the plan; the agent sees the changes in `warnings`.
+ * `avoid`: tours of earlier versions ("try another version"), used only if nothing else fits.
  */
 export function fitBudget(
   itinerary: Itinerary,
   request: TripRequest,
   products: CatalogProduct[],
+  avoid: number[] = [],
 ): Itinerary {
   const budgetTotal = request.budgetPerPerson * request.travelers.length;
   const days = itinerary.days.map((d) => ({ ...d, items: [...d.items] }));
@@ -54,9 +56,10 @@ export function fitBudget(
   const price = (p: CatalogProduct) => priceProductForParty(p, request.travelers).priceTotalUsd;
   const opts = { preferPrivate: request.preferPrivate, youngKids: hasYoungKids(request) };
   const byId = new Map(products.map((p) => [p.bokunId, p]));
+  const skip = new Set(avoid);
 
-  // Each pass fixes one tour; a trip never has more passes than tours.
-  for (let guard = tours().length; guard > 0 && spent() > budgetTotal; guard--) {
+  // Each pass fixes one tour; skipping avoided tours can take a tour two smaller swaps.
+  for (let guard = tours().length * 2; guard > 0 && spent() > budgetTotal; guard--) {
     const over = spent() - budgetTotal;
     const used = new Set(days.flatMap((d) => d.items.map((i) => i.bokunId)).filter(Boolean));
     const byPrice = tours().sort((a, b) => b.item.priceTotalUsd - a.item.priceTotalUsd);
@@ -79,7 +82,7 @@ export function fitBudget(
           .filter((t) => t.item !== item)
           .flatMap((t) => experienceKinds(t.item.title)),
       );
-      const cheaper = products
+      const affordable = products
         .filter(
           (p) =>
             p.onSite &&
@@ -104,7 +107,9 @@ export function fitBudget(
           sameTheme: Number(p.interests.some((i) => original?.interests.includes(i))),
         }))
         .filter((x) => x.score > 0);
-      if (!cheaper.length) continue;
+      if (!affordable.length) continue;
+      const notAvoided = affordable.filter((x) => !skip.has(x.p.bokunId));
+      const cheaper = notAvoided.length ? notAvoided : affordable;
       // Among swaps that bring the trip within budget: keep the interests only this tour
       // covered, same theme, best fit, then the one that uses most of the budget left. If no
       // single swap is enough, take the biggest saving (same priorities) and loop again.

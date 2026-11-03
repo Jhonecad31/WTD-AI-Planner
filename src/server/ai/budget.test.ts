@@ -102,6 +102,33 @@ describe("fitBudget", () => {
     expect(fixed.warnings.some((w) => w.startsWith("Over budget"))).toBe(true);
   });
 
+  it("prefers tours the traveler hasn't seen when asking for another version", () => {
+    const tight = { ...request, budgetPerPerson: 160 };
+    const wider = [
+      ...catalog,
+      product({ bokunId: 6, title: "Ek Balam Visit", interests: ["cultural"], priceFromUsd: 50 }),
+      product({ bokunId: 7, title: "Buggy Trail", interests: ["adventure"], priceFromUsd: 45 }),
+      product({ bokunId: 8, title: "Mayan Town Walk", interests: ["cultural"], priceFromUsd: 40 }),
+      product({ bokunId: 9, title: "Izamal Visit", interests: ["cultural"], priceFromUsd: 41 }),
+      product({ bokunId: 10, title: "Jungle Bike", interests: ["adventure"], priceFromUsd: 46 }),
+      product({ bokunId: 11, title: "Valladolid Walk", interests: ["cultural"], priceFromUsd: 42 }),
+    ];
+    const before = tourIds(rich);
+    const first = tourIds(fitBudget(rich, tight, wider)).filter((id) => !before.includes(id));
+    expect(first.length).toBeGreaterThan(0);
+
+    const fixed = fitBudget(rich, tight, wider, first as number[]);
+    expect(spent(fixed)).toBeLessThanOrEqual(160 * 2);
+    expect(tourIds(fixed).some((id) => first.includes(id))).toBe(false);
+  });
+
+  it("still uses an avoided tour when it's the only one that fits", () => {
+    const tight = { ...request, budgetPerPerson: 130 };
+    const fixed = fitBudget(rich, tight, catalog, [3, 4]);
+    expect(spent(fixed)).toBeLessThanOrEqual(130 * 2);
+    expect(tourIds(fixed).length).toBeGreaterThan(0);
+  });
+
   it("drops tours when nothing cheaper fits, but keeps at least one", () => {
     const broke = { ...request, budgetPerPerson: 10 };
     const fixed = fitBudget(rich, broke, catalog);

@@ -148,7 +148,6 @@
       "title": "When are you flying?",
       "arrival": "Arrival in Cancun",
       "departure": "Departure from Cancun",
-      "nights": "{count, plural, =0 {Same-day trip} one {# night} other {# nights}}",
       "errorOrder": "Your departure must be after your arrival.",
       "arrivalSlot": "What time do you land?",
       "departureSlot": "What time do you leave?",
@@ -338,6 +337,7 @@
       "private": "Private",
       "regenerateTitle": "Not quite your trip?",
       "regenerateBody": "We’ll build a new plan with different tours.",
+      "regenerateSame": "These are the tours that fit your budget and interests. For other options, raise your budget or add interests.",
       "summary": {
         "title": "Your trip",
         "edit": "Edit",
@@ -388,11 +388,16 @@
       "forecast": "forecast",
       "typical": "typical climate",
       "rain": "rain {pct}%",
-      "forecastLabel": "Forecast",
-      "goodDays": "{count, plural, one {# good day} other {# good days}}",
-      "rainyDays": "{count, plural, one {# rainy} other {# rainy}}",
-      "windyDays": "{count, plural, one {# windy} other {# windy}}",
-      "typicalLine": "Typical {month} weather: {max}° / {min}°, rain on {rain}% of days",
+      "title": "Weather for your trip",
+      "disclaimer": "This is only a forecast and it can change. Check it again a few days before you travel.",
+      "typicalRain": "rain on {pct}% of days",
+      "previous": "Previous days",
+      "next": "Next days",
+      "kind": {
+        "good": "Fair",
+        "rainy": "Rain likely",
+        "windy": "Windy"
+      },
       "rainyTip": "For rainy days we recommend Extreme Adventure: ATVs, buggies, ziplines and a cenote.",
       "season": {
         "hurricane": "You travel during hurricane season (June to November). Most days are sunny; check the forecast a few days before.",

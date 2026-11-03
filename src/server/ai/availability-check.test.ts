@@ -98,6 +98,22 @@ describe("verifyAvailability", () => {
     expect(tourOn(itinerary, firstTourDate)?.startTime).toBe("09:15");
   });
 
+  it("replaces a sold-out tour with one the traveler hasn't seen yet", async () => {
+    const wider = [...catalog, product({ bokunId: 4, title: "Reef Dive", reviewCount: 50 })];
+    const plan = buildRulesItinerary({ request, products: wider });
+    const planned = plan.days.flatMap((d) => d.items.map((i) => i.bokunId)).filter(Boolean);
+    const soldOut = planned[0];
+    const unused = wider.map((p) => p.bokunId).filter((id) => !planned.includes(id));
+    expect(unused.length).toBeGreaterThan(1);
+    const lookup = async (id: number, d: string) => (id === soldOut ? [] : [slot(d)]);
+
+    const { itinerary } = await verifyAvailability(plan, request, wider, lookup, [unused[0]]);
+    const ids = itinerary.days.flatMap((d) => d.items.map((i) => i.bokunId)).filter(Boolean);
+    expect(ids).not.toContain(soldOut);
+    expect(ids).not.toContain(unused[0]);
+    expect(ids).toContain(unused[1]);
+  });
+
   it("moves a tour to another trip day where it runs before replacing it", async () => {
     const lookup = async (id: number, d: string) =>
       id === firstId && d === firstTourDate ? [] : [slot(d)];

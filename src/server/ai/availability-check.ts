@@ -7,6 +7,7 @@ import {
   hasYoungKids,
   isParty,
   isSeaTour,
+  lastIfAvoided,
   partyNightOk,
   planDays,
   scoreProduct,
@@ -64,6 +65,7 @@ export async function verifyAvailability(
   request: TripRequest,
   products: CatalogProduct[],
   lookup: AvailabilityLookup,
+  avoid?: number[],
 ): Promise<{ itinerary: Itinerary; report: AvailabilityReport }> {
   const byId = new Map(products.map((p) => [p.bokunId, p]));
   const slots = planDays(request);
@@ -154,7 +156,7 @@ export async function verifyAvailability(
     const slot = slots.find((s) => s.date === d.date);
     const partyOk = partyNightOk(days, index);
     const badWeather = !!d.weather && d.weather.kind !== "good";
-    const candidates = products
+    const ranked = products
       .filter(
         (p) =>
           p.onSite &&
@@ -175,8 +177,9 @@ export async function verifyAvailability(
         }),
       }))
       .filter((x) => x.score > 0)
-      .sort((a, b) => b.score - a.score)
-      .slice(0, MAX_ALTERNATIVES_CHECKED);
+      .sort((a, b) => b.score - a.score);
+    lastIfAvoided(ranked, avoid, (x) => x.p.bokunId);
+    const candidates = ranked.slice(0, MAX_ALTERNATIVES_CHECKED);
 
     let replacement: { p: CatalogProduct; check: DayCheck } | null = null;
     for (const { p } of candidates) {

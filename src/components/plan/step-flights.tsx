@@ -3,7 +3,7 @@
 import { useSyncExternalStore, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { useWizard } from "./wizard-state";
-import { ARRIVAL_SLOTS, DEPARTURE_SLOTS, tripNights, type Flight } from "@/lib/trip-schema";
+import { ARRIVAL_SLOTS, DEPARTURE_SLOTS, type Flight } from "@/lib/trip-schema";
 import { todayIso } from "@/lib/format";
 import { Field, Input, openDatePicker } from "@/components/ui/field";
 import { PlaneLandIcon, PlaneTakeoffIcon } from "@/components/ui/icons";
@@ -22,10 +22,6 @@ export function StepFlights() {
   const arrival = draft.inbound.date ?? "";
   const departure = draft.outbound.date ?? "";
   const orderError = !!arrival && !!departure && departure <= arrival;
-  const nights =
-    arrival && departure && !orderError
-      ? tripNights({ inbound: { date: arrival }, outbound: { date: departure } })
-      : null;
 
   return (
     <div className="flex flex-col gap-6">
@@ -66,13 +62,7 @@ export function StepFlights() {
           />
         </div>
       </section>
-      {orderError ? (
-        <p className="text-sm font-semibold text-red-600">{t("errorOrder")}</p>
-      ) : nights !== null ? (
-        <p className="inline-flex w-fit items-center rounded-pill bg-primary/10 px-4 py-1.5 text-sm font-bold text-primary">
-          {t("nights", { count: nights })}
-        </p>
-      ) : null}
+      {orderError ? <p className="text-sm font-semibold text-red-600">{t("errorOrder")}</p> : null}
       {!orderError ? (
         <TripWeatherSummary from={arrival} to={departure} zone={draft.hotel.zone} />
       ) : null}

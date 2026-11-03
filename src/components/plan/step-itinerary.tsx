@@ -96,6 +96,15 @@ function minutesText(m?: number) {
   return min ? `${h}h ${min}m` : `${h}h`;
 }
 
+/** Same limit as the API: over it, the API drops the whole list. */
+const MAX_AVOIDED_TOURS = 40;
+
+function tourIds(itinerary: GenerateResponse["itinerary"] | undefined): number[] {
+  return (itinerary?.days ?? []).flatMap((d) =>
+    d.items.filter((i) => i.kind === "tour" && i.bokunId).map((i) => i.bokunId as number),
+  );
+}
+
 /** One row of the day timeline: time rail on the left, card on the right. */
 function TimelineItem({
   item,
@@ -289,6 +298,9 @@ export function StepItinerary() {
   const [optionsFor, setOptionsFor] = useState<string | null>(null);
   const [notice, setNotice] = useState<{ kind: "ok" | "error"; text: string } | null>(null);
   const [confirmRegen, setConfirmRegen] = useState(false);
+  // Tours of every version shown so far, so a new version doesn't bring back an older one.
+  const shownTours = useRef<number[]>([]);
+  const lastAvoid = useRef<number[] | undefined>(undefined);
 
   /** `avoid`: tours of the current version, so "try another version" really changes the plan. */
   async function generate(avoid?: number[]) {
@@ -296,6 +308,7 @@ export function StepItinerary() {
       setState({ status: "error", error: t("invalid") });
       return;
     }
+    lastAvoid.current = avoid;
     setState({ status: "loading" });
     setOptionsFor(null);
     setNotice(null);
@@ -310,6 +323,10 @@ export function StepItinerary() {
       const data = { ...j, requestKey };
       setState({ status: "done", data });
       patch({ itinerary: data });
+      const tours = tourIds(j.itinerary);
+      if (avoid?.length && tours.length && tours.every((id) => avoid.includes(id))) {
+        setNotice({ kind: "ok", text: t("regenerateSame") });
+      }
     } catch (e) {
       setState({ status: "error", error: e instanceof Error ? e.message : t("failed") });
     }
@@ -326,10 +343,10 @@ export function StepItinerary() {
   const it = state.data?.itinerary;
 
   function anotherVersion() {
-    const tours = it?.days.flatMap((d) =>
-      d.items.filter((i) => i.kind === "tour" && i.bokunId).map((i) => i.bokunId as number),
-    );
-    void generate(tours);
+    const tours = tourIds(it);
+    const earlier = shownTours.current.filter((id) => !tours.includes(id));
+    shownTours.current = [...earlier, ...tours].slice(-MAX_AVOIDED_TOURS);
+    void generate(shownTours.current);
   }
 
   async function applyEdit(
@@ -433,7 +450,7 @@ export function StepItinerary() {
             <Button variant="ghost" onClick={back}>
               <ArrowLeftIcon size={18} /> {tc("back")}
             </Button>
-            <Button onClick={() => generate()}>{t("retry")}</Button>
+            <Button onClick={() => generate(lastAvoid.current)}>{t("retry")}</Button>
           </div>
         </div>
       )}

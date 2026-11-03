@@ -42,7 +42,12 @@ export async function generateItinerary(
   // Weather goes on first so rainy days swap the beach for shopping.
   // The engine is only asked to respect the budget: enforce it before the seats check,
   // so any tour swapped in here is verified in Bokun too.
-  const withinBudget = fitBudget(withWeather(result.itinerary, weather), request, products);
+  const withinBudget = fitBudget(
+    withWeather(result.itinerary, weather),
+    request,
+    products,
+    opts.avoid,
+  );
   const enriched = enrichItinerary(withinBudget, request, products, {
     ratings,
   });
@@ -52,6 +57,7 @@ export async function generateItinerary(
     request,
     products,
     (bokunId, date) => getAvailability(bokunId, date, date),
+    opts.avoid,
   );
   const settled =
     report.replaced || report.moved

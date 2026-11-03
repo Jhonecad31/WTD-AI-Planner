@@ -93,7 +93,7 @@ export function WizardShell({
         </aside>
 
         {/* Content */}
-        <div className="flex min-h-[60vh] flex-col">
+        <div className="flex min-h-[60vh] min-w-0 flex-col">
           <div className="flex-1 px-4 py-6 sm:px-8 sm:py-8 lg:px-12 lg:py-10">{children}</div>
           {footer ? (
             <>
