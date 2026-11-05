@@ -24,8 +24,6 @@ import { Notice } from "@/components/ui/notice";
 import { PacePicker } from "./pace-picker";
 import { INTEREST_PHOTOS } from "@/content/interest-photos";
 import { BudgetCard } from "./budget-card";
-import { ChipToggle } from "@/components/ui/chip-toggle";
-import { AVOID_GROUPS, groupsFromTypes, typesFromGroups, type AvoidGroup } from "@/lib/avoid";
 import { fullDates } from "@/lib/plan-days";
 import { draftRestDates } from "./wizard-state";
 
@@ -63,11 +61,6 @@ export function StepPreferences() {
   const { draft, patch } = useWizard();
 
   const kids = draft.travelers.some((tr) => tr.age < 13);
-  const avoidGroups = groupsFromTypes(draft.avoidTypes ?? []);
-  function toggleAvoid(g: AvoidGroup) {
-    const next = avoidGroups.includes(g) ? avoidGroups.filter((x) => x !== g) : [...avoidGroups, g];
-    patch({ avoidTypes: typesFromGroups(next) });
-  }
   // How many tours the budget buys vs. how many tour days the pace leaves.
   const from = draft.inbound.date;
   const to = draft.outbound.date;
@@ -122,20 +115,6 @@ export function StepPreferences() {
         />
       </section>
 
-      <section className="flex flex-col gap-3">
-        <div>
-          <h3 className="text-lg font-bold">{t("avoidTitle")}</h3>
-          <p className="mt-1 text-sm text-brand-ink/70">{t("avoidBody")}</p>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {AVOID_GROUPS.map((g) => (
-            <ChipToggle key={g} selected={avoidGroups.includes(g)} onToggle={() => toggleAvoid(g)}>
-              {t(`avoid.${g}`)}
-            </ChipToggle>
-          ))}
-        </div>
-      </section>
-
       <PacePicker />
 
       <BudgetCard
@@ -147,17 +126,20 @@ export function StepPreferences() {
         max={BUDGET_MAX}
         typedMax={BUDGET_TYPED_MAX}
         step={BUDGET_STEP}
-        footnote={
-          t("budgetTotal", {
-            total: formatUsd(draft.budgetPerPerson * draft.travelers.length, locale),
-            count: draft.travelers.length,
-          }) +
-          (tourDays !== null && tourDays > 0
-            ? " · " +
-              (toursThatFit >= tourDays
-                ? t("budgetFitsAll", { days: tourDays })
-                : t("budgetFits", { tours: Math.max(1, toursThatFit), days: tourDays }))
-            : "")
+        footnote={t("budgetTotal", {
+          total: formatUsd(draft.budgetPerPerson * draft.travelers.length, locale),
+          count: draft.travelers.length,
+        })}
+        hint={
+          tourDays !== null && tourDays > 0
+            ? {
+                text:
+                  toursThatFit >= tourDays
+                    ? t("budgetFitsAll", { days: tourDays })
+                    : t("budgetFits", { tours: Math.max(1, toursThatFit), days: tourDays }),
+                tone: toursThatFit >= tourDays ? "ok" : "warn",
+              }
+            : undefined
         }
         onChange={(budgetPerPerson) => patch({ budgetPerPerson })}
       />

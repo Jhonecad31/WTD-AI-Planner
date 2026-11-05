@@ -165,7 +165,6 @@
       "hotel": "Tu hotel",
       "transfersTitle": "Servicio de transporte aeropuerto",
       "transfersBody": "Requieres traslados desde y hacia el aeropuerto?",
-      "transfersExtra": "Los traslados se cobran por vehículo y se suman aparte: no salen de tu presupuesto de tours.",
       "luxuryExtra": "{extra} por trayecto sobre el traslado estándar",
       "arrivalTransfer": "Aeropuerto a hotel",
       "departureTransfer": "Hotel a aeropuerto",
@@ -267,21 +266,8 @@
         "departure": "Salida"
       },
       "privateBody": "Solo tu grupo, sin otros viajeros. Suelen costar más.",
-      "avoidTitle": "¿Algo que prefieras evitar?",
-      "avoidBody": "Lo que marques aquí no aparece en tu plan, garantizado.",
-      "avoid": {
-        "dolphins": "Delfines y tiburón ballena",
-        "boats": "Lanchas y catamaranes",
-        "snorkel": "Snorkel",
-        "atv": "ATV y caballos",
-        "cenotes": "Cenotes y cavernas",
-        "zipline": "Tirolesas",
-        "ruins": "Ruinas y días largos de bus",
-        "parks": "Parques temáticos",
-        "nightlife": "Antros y shows"
-      },
-      "budgetFits": "alcanza para ~{tours} de tus {days} días con tour",
-      "budgetFitsAll": "alcanza para un tour cada uno de tus {days} días con tour"
+      "budgetFits": "Con este presupuesto alcanzan ~{tours} tours para tus {days} días con tour. Sube el presupuesto o quita días con tour.",
+      "budgetFitsAll": "Alcanza para un tour en cada uno de tus {days} días con tour."
     },
     "itinerary": {
       "title": "Tu itinerario",

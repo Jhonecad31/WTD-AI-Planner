@@ -150,8 +150,12 @@ function overrideFor(p: Product) {
  */
 export function experienceTypes(p: Product): ExperienceType[] {
   const fromTitle = RULES.filter((r) => r.re.test(p.title)).map((r) => r.type);
-  const forced = overrideFor(p)?.type;
-  return forced ? [forced, ...fromTitle.filter((t) => t !== forced)] : fromTitle;
+  const o = overrideFor(p);
+  const ordered = o?.type ? [o.type, ...fromTitle.filter((t) => t !== o.type)] : fromTitle;
+  // What the tour also includes per its description (zipline at a cenote park, snorkel on
+  // a dolphin day…): read once from Bokun and kept in the overrides file.
+  const extra = (o?.activities ?? []).filter((t) => !ordered.includes(t));
+  return [...ordered, ...extra];
 }
 
 /** The main type (first match) or null. */
@@ -232,13 +236,32 @@ export function zoneDistance(p: Product, zone: Area): number | null {
  */
 export type Variety = 0 | 1 | 2;
 
+const FAMILIES: ReadonlySet<ExperienceType> = new Set(["park", "ruins", "day_trip"]);
+
+/**
+ * Two tours are the same kind of day when they share the main type, or when one's main
+ * thing is part of the other and they share two or more activities ("ATV, zipline &
+ * cenote" vs "Cenotes adventure with ziplines"), or when they share three. Chichén with
+ * a cenote stop after Tulum with a cenote stop is not a repeat: one shared stop only.
+ */
+export function sameKindOfDay(a: Product, b: Product): boolean {
+  const ta = experienceTypes(a);
+  const tb = experienceTypes(b);
+  if (!ta.length || !tb.length) return false;
+  if (ta[0] === tb[0]) return true;
+  const shared = ta.filter((t) => tb.includes(t) && !FAMILIES.has(t));
+  if (shared.length >= 3) return true;
+  const mainInOther = tb.includes(ta[0]) || ta.includes(tb[0]);
+  return mainInOther && shared.length >= 2;
+}
+
 export function variety(p: Product, chosen: Product[]): Variety {
   const types = experienceTypes(p);
   if (!types.length) return 2;
   let level: Variety = 2;
   for (const c of chosen) {
+    if (sameKindOfDay(p, c)) return 0;
     const other = experienceTypes(c);
-    if (other[0] === types[0]) return 0;
     if (types.some((t) => other.includes(t))) level = 1;
   }
   return level;

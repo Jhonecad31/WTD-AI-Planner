@@ -158,3 +158,25 @@ describe("hand-set overrides", () => {
     expect(mainExperience(cenotes)).toBe("cenote");
   });
 });
+
+describe("same kind of day by what the tours include", () => {
+  it("treats an ATV park with cenote and ziplines as a repeat of the cenote park with ziplines", () => {
+    const extreme = {
+      bokunId: 670333,
+      title: "ATV, Ziplining & Cenote Tour at Extreme Adventure Eco Park",
+    };
+    const cenotes = { bokunId: 705158, title: "Semi-private 3 waterfall Cenotes experience" };
+    expect(experienceTypes(cenotes)).toContain("zipline");
+    expect(variety(cenotes, [extreme])).toBe(0);
+    expect(variety(extreme, [cenotes])).toBe(0);
+    // A cenote stop on a ruins day is not an ATV day.
+    const chichen = { bokunId: 670332, title: "Chichen Itza Classic Cenote & Valladolid Tour" };
+    expect(variety(chichen, [extreme])).toBe(1);
+    // Two different ruins with a cenote stop each: fine.
+    const tulum = {
+      bokunId: 796135,
+      title: "Tulum, Coba, Playa del Carmen and Cenote Kuxtal Deluxe Tour",
+    };
+    expect(variety(tulum, [chichen])).toBe(1);
+  });
+});

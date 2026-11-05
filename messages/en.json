@@ -164,7 +164,6 @@
       "hotel": "Your hotel",
       "transfersTitle": "Airport transportation",
       "transfersBody": "Do you need airport transfers?",
-      "transfersExtra": "Transfers are priced per vehicle and added on top: they don't come out of your tour budget.",
       "luxuryExtra": "{extra} per ride over the standard transfer",
       "arrivalTransfer": "Airport to hotel",
       "departureTransfer": "Hotel to airport",
@@ -266,21 +265,8 @@
         "departure": "Departure"
       },
       "privateBody": "Only your group, no other travelers. Usually costs more.",
-      "avoidTitle": "Anything you'd rather skip?",
-      "avoidBody": "Whatever you mark here stays out of your plan, guaranteed.",
-      "avoid": {
-        "dolphins": "Dolphins & whale sharks",
-        "boats": "Boats & catamarans",
-        "snorkel": "Snorkeling",
-        "atv": "ATVs & horseback",
-        "cenotes": "Cenotes & caves",
-        "zipline": "Ziplines",
-        "ruins": "Ruins & long bus days",
-        "parks": "Theme parks",
-        "nightlife": "Clubs & shows"
-      },
-      "budgetFits": "covers ~{tours} of your {days} tour days",
-      "budgetFitsAll": "covers a tour on each of your {days} tour days"
+      "budgetFits": "This budget covers ~{tours} tours for your {days} tour days. Raise it or plan fewer tour days.",
+      "budgetFitsAll": "Covers a tour on each of your {days} tour days."
     },
     "itinerary": {
       "title": "Your itinerary",

@@ -140,8 +140,7 @@ export function StepStay() {
 
       <section>
         <h3 className="text-lg font-bold">{t("transfersTitle")}</h3>
-        <p className="mt-1 text-sm text-brand-ink/70">{t("transfersBody")}</p>
-        <p className="mt-1 mb-4 text-xs text-brand-ink/60">{t("transfersExtra")}</p>
+        <p className="mt-1 mb-4 text-sm text-brand-ink/70">{t("transfersBody")}</p>
         <div className="grid gap-3 sm:grid-cols-2">
           <OptionCard
             selected={tr.arrival}
