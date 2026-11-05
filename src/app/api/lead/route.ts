@@ -28,9 +28,10 @@ export async function POST(request: NextRequest) {
     const products = await getPlannerProducts();
     const { itinerary } = validateAndRepair(rawItinerary, trip, products);
 
-    // The lead, its PDF and its emails are persisted through the store: Supabase in
-    // production, JSON files in local dev. Prices were re-validated above.
     const store = getLeadStore();
+    // Vercel has no writable disk: there the lead is not written locally (the team's own
+    // backend keeps it); in local dev it goes to .data/ as before.
+    const isVercel = process.env.VERCEL === "1";
     const now = new Date().toISOString();
     const lead: LeadRecord = {
       id: newId(),
@@ -51,11 +52,13 @@ export async function POST(request: NextRequest) {
       notes: [],
       bokunConfirmationCodes: [],
     };
-    await store.createLead(lead);
+    if (!isVercel) await store.createLead(lead);
 
     const pdf = await renderTripPdf({ name: lead.name, ref: lead.ref, request: trip, itinerary });
-    lead.pdfPath = await store.savePdf(lead.id, pdf);
-    await store.updateLead(lead.id, { pdfPath: lead.pdfPath });
+    if (!isVercel) {
+      lead.pdfPath = await store.savePdf(lead.id, pdf);
+      await store.updateLead(lead.id, { pdfPath: lead.pdfPath });
+    }
 
     const emails = await sendLeadEmails(lead, pdf);
 

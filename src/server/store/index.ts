@@ -2,8 +2,6 @@ import { mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { randomBytes, randomUUID } from "node:crypto";
 import type { LeadRecord, OutboundEmail } from "@/lib/lead-schema";
-import { env } from "@/server/config/env";
-import { SupabaseLeadStore } from "./supabase";
 
 /**
  * Persistence behind one small interface so the local file store can be swapped
@@ -111,29 +109,9 @@ export class FileLeadStore implements LeadStore {
 }
 
 let store: LeadStore | null = null;
-
-/** True when the Supabase project is configured (production, or local against a project). */
-export function hasSupabase(): boolean {
-  const e = env();
-  return Boolean(e.NEXT_PUBLIC_SUPABASE_URL && e.SUPABASE_SERVICE_ROLE_KEY);
-}
-
-/**
- * Supabase when `NEXT_PUBLIC_SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` are set, otherwise
- * JSON files under `.data/` (local dev). On Vercel the file store has no writable disk, so
- * production must have Supabase configured or every lead is lost.
- */
+/** Local JSON files. Production persistence lives in the team's own backend. */
 export function getLeadStore(): LeadStore {
-  if (store) return store;
-  if (hasSupabase()) {
-    const e = env();
-    store = SupabaseLeadStore.fromEnv(e.NEXT_PUBLIC_SUPABASE_URL, e.SUPABASE_SERVICE_ROLE_KEY);
-  } else {
-    if (process.env.VERCEL) {
-      console.warn("[store] No Supabase configured on Vercel: leads will NOT persist.");
-    }
-    store = new FileLeadStore();
-  }
+  store ??= new FileLeadStore();
   return store;
 }
 
