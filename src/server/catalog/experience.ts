@@ -245,6 +245,9 @@ const FAMILIES: ReadonlySet<ExperienceType> = new Set(["park", "ruins", "day_tri
  * a cenote stop after Tulum with a cenote stop is not a repeat: one shared stop only.
  */
 export function sameKindOfDay(a: Product, b: Product): boolean {
+  // Hand-curated duplicates (the three Río Secreto combos, the two clear-boat rides).
+  const fa = overrideFor(a)?.family;
+  if (fa && fa === overrideFor(b)?.family) return true;
   const ta = experienceTypes(a);
   const tb = experienceTypes(b);
   if (!ta.length || !tb.length) return false;

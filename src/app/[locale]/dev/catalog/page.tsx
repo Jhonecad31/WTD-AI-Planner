@@ -1,7 +1,13 @@
 import Link from "next/link";
 import { getCatalog, hasBokunCredentials } from "@/server/catalog/service";
 import type { CatalogProduct } from "@/server/catalog/types";
-import { areaOf, mainExperience, primaryInterest } from "@/server/catalog/experience";
+import {
+  areaOf,
+  experienceTypes,
+  mainExperience,
+  primaryInterest,
+} from "@/server/catalog/experience";
+import { EXPERIENCE_OVERRIDES } from "@/content/experience-overrides";
 import { interestsFor } from "@/server/catalog/normalize";
 
 /**
@@ -66,6 +72,16 @@ function ProductCard({ p }: { p: CatalogProduct }) {
             <span className="rounded-pill bg-black/5 px-2 py-0.5 text-brand-ink/70">
               {area ?? "unknown area"}
             </span>
+            {experienceTypes(p).length > 1 ? (
+              <span className="text-brand-ink/60" title="Everything the tour includes">
+                includes: {experienceTypes(p).slice(1).join(", ")}
+              </span>
+            ) : null}
+            {EXPERIENCE_OVERRIDES[p.bokunId]?.family ? (
+              <span className="rounded-pill bg-amber-100 px-2 py-0.5 text-amber-900">
+                family: {EXPERIENCE_OVERRIDES[p.bokunId].family}
+              </span>
+            ) : null}
           </div>
         ) : null}
         <h3 className="text-base font-bold leading-snug">{p.title}</h3>

@@ -180,3 +180,48 @@ describe("same kind of day by what the tours include", () => {
     expect(variety(tulum, [chichen])).toBe(1);
   });
 });
+
+describe("curated families and inclusions (read from the Bokun descriptions)", () => {
+  const rioAlone = {
+    bokunId: 1023136,
+    title: "Rio Secreto Admission (With Optional Transportation)",
+  };
+  const rioTulum = { bokunId: 1023182, title: "Rio Secreto + Tulum Mayan Ruins" };
+  const rioCoba = { bokunId: 1023186, title: "Rio Secreto + Coba Mayan Ruins" };
+  const tulumCoba = {
+    bokunId: 796135,
+    title: "Tulum, Coba, Playa del Carmen and Cenote Kuxtal Deluxe Tour",
+  };
+
+  it("never plans two Río Secreto days, whatever ruins come with them", () => {
+    expect(variety(rioTulum, [rioCoba])).toBe(0);
+    expect(variety(rioAlone, [rioTulum])).toBe(0);
+    // Río Secreto with a Tulum stop after a Tulum/Cobá day: a different headline, allowed.
+    expect(variety(rioTulum, [tulumCoba])).toBe(1);
+    expect(mainExperience(rioTulum)).toBe("cave");
+  });
+
+  it("the two clear-boat rides and the two Jungala days are the same day", () => {
+    const parasail = {
+      bokunId: 746175,
+      title: "Parasailing and Clear Boat with Sand Bar Swim Combo Tour",
+    };
+    const clear = {
+      bokunId: 1263404,
+      title: "Clearboat Tour with Reef Visit & Sandbar Swim in Cancun",
+    };
+    expect(variety(clear, [parasail])).toBe(0);
+    const jungala = { bokunId: 1278089, title: "Jungala Beyond" };
+    const cirque = { bokunId: 1241968, title: "Cirque Du Soleil & Jungala Beyond" };
+    expect(variety(cirque, [jungala])).toBe(0);
+  });
+
+  it("doesn't count optional extras: a dolphin day in Cozumel is not a snorkel day", () => {
+    const dolphins = { bokunId: 1026428, title: "Dolphin Discovery in Cozumel" };
+    expect(experienceTypes(dolphins)).not.toContain("snorkel");
+    const xelha = { bokunId: 714416, title: "Xelha All Inclusive From Cancun & Riviera Maya" };
+    expect(experienceTypes(xelha)).toEqual(
+      expect.arrayContaining(["snorkel", "zipline", "cenote"]),
+    );
+  });
+});
