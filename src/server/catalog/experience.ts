@@ -242,6 +242,25 @@ export function zoneDistance(p: Product, zone: Area): number | null {
 export type Variety = 0 | 1 | 2;
 
 const FAMILIES: ReadonlySet<ExperienceType> = new Set(["park", "ruins", "day_trip"]);
+/** Named places: visiting the same one twice is a repeat whatever the day's headline. */
+const PLACES: ReadonlySet<ExperienceType> = new Set([
+  "chichen",
+  "tulum",
+  "coba",
+  "ek_balam",
+  "xcaret",
+  "xelha",
+  "xplor",
+  "xenses",
+  "xavage",
+  "jungala",
+  "garrafon",
+  "holbox",
+  "bacalar",
+  "cozumel",
+  "coloradas",
+  "kaan_luum",
+]);
 
 /**
  * Two tours are the same kind of day when they share the main type, or when one's main
@@ -258,6 +277,8 @@ export function sameKindOfDay(a: Product, b: Product): boolean {
   if (!ta.length || !tb.length) return false;
   if (ta[0] === tb[0]) return true;
   const shared = ta.filter((t) => tb.includes(t) && !FAMILIES.has(t));
+  // The same ruins or island twice (Tulum with Río Secreto after Tulum with Cobá): a repeat.
+  if (shared.some((t) => PLACES.has(t))) return true;
   if (shared.length >= 3) return true;
   const mainInOther = tb.includes(ta[0]) || ta.includes(tb[0]);
   return mainInOther && shared.length >= 2;
