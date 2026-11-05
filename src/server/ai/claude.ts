@@ -15,6 +15,7 @@ import {
   isParty,
   isRainyFavorite,
   isSeaTour,
+  LONG_TOUR_KID_AGE,
   LONG_TOUR_MINUTES,
   planDays,
   scoreOpts,
@@ -195,7 +196,7 @@ You build day-by-day itineraries using ONLY the products in the candidate list. 
 - Candidates with filler=true match none of the requested interests. Use one only on a day that would otherwise have no tour because every matching candidate is already used or doesn't fit (budget, ages, weather); never place a filler while a matching candidate is still available, and prefer fillers near the hotel.
 - Match the traveler's interests by what a tour mainly is ("mainInterest"), not by the extra interests it also lists: someone who asked for "cultural" gets ruins and towns, not a dolphin swim that merely mentions the Mayan coast. Cover every requested interest that has tours at least once before repeating an interest (shopping has no tours). Prefer higher rating/reviews when similar (use the tripadvisor rating when present).
 - When ratings are null, do not fall back on how famous a tour is: choose by fit with this group (interests, ages, budget, pace) and vary the kind of experience across days. At most one partyNight tour per trip, unless "party" is among the interests and the trip has 5+ full days.
-- Children: check minAge against the youngest traveler. With kids under 12, avoid tours of ${LONG_TOUR_MINUTES / 60}+ hours (e.g. Chichén Itzá day trips) unless nothing else fits.
+- Children: check minAge against the youngest traveler. With kids under 12, avoid tours of ${LONG_TOUR_MINUTES / 60}+ hours (e.g. Chichén Itzá day trips) unless nothing else fits; with a child under ${LONG_TOUR_KID_AGE}, never more than ONE such tour in the whole trip.
 ${request.preferPrivate ? "- The traveler prefers PRIVATE tours: when similar options exist, pick the one with Private/Privado in the title.\n" : ""}- If the traveler asked for transfers, place the transfer item on the arrival day and/or departure day using a transfer bokunId, startTime null.
 - Each item note: one short, warm, specific sentence (max ~20 words) in ${lang} about why it fits this group. Day titles short (2-5 words), in ${lang}. Summary: one sentence in ${lang}, max 25 words.
 - Weather: each skeleton day may carry weather {kind, source}. On every "rainy" day, in date order, use a not-yet-used candidate with rainyFavorite=true (WhatToDo's Extreme Adventuring and Cenote Adventuring parks) as long as it fits budget and ages. This rule outranks interest coverage and ratings. Only when no unused rainyFavorite candidate fits, prefer cenotes, ruins, food or other non-sea tours. On "rainy" or "windy" days never pick a tour with seaTour=true when another option fits. Save rainyFavorite tours for rainy days when the trip has any. Mention the weather in that day's note only when it changed the choice. "typical" weather is a monthly average, not a forecast: do not change plans because of it.

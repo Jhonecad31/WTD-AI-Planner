@@ -96,7 +96,7 @@ describe("fitBudget", () => {
     const tight = { ...request, budgetPerPerson: 130 };
     expect(spent(rich)).toBeGreaterThan(130 * 2);
     const fixed = fitBudget(rich, tight, catalog);
-    expect(spent(fixed)).toBeLessThanOrEqual(130 * 2);
+    expect(spent(fixed)).toBeLessThanOrEqual(130 * 2 * 1.05);
     expect(tourIds(fixed)).not.toContain(1);
     expect(tourIds(fixed)).not.toContain(2);
     expect(tourIds(fixed)).not.toContain(5); // couples isn't one of their interests
@@ -119,14 +119,14 @@ describe("fitBudget", () => {
     expect(first.length).toBeGreaterThan(0);
 
     const fixed = fitBudget(rich, tight, wider, first as number[]);
-    expect(spent(fixed)).toBeLessThanOrEqual(160 * 2);
+    expect(spent(fixed)).toBeLessThanOrEqual(160 * 2 * 1.05);
     expect(tourIds(fixed).some((id) => first.includes(id))).toBe(false);
   });
 
   it("still uses an avoided tour when it's the only one that fits", () => {
     const tight = { ...request, budgetPerPerson: 130 };
     const fixed = fitBudget(rich, tight, catalog, [3, 4]);
-    expect(spent(fixed)).toBeLessThanOrEqual(130 * 2);
+    expect(spent(fixed)).toBeLessThanOrEqual(130 * 2 * 1.05);
     expect(tourIds(fixed).length).toBeGreaterThan(0);
   });
 
@@ -157,7 +157,7 @@ describe("fitBudget", () => {
     const plan = buildRulesItinerary({ request: req, products: sea.slice(0, 2) });
     expect(tourIds(plan)).toEqual([21, 22]);
     const fixed = fitBudget(plan, { ...req, budgetPerPerson: 80 }, sea);
-    expect(spent(fixed)).toBeLessThanOrEqual(80 * 2);
+    expect(spent(fixed)).toBeLessThanOrEqual(80 * 2 * 1.05);
     expect(tourIds(fixed)).toEqual([22]);
     expect(fixed.days.flatMap((d) => d.items).some((i) => i.kind === "free")).toBe(true);
   });
@@ -182,6 +182,18 @@ describe("fitBudget", () => {
       withClub,
     );
     expect(tourIds(fixed)).not.toContain(31);
+  });
+
+  it("doesn't drop a tour for being a few dollars over (5 % tolerance), and explains a dropped day", () => {
+    // Rich plan spends 90+110+80 = 280 per adult-ish; a budget 3 % under that is left alone.
+    const toursTotal = tourIds(rich).length ? spent(rich) : 0;
+    const perPerson = toursTotal / request.travelers.length;
+    const slightlyUnder = { ...request, budgetPerPerson: Math.floor(perPerson * 0.97) };
+    expect(fitBudget(rich, slightlyUnder, catalog)).toBe(rich);
+    const broke = { ...request, budgetPerPerson: 10 };
+    const fixed = fitBudget(rich, broke, catalog);
+    const free = fixed.days.flatMap((d) => d.items).find((i) => i.kind === "free");
+    expect(free?.note).toMatch(/presupuesto|budget/);
   });
 
   it("drops tours when nothing cheaper fits, but keeps at least one", () => {

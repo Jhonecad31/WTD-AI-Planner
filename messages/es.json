@@ -299,7 +299,7 @@
       "details": "Ver detalles",
       "perPerson": "Por persona",
       "total": "Total",
-      "withinBudget": "Tours dentro de tu presupuesto de {budget} por persona · traslados aparte",
+      "withinBudget": "Tours dentro de tu presupuesto de {budget} por persona",
       "overBudget": "Tours arriba de tu presupuesto de {budget} por persona — un especialista lo puede ajustar",
       "looksGood": "Continuar",
       "edit": {
@@ -376,7 +376,8 @@
         "noDining": "No planeamos tus cenas",
         "anyCuisine": "Cualquier cocina",
         "perDinner": "{budget} por cena"
-      }
+      },
+      "breakdown": "Tours: {toursPp} por persona · traslados: {transfers} por grupo ({count, plural, one {# viajero} other {# viajeros}})"
     },
     "contact": {
       "title": "¿A dónde te lo enviamos?",

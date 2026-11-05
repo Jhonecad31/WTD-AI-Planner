@@ -94,6 +94,34 @@ export function isSeaTour(p: { title: string }): boolean {
 
 /** Tours this long (Chichén Itzá day trips) are hard on young kids. */
 export const LONG_TOUR_MINUTES = 10 * 60;
+/** Under this age, at most one tour of LONG_TOUR_MINUTES+ per trip (a hard rule, not a penalty). */
+export const LONG_TOUR_KID_AGE = 6;
+/** The tour budget may be exceeded by this much before the guard swaps or drops tours. */
+export const BUDGET_TOLERANCE = 1.05;
+
+export function isLongTour(p: { durationMinutes: number | null }): boolean {
+  return (p.durationMinutes ?? 0) >= LONG_TOUR_MINUTES;
+}
+
+/**
+ * With a child under LONG_TOUR_KID_AGE, a second 10 h+ day is never planned: one long
+ * day trip is enough. `others` are the tours already in the trip.
+ */
+export function longTourOk(
+  p: { durationMinutes: number | null },
+  request: Pick<TripRequest, "travelers">,
+  others: { durationMinutes?: number | null }[],
+): boolean {
+  if (!isLongTour(p)) return true;
+  const youngest = Math.min(...request.travelers.map((t) => t.age));
+  if (youngest >= LONG_TOUR_KID_AGE) return true;
+  return !others.some((o) => (o.durationMinutes ?? 0) >= LONG_TOUR_MINUTES);
+}
+
+/** Tours per person within the budget (with the tolerance). */
+export function withinBudget(toursUsd: number, request: TripRequest): boolean {
+  return round2(toursUsd / request.travelers.length) <= request.budgetPerPerson * BUDGET_TOLERANCE;
+}
 
 /** A tour whose main interest the traveler picked outranks one that only touches it. */
 const MAIN_INTEREST_POINTS = 6;
@@ -330,7 +358,8 @@ export function buildRulesItinerary(inputs: PlanInputs): Itinerary {
       // Chichén is fine, a second dolphin swim is not); only when nothing else fits, the
       // same kind of day again. Within that, the best interest fit wins.
       const pickWith = (min: Variety) => {
-        const varied = (p: CatalogProduct) => variety(p, chosen) >= min;
+        const varied = (p: CatalogProduct) =>
+          variety(p, chosen) >= min && longTourOk(p, request, chosen);
         return (
           candidates.find(({ p }) => {
             if (!varied(p)) return false;
@@ -431,7 +460,7 @@ export function buildRulesItinerary(inputs: PlanInputs): Itinerary {
       totalUsd,
       perPersonUsd,
       budgetPerPersonUsd: request.budgetPerPerson,
-      withinBudget: round2(toursUsd / request.travelers.length) <= request.budgetPerPerson,
+      withinBudget: withinBudget(toursUsd, request),
       diningEstimateUsd: 0,
     },
     introWarnings: [],

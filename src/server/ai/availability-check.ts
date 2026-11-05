@@ -9,6 +9,7 @@ import {
   isParty,
   isSeaTour,
   lastIfAvoided,
+  longTourOk,
   allowedForTraveler,
   partyNightOk,
   planDays,
@@ -174,6 +175,7 @@ export async function verifyAvailability(
           !(badWeather && isSeaTour(p)) &&
           // Never a repeat of another day; the day goes free before that.
           variety(p, otherTours) > 0 &&
+          longTourOk(p, request, otherTours) &&
           spentElsewhere + priceProductForParty(p, request.travelers).priceTotalUsd <= budgetTotal,
       )
       .map((p) => ({

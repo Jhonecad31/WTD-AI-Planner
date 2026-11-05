@@ -66,6 +66,33 @@ export default async function LeadPage({ params }: { params: Promise<{ id: strin
           </li>
         ))}
       </ol>
+      <h2 className="mt-8 text-lg font-bold">What the traveler asked for</h2>
+      <p className="mt-2 text-sm">
+        Interests: {lead.request.interests.join(", ")}
+        {lead.request.avoidTypes?.length ? ` · skip: ${lead.request.avoidTypes.join(", ")}` : ""}
+        {" · "}budget {lead.request.budgetPerPerson} USD pp · zone{" "}
+        {lead.request.hotel.zone ?? "no hotel yet"}
+      </p>
+      {lead.request.notes ? (
+        <p className="mt-1 whitespace-pre-wrap rounded-card bg-amber-50 p-3 text-sm">
+          {lead.request.notes}
+        </p>
+      ) : null}
+      <h2 className="mt-8 text-lg font-bold">
+        System notes{" "}
+        <span className="text-sm font-normal text-muted">
+          (what the server changed and why: sold out, over budget, variety, weather)
+        </span>
+      </h2>
+      {lead.itinerary.warnings.length ? (
+        <ul className="mt-2 list-disc space-y-1 pl-5 text-sm">
+          {lead.itinerary.warnings.map((w, i) => (
+            <li key={i}>{w}</li>
+          ))}
+        </ul>
+      ) : (
+        <p className="mt-2 text-sm text-muted">None: the plan came out as the engine chose it.</p>
+      )}
       <h2 className="mt-8 text-lg font-bold">Raw request</h2>
       <pre className="mt-2 overflow-x-auto rounded-card bg-gray-100 p-3 text-xs">
         {JSON.stringify(lead.request, null, 2)}

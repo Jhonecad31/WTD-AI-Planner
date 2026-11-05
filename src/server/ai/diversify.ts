@@ -8,6 +8,7 @@ import {
   isParty,
   isSeaTour,
   allowedForTraveler,
+  longTourOk,
   partyNightOk,
   scoreOpts,
   scoreProduct,
@@ -35,7 +36,7 @@ export function diversify(
   const opts = scoreOpts(request);
   const price = (p: CatalogProduct) => priceProductForParty(p, request.travelers).priceTotalUsd;
   const warnings: string[] = [];
-  const chosen: { title: string }[] = [];
+  const chosen: { title: string; bokunId?: number; durationMinutes?: number | null }[] = [];
 
   for (const [index, d] of days.entries()) {
     const item = d.items.find((i) => i.kind === "tour");
@@ -68,7 +69,8 @@ export function diversify(
           (!isParty(p) || partyNightOk(days, index)) &&
           !(badWeather && isSeaTour(p)) &&
           spentElsewhere + price(p) <= budgetTotal &&
-          variety(p, chosen) > 0,
+          variety(p, chosen) > 0 &&
+          longTourOk(p, request, chosen),
       )
       .map((p) => ({
         p,

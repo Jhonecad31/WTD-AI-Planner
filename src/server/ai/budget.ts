@@ -11,6 +11,8 @@ import {
   scoreOpts,
   scoreProduct,
   toItem,
+  BUDGET_TOLERANCE,
+  longTourOk,
 } from "./rules";
 import { variety } from "@/server/catalog/experience";
 
@@ -23,6 +25,17 @@ import { variety } from "@/server/catalog/experience";
  * their first version of the plan; the agent sees the changes in `warnings`.
  * `avoid`: tours of earlier versions ("try another version"), used only if nothing else fits.
  */
+/** "Left free to fit your budget: «Tour» would add +USD X (Y per person)." */
+export function budgetNote(
+  tour: { title: string; priceTotalUsd: number },
+  request: TripRequest,
+): string {
+  const pp = round2(tour.priceTotalUsd / request.travelers.length);
+  return request.locale === "es"
+    ? `Quedó libre para ajustarse a tu presupuesto: «${tour.title}» sumaría +USD ${tour.priceTotalUsd} (USD ${pp} por persona).`
+    : `Left free to fit your budget: "${tour.title}" would add +USD ${tour.priceTotalUsd} (USD ${pp} per person).`;
+}
+
 export function fitBudget(
   itinerary: Itinerary,
   request: TripRequest,
@@ -48,8 +61,10 @@ export function fitBudget(
   const skip = new Set(avoid);
 
   // Each pass fixes one tour; skipping avoided tours can take a tour two smaller swaps.
-  for (let guard = tours().length * 2; guard > 0 && spent() > budgetTotal; guard--) {
-    const over = spent() - budgetTotal;
+  // A little over is fine (BUDGET_TOLERANCE): dropping a 298 USD tour for 16 USD isn't.
+  const ceiling = budgetTotal * BUDGET_TOLERANCE;
+  for (let guard = tours().length * 2; guard > 0 && spent() > ceiling; guard--) {
+    const over = spent() - ceiling;
     const used = new Set(days.flatMap((d) => d.items.map((i) => i.bokunId)).filter(Boolean));
     const byPrice = tours().sort((a, b) => b.item.priceTotalUsd - a.item.priceTotalUsd);
 
@@ -85,6 +100,7 @@ export function fitBudget(
             // Never a repeat of another day (a second catamaran or speedboat): when no
             // different kind of tour is cheaper, the day goes free instead.
             variety(p, otherTours) > 0 &&
+            longTourOk(p, request, otherTours) &&
             price(p) < item.priceTotalUsd,
         )
         .map((p) => ({
@@ -143,6 +159,8 @@ export function fitBudget(
           priceTotalUsd: 0,
           pricing: [],
           pickup: false,
+          // Say why, and what it would take: the traveler (and the agent) can decide.
+          note: budgetNote(item, request),
         }),
     };
     warnings.push(

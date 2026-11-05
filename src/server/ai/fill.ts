@@ -3,6 +3,7 @@ import type { TripRequest } from "@/lib/trip-schema";
 import type { Itinerary } from "@/lib/itinerary-schema";
 import { variety } from "@/server/catalog/experience";
 import { fitsAges, priceProductForParty } from "./pricing";
+import { budgetNote } from "./budget";
 import {
   fitsDay,
   isParty,
@@ -10,6 +11,7 @@ import {
   isSeaTour,
   lastIfAvoided,
   allowedForTraveler,
+  longTourOk,
   partyNightOk,
   scoreOpts,
   scoreProduct,
@@ -67,14 +69,34 @@ export function fillEmptyDays(
           // Keep WhatToDo's parks for the rainy days of the trip.
           !(rainyAhead && w?.kind !== "rainy" && isRainyFavorite(p)) &&
           variety(p, chosen) > 0 &&
-          price(p) <= remaining,
+          longTourOk(p, request, chosen),
       )
-      .map((p) => ({ p, score: scoreProduct(p, request.interests, opts) }))
+      .map((p) => ({ p, score: scoreProduct(p, request.interests, opts), cost: price(p) }))
       .filter((x) => x.score > 0)
       .sort((a, b) => b.score - a.score);
     lastIfAvoided(ranked, avoid, (x) => x.p.bokunId);
-    const pick = ranked[0];
-    if (!pick) continue;
+    const pick = ranked.find((x) => x.cost <= remaining);
+    if (!pick) {
+      // Something fits except for the money: say so on the free day, with the cheapest option.
+      const cheapest = [...ranked].sort((a, b) => a.cost - b.cost)[0];
+      if (cheapest && !d.items.some((i) => i.kind === "free" && i.note)) {
+        days[index] = {
+          ...d,
+          items: [
+            ...d.items.filter((i) => i.kind !== "free"),
+            {
+              kind: "free",
+              title: request.locale === "es" ? "Día libre" : "Free day",
+              priceTotalUsd: 0,
+              pricing: [],
+              pickup: false,
+              note: budgetNote({ title: cheapest.p.title, priceTotalUsd: cheapest.cost }, request),
+            },
+          ],
+        };
+      }
+      continue;
+    }
     days[index] = {
       ...d,
       title: pick.p.title,

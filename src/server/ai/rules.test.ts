@@ -7,8 +7,10 @@ import {
   isRainyFavorite,
   isAvoided,
   isSeaTour,
+  longTourOk,
   partyAllowed,
   planDays,
+  withinBudget,
   scoreOpts,
   scoreProduct,
   toItem,
@@ -816,5 +818,44 @@ describe('"I\'d rather skip" (avoidTypes)', () => {
     expect(isAvoided({ title: "Isla Mujeres Catamaran" }, { ...req, avoidTypes: undefined })).toBe(
       false,
     );
+  });
+});
+
+describe("small kids: at most one long day trip", () => {
+  const long = (id: number, title: string) =>
+    product({
+      bokunId: id,
+      title,
+      interests: ["cultural"],
+      durationMinutes: 12 * 60,
+      priceFromUsd: 50,
+    });
+  const family: TripRequest = {
+    ...request,
+    travelers: [{ age: 35 }, { age: 4 }],
+    interests: ["cultural"],
+    budgetPerPerson: 1000,
+  };
+  const products = [
+    long(601, "Chichen Itza Classic"),
+    long(602, "Ek Balam Mayan Traditions"),
+    long(603, "Coba Ruins"),
+  ];
+
+  it("plans one long tour, then leaves the day free rather than a second 12-hour day", () => {
+    const it_ = buildRulesItinerary({ request: family, products });
+    const tours = it_.days.flatMap((d) => d.items).filter((i) => i.kind === "tour");
+    expect(tours).toHaveLength(1);
+    expect(longTourOk(products[1], family, [products[0]])).toBe(false);
+    // Adults only: no such limit.
+    expect(longTourOk(products[1], { travelers: [{ age: 30 }] }, [products[0]])).toBe(true);
+  });
+});
+
+describe("budget tolerance", () => {
+  it("accepts tours up to 5 % over the budget", () => {
+    const req = { ...request, travelers: [{ age: 30 }, { age: 30 }], budgetPerPerson: 100 };
+    expect(withinBudget(210, req)).toBe(true); // 105 pp
+    expect(withinBudget(212, req)).toBe(false);
   });
 });
