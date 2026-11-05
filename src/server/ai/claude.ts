@@ -3,7 +3,7 @@ import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import { z } from "zod";
 import { env } from "@/server/config/env";
 import type { CatalogProduct } from "@/server/catalog/types";
-import type { TripRequest } from "@/lib/trip-schema";
+import { effectiveZone, type TripRequest } from "@/lib/trip-schema";
 import {
   ItinerarySchema,
   type DayWeather,
@@ -17,12 +17,18 @@ import {
   isSeaTour,
   LONG_TOUR_MINUTES,
   planDays,
+  scoreOpts,
   scoreProduct,
   lastIfAvoided,
   transferFor,
 } from "./rules";
 import { fitsAges, priceProductForParty } from "./pricing";
-import { experienceTypes, primaryInterest } from "@/server/catalog/experience";
+import {
+  areaOf,
+  experienceTypes,
+  primaryInterest,
+  zoneDistance,
+} from "@/server/catalog/experience";
 
 /**
  * Claude engine. Claude only *chooses and explains*; it never invents products
@@ -65,10 +71,7 @@ export function pickCandidates(
     .filter((p) => fitsAges(p, request.travelers))
     .map((p) => ({
       p,
-      score: scoreProduct(p, request.interests, {
-        preferPrivate: request.preferPrivate,
-        youngKids: hasYoungKids(request),
-      }),
+      score: scoreProduct(p, request.interests, scoreOpts(request)),
     }))
     .sort((a, b) => b.score - a.score);
   lastIfAvoided(scored, opts.avoid, (x) => x.p.bokunId);
@@ -129,6 +132,10 @@ function compact(
     kinds: experienceTypes(p),
     // What the tour mainly is for; the other interests are only touched on.
     mainInterest: primaryInterest(p),
+    // Where it happens along the coast and how many hotel zones away that is (null = far
+    // from everywhere, like Chichén Itzá, or unknown).
+    area: areaOf(p),
+    zonesFromHotel: zoneDistance(p, effectiveZone(request)),
   };
 }
 
@@ -159,6 +166,7 @@ You build day-by-day itineraries using ONLY the products in the candidate list. 
 - A tour with partyNight=true (night life) goes ONLY on a "full" day whose next day in the skeleton is "chill" or "departure", so a tour day always follows a dinner or rest night. If no such day is left, do not use party tours.
 - Respect the party budget: sum of partyPriceUsd over chosen items must be <= ${budgetTotal} USD (${request.budgetPerPerson} per person x ${request.travelers.length}).
 - VARIETY: never pick two tours with the same main kind (the first value in "kinds"): no second dolphin swim, ATV day, Isla Mujeres catamaran or Chichén Itzá variant. Different sites of one family are fine (Chichén one day, Tulum another; Xcaret and Xel-Há). This rule outranks interest coverage and ratings.
+- Stay near the hotel: "zonesFromHotel" is how far down the coast a tour happens (0 = same area, 5 = Cancun ↔ Tulum). Between similar options prefer the lower number, and never fill a trip with 3+ tours at 4-5 zones away. Day trips with zonesFromHotel null (Chichén Itzá, Holbox, Bacalar) are far from every hotel and are fine once or twice.
 - Match the traveler's interests by what a tour mainly is ("mainInterest"), not by the extra interests it also lists: someone who asked for "cultural" gets ruins and towns, not a dolphin swim that merely mentions the Mayan coast. Cover every requested interest that has tours at least once before repeating an interest (shopping has no tours). Prefer higher rating/reviews when similar (use the tripadvisor rating when present).
 - When ratings are null, do not fall back on how famous a tour is: choose by fit with this group (interests, ages, budget, pace) and vary the kind of experience across days. At most one partyNight tour per trip, unless "party" is among the interests and the trip has 5+ full days.
 - Children: check minAge against the youngest traveler. With kids under 12, avoid tours of ${LONG_TOUR_MINUTES / 60}+ hours (e.g. Chichén Itzá day trips) unless nothing else fits.
@@ -176,7 +184,7 @@ ${request.preferPrivate ? "- The traveler prefers PRIVATE tours: when similar op
       locale: request.locale,
       arrival: request.inbound,
       departure: request.outbound,
-      hotelZone: request.hotel.zone ?? null,
+      hotelZone: effectiveZone(request),
       noHotelYet: request.hotel.noHotel,
       hotelName: request.hotel.name ?? null,
       transfers: request.transfers,

@@ -11,6 +11,7 @@ import {
   lastIfAvoided,
   partyNightOk,
   planDays,
+  scoreOpts,
   scoreProduct,
   toItem,
 } from "./rules";
@@ -175,10 +176,7 @@ export async function verifyAvailability(
       )
       .map((p) => ({
         p,
-        score: scoreProduct(p, request.interests, {
-          preferPrivate: request.preferPrivate,
-          youngKids: hasYoungKids(request),
-        }),
+        score: scoreProduct(p, request.interests, scoreOpts(request)),
       }))
       .filter((x) => x.score > 0)
       .sort((a, b) => b.score - a.score);

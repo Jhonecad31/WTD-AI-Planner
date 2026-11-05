@@ -7,6 +7,7 @@ import {
   isRainyFavorite,
   isSeaTour,
   planDays,
+  scoreOpts,
   scoreProduct,
   toItem,
   transferFor,
@@ -450,7 +451,38 @@ describe("variety", () => {
       .flatMap((d) => d.items)
       .filter((i) => i.kind === "tour")
       .map((i) => i.bokunId);
-    expect(ids).toEqual([71, 73, 74]);
+    expect(ids.sort()).toEqual([71, 73, 74]);
+  });
+
+  it("ranks tours near the hotel zone above the same tour far down the coast", () => {
+    const near = product({
+      bokunId: 91,
+      title: "Dolphin Discovery in Cancun",
+      interests: ["water"],
+    });
+    const far = product({
+      bokunId: 92,
+      title: "Dolphin Discovery Tulum - Akumal",
+      interests: ["water"],
+    });
+    const cancun = scoreOpts({ ...request, hotel: { noHotel: false, zone: "cancun" } });
+    const tulum = scoreOpts({ ...request, hotel: { noHotel: false, zone: "tulum" } });
+    expect(scoreProduct(near, ["water"], cancun)).toBeGreaterThan(
+      scoreProduct(far, ["water"], cancun),
+    );
+    expect(scoreProduct(far, ["water"], tulum)).toBeGreaterThan(
+      scoreProduct(near, ["water"], tulum),
+    );
+    // Distance never beats the interest itself.
+    const ruins = product({ bokunId: 93, title: "Tulum Ruins", interests: ["cultural"] });
+    const nearbyBoat = product({
+      bokunId: 94,
+      title: "Cancun Glass Boat",
+      interests: ["water", "cultural"],
+    });
+    expect(scoreProduct(ruins, ["cultural"], cancun)).toBeGreaterThan(
+      scoreProduct(nearbyBoat, ["cultural"], cancun),
+    );
   });
 
   it("keeps night life out unless the traveler picked party, whatever else it's tagged", () => {

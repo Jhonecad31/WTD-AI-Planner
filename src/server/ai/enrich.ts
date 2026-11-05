@@ -9,7 +9,7 @@ import type {
 import { RESTAURANTS, type RestaurantInfo } from "@/content/restaurants";
 import { placesFor, type Place } from "@/content/places";
 import { fitsAges, priceProductForParty } from "./pricing";
-import { hasYoungKids, isParty, partyNightOk, scoreProduct, toItem } from "./rules";
+import { isParty, partyNightOk, scoreOpts, scoreProduct, toItem } from "./rules";
 
 /**
  * Deterministic trip rules applied after either engine picked the tours, so they
@@ -199,10 +199,7 @@ export function placePartyNights(
       )
       .map((p) => ({
         p,
-        s: scoreProduct(p, request.interests, {
-          preferPrivate: request.preferPrivate,
-          youngKids: hasYoungKids(request),
-        }),
+        s: scoreProduct(p, request.interests, scoreOpts(request)),
       }))
       .filter((x) => x.s > 0)
       .sort((a, b) => b.s - a.s)[0]?.p;

@@ -4,10 +4,10 @@ import type { Itinerary, ItineraryItem } from "@/lib/itinerary-schema";
 import { fitsAges, priceProductForParty, round2 } from "./pricing";
 import {
   fitsDay,
-  hasYoungKids,
   isParty,
   isSeaTour,
   partyNightOk,
+  scoreOpts,
   scoreProduct,
   toItem,
 } from "./rules";
@@ -41,7 +41,7 @@ export function fitBudget(
       d.items.filter((i) => i.kind === "tour").map((item) => ({ index, item })),
     );
   const price = (p: CatalogProduct) => priceProductForParty(p, request.travelers).priceTotalUsd;
-  const opts = { preferPrivate: request.preferPrivate, youngKids: hasYoungKids(request) };
+  const opts = scoreOpts(request);
   const byId = new Map(products.map((p) => [p.bokunId, p]));
   const skip = new Set(avoid);
 

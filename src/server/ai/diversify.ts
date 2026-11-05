@@ -5,10 +5,10 @@ import { variety } from "@/server/catalog/experience";
 import { fitsAges, priceProductForParty } from "./pricing";
 import {
   fitsDay,
-  hasYoungKids,
   isParty,
   isSeaTour,
   partyNightOk,
+  scoreOpts,
   scoreProduct,
   toItem,
 } from "./rules";
@@ -31,7 +31,7 @@ export function diversify(
   const budgetTotal = request.budgetPerPerson * request.travelers.length;
   const days = itinerary.days.map((d) => ({ ...d, items: [...d.items] }));
   const byId = new Map(products.map((p) => [p.bokunId, p]));
-  const opts = { preferPrivate: request.preferPrivate, youngKids: hasYoungKids(request) };
+  const opts = scoreOpts(request);
   const price = (p: CatalogProduct) => priceProductForParty(p, request.travelers).priceTotalUsd;
   const warnings: string[] = [];
   const chosen: { title: string }[] = [];

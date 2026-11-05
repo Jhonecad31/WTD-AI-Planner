@@ -93,3 +93,16 @@ romper empates con reseñas externas.
 - Script sobre el catálogo real: tours por interés antes/después.
 - Itinerario real en la app (`/es/plan`) y "Probar otra versión": sin dos días del
   mismo tipo y con tours del interés marcado.
+
+## Añadido (misma fecha): zona del hotel y overrides
+
+- **Zona del hotel.** `areaOf(p)` lee del título dónde ocurre el tour en la costa
+  (costa_mujeres → tulum, misma escala que `HOTEL_ZONES`); `zoneDistance` cuenta
+  las zonas entre hotel y tour. `scoreProduct` resta 0.75 por zona (máx. 4.5), así
+  que nunca le gana al interés principal (6) pero sí rompe empates hacia lo
+  cercano. Chichén, Holbox, Bacalar, Coloradas quedan sin zona: lejos de todos,
+  sin penalización. Claude recibe `area` y `zonesFromHotel` con una regla.
+- **Overrides a mano** (`src/content/experience-overrides.ts`): por `bokunId` se
+  fija `type`, `interests` y/o `area` cuando el título no dice suficiente.
+  `/dev/catalog` muestra tipo → interés principal y zona de cada tour, cuenta los
+  que no tienen tipo y los filtra con `?untyped=1`.

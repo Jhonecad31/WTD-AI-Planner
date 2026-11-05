@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { experienceTypes, mainExperience, primaryInterest, variety } from "./experience";
+import {
+  areaOf,
+  experienceTypes,
+  mainExperience,
+  primaryInterest,
+  variety,
+  zoneDistance,
+} from "./experience";
 
 const main = (title: string) => mainExperience({ title });
 
@@ -104,5 +111,47 @@ describe("variety", () => {
         { title: "Isla Mujeres Premium Tour with Catamaran, Snorkeling & Beach Club" },
       ]),
     ).toBe(0);
+  });
+});
+
+describe("areas along the coast", () => {
+  it("reads where a tour happens from its title", () => {
+    expect(areaOf({ title: "Catamaran Isla Mujeres Tour with Snorkeling & Beach Club" })).toBe(
+      "cancun",
+    );
+    expect(areaOf({ title: "Dolphin Discovery Tulum - Akumal" })).toBe("tulum");
+    expect(areaOf({ title: "Akumal Reef & Turtles Sanctuary from Riviera Maya" })).toBe(
+      "puerto_aventuras",
+    );
+    expect(areaOf({ title: "Xcaret Tickets Admission From Cancun & Playa del Carmen" })).toBe(
+      "playa_del_carmen",
+    );
+    expect(areaOf({ title: "Xelha All Inclusive From Cancun & Riviera Maya" })).toBe(
+      "riviera_maya",
+    );
+    expect(areaOf({ title: "ATV, Ziplining & Cenote Tour at Extreme Adventure Eco Park" })).toBe(
+      "puerto_morelos",
+    );
+    // Far from every zone: no area, no penalty.
+    expect(areaOf({ title: "Chichen Itza Classic Cenote & Valladolid Tour" })).toBeNull();
+    expect(areaOf({ title: "Tour Holbox Essentials" })).toBeNull();
+  });
+
+  it("counts hotel zones between the hotel and the tour", () => {
+    const isla = { title: "Isla Mujeres Premium Catamaran" };
+    expect(zoneDistance(isla, "cancun")).toBe(0);
+    expect(zoneDistance(isla, "costa_mujeres")).toBe(1);
+    expect(zoneDistance(isla, "tulum")).toBe(5);
+    expect(zoneDistance({ title: "Chichen Itza Deluxe" }, "tulum")).toBeNull();
+  });
+});
+
+describe("hand-set overrides", () => {
+  it("fill in what the title doesn't say", () => {
+    // 705158: Cenotes Adventuring, Puerto Morelos (the title names no place).
+    const cenotes = { bokunId: 705158, title: "Semi-private 3 waterfall Cenotes experience" };
+    expect(areaOf({ title: cenotes.title })).toBeNull();
+    expect(areaOf(cenotes)).toBe("puerto_morelos");
+    expect(mainExperience(cenotes)).toBe("cenote");
   });
 });

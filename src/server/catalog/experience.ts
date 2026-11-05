@@ -1,4 +1,5 @@
 import type { Interest } from "./types";
+import { EXPERIENCE_OVERRIDES } from "@/content/experience-overrides";
 
 /**
  * What kind of experience a tour is, read from its title. Shared by the catalog
@@ -137,20 +138,83 @@ const INTEREST_OF: Record<ExperienceType, Interest> = Object.fromEntries(
   RULES.map((r) => [r.type, r.interest]),
 ) as Record<ExperienceType, Interest>;
 
-/** Every type the title names, main type first. Empty when the title says nothing. */
-export function experienceTypes(p: { title: string }): ExperienceType[] {
-  return RULES.filter((r) => r.re.test(p.title)).map((r) => r.type);
+type Product = { title: string; bokunId?: number };
+
+function overrideFor(p: Product) {
+  return p.bokunId !== undefined ? EXPERIENCE_OVERRIDES[p.bokunId] : undefined;
+}
+
+/**
+ * Every type the title names, main type first. Empty when the title says nothing.
+ * A hand-set type (`content/experience-overrides.ts`) goes first.
+ */
+export function experienceTypes(p: Product): ExperienceType[] {
+  const fromTitle = RULES.filter((r) => r.re.test(p.title)).map((r) => r.type);
+  const forced = overrideFor(p)?.type;
+  return forced ? [forced, ...fromTitle.filter((t) => t !== forced)] : fromTitle;
 }
 
 /** The main type (first match) or null. */
-export function mainExperience(p: { title: string }): ExperienceType | null {
+export function mainExperience(p: Product): ExperienceType | null {
   return experienceTypes(p)[0] ?? null;
 }
 
-/** The interest the main type stands for: Chichén → cultural, ATV → adventure, dolphins → water… */
-export function primaryInterest(p: { title: string }): Interest | null {
+/**
+ * The interest the main type stands for: Chichén → cultural, ATV → adventure, dolphins →
+ * water… A hand-set interest list wins (its first entry is the main interest).
+ */
+export function primaryInterest(p: Product): Interest | null {
+  const forced = overrideFor(p)?.interests?.[0];
+  if (forced) return forced;
   const main = mainExperience(p);
   return main ? INTEREST_OF[main] : null;
+}
+
+/**
+ * Where a tour happens along the coast, north to south, on the same scale as the
+ * hotel zones. Null = far from every zone (Chichén Itzá, Holbox, Bacalar) or unknown:
+ * no distance penalty either way.
+ */
+export const AREAS = [
+  "costa_mujeres",
+  "cancun",
+  "puerto_morelos",
+  "playa_del_carmen",
+  "riviera_maya",
+  "puerto_aventuras",
+  "tulum",
+] as const;
+export type Area = (typeof AREAS)[number];
+
+const AREA_RULES: { area: Area; re: RegExp }[] = [
+  { area: "tulum", re: /tulum|kaan ?luum|\bcob[aá]\b|casa tortuga/i },
+  { area: "puerto_aventuras", re: /akumal|puerto aventuras/i },
+  {
+    area: "puerto_morelos",
+    re: /puerto morelos|extreme adventur|cenotes? adventuring|ruta de los cenotes/i,
+  },
+  { area: "riviera_maya", re: /riviera maya|xel-?h[aá]|jungala|cirque|\bjoya\b|playa para[ií]so/i },
+  {
+    area: "playa_del_carmen",
+    re: /playa del carmen|xcaret|xplor|xenses|xavage|r[ií]o secreto|cozumel/i,
+  },
+  {
+    area: "cancun",
+    re: /canc[uú]n|isla mujeres|hotel zone|zona hotelera|nichupt[eé]|coco bongo|mandala|vaquita|rakata|d'cave|garraf[oó]n|whale shark|xoximilco|madness|parasail|jet ?ski|columbus|glass ?boat|clear ?boat|baby dancer|\bmyst\b/i,
+  },
+];
+
+export function areaOf(p: Product): Area | null {
+  const forced = overrideFor(p)?.area;
+  if (forced) return forced;
+  return AREA_RULES.find((r) => r.re.test(p.title))?.area ?? null;
+}
+
+/** Zones apart between the hotel and the tour (0 = same area); null when unknown. */
+export function zoneDistance(p: Product, zone: Area): number | null {
+  const area = areaOf(p);
+  if (!area) return null;
+  return Math.abs(AREAS.indexOf(area) - AREAS.indexOf(zone));
 }
 
 /**
@@ -161,7 +225,7 @@ export function primaryInterest(p: { title: string }): Interest | null {
  */
 export type Variety = 0 | 1 | 2;
 
-export function variety(p: { title: string }, chosen: { title: string }[]): Variety {
+export function variety(p: Product, chosen: Product[]): Variety {
   const types = experienceTypes(p);
   if (!types.length) return 2;
   let level: Variety = 2;

@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { getCatalog, hasBokunCredentials } from "@/server/catalog/service";
 import type { CatalogProduct } from "@/server/catalog/types";
+import { areaOf, mainExperience, primaryInterest } from "@/server/catalog/experience";
+import { interestsFor } from "@/server/catalog/normalize";
 
 /**
  * Internal page (phase 1 deliverable): lists the real Bokun catalog so Andre can
@@ -19,6 +21,9 @@ function minutesToText(m: number | null) {
 }
 
 function ProductCard({ p }: { p: CatalogProduct }) {
+  const plannable = p.onSite && (p.kind === "tour" || p.kind === "ticket");
+  const type = mainExperience(p);
+  const area = areaOf(p);
   return (
     <article className="flex flex-col overflow-hidden rounded-card border border-black/5 bg-white shadow-sm">
       {p.imageUrl ? (
@@ -44,6 +49,25 @@ function ProductCard({ p }: { p: CatalogProduct }) {
           ) : null}
           {p.durationMinutes ? <span>· {minutesToText(p.durationMinutes)}</span> : null}
         </div>
+        {plannable ? (
+          <div className="flex flex-wrap gap-1 text-xs">
+            {type ? (
+              <span className="rounded-pill bg-brand-navy/10 px-2 py-0.5 font-semibold text-brand-navy">
+                {type} → {primaryInterest(p)}
+              </span>
+            ) : (
+              <span
+                className="rounded-pill bg-red-100 px-2 py-0.5 font-semibold text-red-800"
+                title="The planner can't tell what kind of day this is: add it to src/content/experience-overrides.ts"
+              >
+                no type
+              </span>
+            )}
+            <span className="rounded-pill bg-black/5 px-2 py-0.5 text-brand-ink/70">
+              {area ?? "far / unknown area"}
+            </span>
+          </div>
+        ) : null}
         <h3 className="text-base font-bold leading-snug">{p.title}</h3>
         <div className="flex flex-wrap gap-1">
           {p.interests.map((i) => (
@@ -101,7 +125,13 @@ function ProductCard({ p }: { p: CatalogProduct }) {
 export default async function DevCatalogPage({
   searchParams,
 }: {
-  searchParams: Promise<{ refresh?: string; kind?: string; interest?: string; site?: string }>;
+  searchParams: Promise<{
+    refresh?: string;
+    kind?: string;
+    interest?: string;
+    site?: string;
+    untyped?: string;
+  }>;
 }) {
   const params = await searchParams;
 
@@ -134,8 +164,14 @@ export default async function DevCatalogPage({
     );
   }
 
-  const products = snapshot.products
+  // Same tags the planner uses (re-tagged on load, see getPlannerProducts).
+  const tagged = snapshot.products.map((p) => ({ ...p, interests: interestsFor(p) }));
+  const untyped = tagged.filter(
+    (p) => p.onSite && (p.kind === "tour" || p.kind === "ticket") && !mainExperience(p),
+  );
+  const products = tagged
     .filter((p) => !params.kind || p.kind === params.kind)
+    .filter((p) => params.untyped !== "1" || untyped.includes(p))
     .filter((p) => !params.interest || p.interests.includes(params.interest as never))
     .filter((p) => params.site !== "1" || p.onSite)
     .sort(
@@ -144,7 +180,18 @@ export default async function DevCatalogPage({
   const onSiteCount = snapshot.products.filter((p) => p.onSite).length;
 
   const kinds = ["tour", "transfer", "ticket", "other"];
-  const interests = ["adventure", "cultural", "food", "water", "party", "couples", "chill"];
+  const interests = [
+    "adventure",
+    "cultural",
+    "food",
+    "water",
+    "beach",
+    "shopping",
+    "parks",
+    "party",
+    "couples",
+    "chill",
+  ];
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-10">
@@ -152,8 +199,15 @@ export default async function DevCatalogPage({
         <div>
           <h1 className="text-3xl font-bold">Bokun catalog</h1>
           <p className="text-sm text-brand-ink/60">
-            {snapshot.products.length} products ({onSiteCount} on the website) · fetched{" "}
-            {new Date(snapshot.fetchedAt).toLocaleString()} · {snapshot.errors.length} errors ·{" "}
+            {snapshot.products.length} products ({onSiteCount} on the website,{" "}
+            <Link
+              className={untyped.length ? "font-semibold text-red-700 hover:underline" : ""}
+              href="/dev/catalog?untyped=1"
+            >
+              {untyped.length} without a type
+            </Link>
+            ) · fetched {new Date(snapshot.fetchedAt).toLocaleString()} · {snapshot.errors.length}{" "}
+            errors ·{" "}
             <Link className="text-primary hover:underline" href="/dev/catalog?refresh=1">
               refresh from Bokun
             </Link>

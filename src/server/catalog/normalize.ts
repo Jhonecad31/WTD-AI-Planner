@@ -2,6 +2,7 @@ import type { BokunActivity, BokunPhoto, BokunPickupPlace } from "@/server/bokun
 import type { CatalogProduct, Interest, PickupPlace, ProductKind } from "./types";
 import siteLinks from "@/content/site-links.json";
 import { primaryInterest } from "./experience";
+import { EXPERIENCE_OVERRIDES } from "@/content/experience-overrides";
 
 const SITE_URL = "https://whattodoincancun.com";
 const EXTRANET_URL = "https://extranet.bokun.io";
@@ -148,11 +149,14 @@ export function detectKind(a: BokunActivity): ProductKind {
  */
 export function interestsFor(p: {
   title: string;
+  bokunId?: number;
   bokunCategories?: string[];
   keywords?: string[];
   kind?: ProductKind;
 }): Interest[] {
   if (p.kind === "transfer") return [];
+  const forced = p.bokunId !== undefined ? EXPERIENCE_OVERRIDES[p.bokunId]?.interests : undefined;
+  if (forced) return [...forced];
   const set = new Set<Interest>();
   const main = primaryInterest(p);
   if (main) set.add(main);
@@ -169,6 +173,7 @@ export function interestsFor(p: {
 export function detectInterests(a: BokunActivity): Interest[] {
   return interestsFor({
     title: a.title ?? "",
+    bokunId: a.id,
     bokunCategories: a.activityCategories ?? [],
     keywords: a.keywords ?? [],
     kind: detectKind(a),

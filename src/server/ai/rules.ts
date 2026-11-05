@@ -1,10 +1,10 @@
 import type { CatalogProduct, Interest } from "@/server/catalog/types";
-import { effectiveZone, type TripRequest } from "@/lib/trip-schema";
+import { effectiveZone, type HotelZone, type TripRequest } from "@/lib/trip-schema";
 import type { DayWeather, Itinerary, ItineraryDay, ItineraryItem } from "@/lib/itinerary-schema";
 import { fitsAges, priceProductForParty, round2 } from "./pricing";
 import { planDays, type DaySlot } from "@/lib/plan-days";
 import { isPrivateTitle } from "@/lib/item-meta";
-import { primaryInterest, variety, type Variety } from "@/server/catalog/experience";
+import { primaryInterest, variety, zoneDistance, type Variety } from "@/server/catalog/experience";
 
 export { planDays, type DaySlot } from "@/lib/plan-days";
 
@@ -61,11 +61,32 @@ export const LONG_TOUR_MINUTES = 10 * 60;
 /** A tour whose main interest the traveler picked outranks one that only touches it. */
 const MAIN_INTEREST_POINTS = 6;
 const SECONDARY_INTEREST_POINTS = 1.5;
+/**
+ * Per hotel zone between the hotel and where the tour happens (Cancun → Tulum is 5).
+ * Breaks ties toward nearby tours without ever beating a main-interest match.
+ */
+const ZONE_STEP_PENALTY = 0.75;
+
+export interface ScoreOptions {
+  preferPrivate?: boolean;
+  youngKids?: boolean;
+  /** Hotel zone: tours far down the coast rank lower. */
+  zone?: HotelZone;
+}
+
+/** The scoring options every engine and guard should pass for a request. */
+export function scoreOpts(request: TripRequest): ScoreOptions {
+  return {
+    preferPrivate: request.preferPrivate,
+    youngKids: hasYoungKids(request),
+    zone: effectiveZone(request),
+  };
+}
 
 export function scoreProduct(
   p: CatalogProduct,
   interests: Interest[],
-  opts: { preferPrivate?: boolean; youngKids?: boolean } = {},
+  opts: ScoreOptions = {},
 ): number {
   if (p.kind !== "tour" && p.kind !== "ticket") return -1;
   const overlap = p.interests.filter((i) => interests.includes(i));
@@ -80,6 +101,10 @@ export function scoreProduct(
   const reviews = Math.log10((p.reviewCount ?? 0) + 1);
   let score = mainHit + secondary + rating + reviews;
   if (opts.preferPrivate && isPrivateTitle(p.title)) score += 3;
+  if (opts.zone) {
+    const steps = zoneDistance(p, opts.zone);
+    if (steps) score = Math.max(0.1, score - steps * ZONE_STEP_PENALTY);
+  }
   // Very long day trips rank last with young kids (still allowed if nothing else fits).
   if (opts.youngKids && (p.durationMinutes ?? 0) >= LONG_TOUR_MINUTES)
     score = Math.max(0.1, score - 6);
@@ -198,10 +223,7 @@ export function buildRulesItinerary(inputs: PlanInputs): Itinerary {
     .filter((p) => request.interests.includes("party") || !isParty(p))
     .map((p) => ({
       p,
-      score: scoreProduct(p, request.interests, {
-        preferPrivate: request.preferPrivate,
-        youngKids: hasYoungKids(request),
-      }),
+      score: scoreProduct(p, request.interests, scoreOpts(request)),
     }))
     .filter((x) => x.score > 0)
     .sort((a, b) => b.score - a.score);
