@@ -738,3 +738,41 @@ describe("transfers are extra, not part of the tour budget", () => {
     expect(tours.length).toBeGreaterThan(0);
   });
 });
+
+describe("Claude's menu stays near the hotel", () => {
+  it("lets only a few tours 4+ zones away onto the menu", () => {
+    const cancunTours = Array.from({ length: 8 }, (_, i) =>
+      product({ bokunId: 300 + i, title: `Cancun Reef Snorkel ${i}`, interests: ["water"] }),
+    );
+    const tulumTour = product({ bokunId: 320, title: "Tulum Lagoon Swim", interests: ["water"] });
+    const req: TripRequest = {
+      ...request,
+      travelers: [{ age: 30 }, { age: 30 }],
+      interests: ["water"],
+      hotel: { noHotel: false, zone: "tulum" },
+    };
+    const menu = pickCandidates(req, [...cancunTours, tulumTour]).tours.map((p) => p.bokunId);
+    expect(menu).toContain(320);
+    expect(menu.filter((id) => id >= 300 && id < 320)).toHaveLength(4);
+  });
+});
+
+describe("Claude's menu for another version", () => {
+  it("drops the previous version's tours while enough others remain", () => {
+    const many = Array.from({ length: 16 }, (_, i) =>
+      product({ bokunId: 400 + i, title: `Reef Snorkel ${i}`, interests: ["water"] }),
+    );
+    const req: TripRequest = {
+      ...request,
+      travelers: [{ age: 30 }, { age: 30 }],
+      interests: ["water"],
+    };
+    const avoid = [400, 401, 402];
+    const menu = pickCandidates(req, many, { avoid }).tours.map((p) => p.bokunId);
+    for (const id of avoid) expect(menu).not.toContain(id);
+    // With too few alternatives the old tours stay on the menu (at the end).
+    const few = many.slice(0, 6);
+    const menu2 = pickCandidates(req, few, { avoid }).tours.map((p) => p.bokunId);
+    expect(menu2.slice(-3)).toEqual(expect.arrayContaining(avoid));
+  });
+});

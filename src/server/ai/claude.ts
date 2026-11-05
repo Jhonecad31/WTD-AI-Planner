@@ -41,6 +41,9 @@ import {
 const MAX_CANDIDATES = 40;
 /** Below this many interest matches, top the list up with other tours so Claude has room to choose. */
 const MIN_CANDIDATES = 12;
+/** Tours this many hotel zones away (Cancun ↔ Tulum) are a day of driving: only a few make the menu. */
+const FAR_ZONES = 4;
+const MAX_FAR_CANDIDATES = 4;
 
 /** What Claude is allowed to decide. Prices/images are filled in server-side. */
 const DraftItemSchema = z.object({
@@ -79,11 +82,28 @@ export function pickCandidates(
   // Only tours that match the traveler's interests, so a famous name (Coco Bongo) isn't on
   // the menu of someone who never asked for it. Night life is never on the menu unless the
   // traveler picked "party", whatever other tags a bar crawl carries.
-  const matched = scored.filter((x) => x.score > 0 && partyAllowed(x.p, request));
-  const fillers = scored.filter((x) => x.score === 0 && partyAllowed(x.p, request));
-  const tours = [...matched, ...fillers.slice(0, Math.max(0, MIN_CANDIDATES - matched.length))]
+  // Claude picks freely from the menu, so the menu itself stays near the hotel: only the
+  // best few tours 4+ zones away get in, and a trip can't be filled with them.
+  const zone = effectiveZone(request);
+  let far = 0;
+  const nearEnough = (p: CatalogProduct) =>
+    (zoneDistance(p, zone) ?? 0) < FAR_ZONES || far++ < MAX_FAR_CANDIDATES;
+  const matched = scored.filter(
+    (x) => x.score > 0 && partyAllowed(x.p, request) && nearEnough(x.p),
+  );
+  const fillers = scored.filter(
+    (x) => x.score === 0 && partyAllowed(x.p, request) && nearEnough(x.p),
+  );
+  let tours = [...matched, ...fillers.slice(0, Math.max(0, MIN_CANDIDATES - matched.length))]
     .slice(0, MAX_CANDIDATES)
     .map((x) => x.p);
+  // "Try another version": the previous tours leave the menu altogether while enough
+  // others remain, so a new version is really new (asking Claude nicely wasn't enough).
+  if (opts.avoid?.length) {
+    const skip = new Set(opts.avoid);
+    const fresh = tours.filter((p) => !skip.has(p.bokunId));
+    if (fresh.length >= MIN_CANDIDATES) tours = fresh;
+  }
   // On a rainy trip, Extreme Adventure must be on the menu even if it ranked low.
   if (opts.rainy) {
     for (const p of products) {
