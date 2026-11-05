@@ -775,8 +775,8 @@ describe("Claude's menu for another version", () => {
     const avoid = [400, 401, 402];
     const menu = pickCandidates(req, many, { avoid }).tours.map((p) => p.bokunId);
     for (const id of avoid) expect(menu).not.toContain(id);
-    // With too few alternatives the old tours stay on the menu (at the end).
-    const few = many.slice(0, 6);
+    // With fewer fresh tours than tour days (3 here) the old tours stay on the menu (at the end).
+    const few = many.slice(0, 5);
     const menu2 = pickCandidates(req, few, { avoid }).tours.map((p) => p.bokunId);
     expect(menu2.slice(-3)).toEqual(expect.arrayContaining(avoid));
   });
@@ -1029,5 +1029,41 @@ describe("commercial priority (boost)", () => {
     expect(scoreProduct(atv, ["adventure", "water"], opts)).toBeGreaterThan(
       scoreProduct(chichen, ["adventure", "water"], opts),
     );
+  });
+});
+
+describe("try another version excludes the same kind of day, not just the same id", () => {
+  it("leaves out Chichén Deluxe when Chichén Classic was in the previous version", async () => {
+    const { expandAvoid } = await import("./rules");
+    const classic = product({
+      bokunId: 670332,
+      title: "Chichen Itza Classic Cenote & Valladolid Tour",
+      interests: ["cultural"],
+    });
+    const deluxe = product({
+      bokunId: 796133,
+      title: "Chichen Itza Deluxe Tour with Cenote & Valladolid",
+      interests: ["cultural"],
+    });
+    const ekBalam = product({
+      bokunId: 848479,
+      title: "Ek Balam Mayan Traditions",
+      interests: ["cultural"],
+    });
+    const dolphinsCancun = product({
+      bokunId: 1025575,
+      title: "Dolphin Discovery in Cancun (Hotel Zone)",
+      interests: ["water"],
+    });
+    const dolphinsPlaya = product({
+      bokunId: 1028829,
+      title: "Dolphin Discovery in Playa del Carmen",
+      interests: ["water"],
+    });
+    const all = [classic, deluxe, ekBalam, dolphinsCancun, dolphinsPlaya];
+    const expanded = expandAvoid(all, [670332, 1025575]);
+    expect(expanded.sort()).toEqual([1025575, 1028829, 670332, 796133].sort());
+    expect(expanded).not.toContain(848479);
+    expect(expandAvoid(all, undefined)).toEqual([]);
   });
 });

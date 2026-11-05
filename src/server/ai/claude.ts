@@ -101,11 +101,13 @@ export function pickCandidates(
     .slice(0, MAX_CANDIDATES)
     .map((x) => x.p);
   // "Try another version": the previous tours leave the menu altogether while enough
-  // others remain, so a new version is really new (asking Claude nicely wasn't enough).
+  // others remain to fill the tour days, so a new version is really new (asking Claude
+  // nicely wasn't enough). With fewer fresh tours than days, the old ones stay at the end.
   if (opts.avoid?.length) {
     const skip = new Set(opts.avoid);
     const fresh = tours.filter((p) => !skip.has(p.bokunId));
-    if (fresh.length >= MIN_CANDIDATES) tours = fresh;
+    const tourDays = planDays(request).filter((d) => d.label === "full").length;
+    if (fresh.length >= Math.max(1, tourDays)) tours = fresh;
   }
   // On a rainy trip, WhatToDo's parks must be on the menu even if they ranked low, but
   // only when they fit the traveler (an ATV park needs "adventure").

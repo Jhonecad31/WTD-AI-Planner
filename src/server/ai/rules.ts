@@ -10,6 +10,7 @@ import {
   experienceTypes,
   mainExperience,
   primaryInterest,
+  sameKindOfDay,
   variety,
   zoneDistance,
   type Variety,
@@ -256,6 +257,19 @@ export function transferFor(
     })
     .sort((a, b) => b.s - a.s);
   return ranked[0]?.p ?? null;
+}
+
+/**
+ * "Try another version": the previous plan's tours plus every tour that is the same kind
+ * of day as one of them (Chichén Deluxe after Chichén Classic, another Dolphin Discovery),
+ * so the new version is really a different trip, not the same days under other ids.
+ */
+export function expandAvoid(products: CatalogProduct[], avoid: number[] | undefined): number[] {
+  if (!avoid?.length) return [];
+  const avoided = products.filter((p) => avoid.includes(p.bokunId));
+  return products
+    .filter((p) => avoid.includes(p.bokunId) || avoided.some((a) => sameKindOfDay(p, a)))
+    .map((p) => p.bokunId);
 }
 
 /** Moves the avoided products to the end of a ranked list, keeping the order otherwise. */

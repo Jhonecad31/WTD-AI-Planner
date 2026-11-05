@@ -6,7 +6,7 @@ import { effectiveZone, type TripRequest } from "@/lib/trip-schema";
 import type { DayWeather, Itinerary, TripAdvisorRating } from "@/lib/itinerary-schema";
 import { getTripWeather } from "@/server/weather";
 import type { CatalogProduct } from "@/server/catalog/types";
-import { buildRulesItinerary } from "./rules";
+import { buildRulesItinerary, expandAvoid } from "./rules";
 import { draftToItinerary, generateWithClaude } from "./claude";
 import { validateAndRepair } from "./validate";
 import { enrichItinerary } from "./enrich";
@@ -39,16 +39,19 @@ export async function generateItinerary(
   ]);
   // Tripadvisor ratings (cached; empty without a key) break ties between similar picks.
   const ratings = await getRatings(products.map((p) => p.bokunId));
-  const result = await generateWithEngines(request, products, weather, ratings, opts.avoid);
+  // "Try another version": leave out the previous tours and anything that is the same kind
+  // of day as them (another Chichén variant, another dolphin swim).
+  const avoid = expandAvoid(products, opts.avoid);
+  const result = await generateWithEngines(request, products, weather, ratings, avoid);
   // Trip rules (dinners, beach/shopping, arrival/departure, party nights), then re-total.
   // Weather goes on first so rainy days swap the beach for shopping.
   // The engine is only asked to respect the budget: enforce it before the seats check,
   // so any tour swapped in here is verified in Bokun too.
   // Same for variety: no two days of the same kind of experience, whatever the engine chose.
-  const varied = diversify(withWeather(result.itinerary, weather), request, products, opts.avoid);
+  const varied = diversify(withWeather(result.itinerary, weather), request, products, avoid);
   // A full day is a tour day: fill the ones the engine skipped while the budget allows.
-  const filled = fillEmptyDays(varied, request, products, opts.avoid);
-  const withinBudget = fitBudget(filled, request, products, opts.avoid);
+  const filled = fillEmptyDays(varied, request, products, avoid);
+  const withinBudget = fitBudget(filled, request, products, avoid);
   const enriched = enrichItinerary(withinBudget, request, products, {
     ratings,
   });
@@ -58,7 +61,7 @@ export async function generateItinerary(
     request,
     products,
     (bokunId, date) => getAvailability(bokunId, date, date),
-    opts.avoid,
+    avoid,
   );
   const settled =
     report.replaced || report.moved

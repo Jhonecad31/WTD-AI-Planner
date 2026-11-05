@@ -38,10 +38,14 @@ export function diversify(
   const warnings: string[] = [];
   const chosen: { title: string; bokunId?: number; durationMinutes?: number | null }[] = [];
 
+  const avoidSet = new Set(avoid);
   for (const [index, d] of days.entries()) {
     const item = d.items.find((i) => i.kind === "tour");
     if (!item) continue;
-    if (variety(item, chosen) > 0) {
+    // A tour from the previous version ("try another version") is treated like a repeat:
+    // swapped for a fresh one when any fits, kept only when nothing else does.
+    const fromPrevious = item.bokunId !== undefined && avoidSet.has(item.bokunId);
+    if (variety(item, chosen) > 0 && !fromPrevious) {
       chosen.push(item);
       continue;
     }
@@ -95,7 +99,9 @@ export function diversify(
     };
     chosen.push(pick.p);
     warnings.push(
-      `Variety: swapped "${item.title}" on ${d.date} for "${pick.p.title}" (too similar to an earlier day).`,
+      fromPrevious
+        ? `Another version: swapped "${item.title}" on ${d.date} for "${pick.p.title}" (it was in the previous version).`
+        : `Variety: swapped "${item.title}" on ${d.date} for "${pick.p.title}" (too similar to an earlier day).`,
     );
   }
 
