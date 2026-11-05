@@ -51,15 +51,6 @@ export type PickupCoverage =
   /** Pickup service with no usable place list: unknown, treated like "self". */
   | "unknown";
 
-/**
- * Zones whose pickup also serves a hotel zone. The Riviera Maya stretch (Playa Paraíso,
- * Maroma) sits between Puerto Morelos and Playa del Carmen on the same highway, so a
- * tour that collects in either of those collects there too.
- */
-const ALSO_SERVED_BY: Partial<Record<HotelZone, HotelZone[]>> = {
-  riviera_maya: ["puerto_morelos", "playa_del_carmen"],
-};
-
 export function pickupCoverage(
   p: Pick<CatalogProduct, "kind" | "pickupService" | "pickupPlaces">,
   zone: HotelZone,
@@ -68,6 +59,5 @@ export function pickupCoverage(
   if (!p.pickupService) return "self";
   const zones = pickupZones(p);
   if (!zones.length) return "unknown";
-  const serves = [zone, ...(ALSO_SERVED_BY[zone] ?? [])];
-  return zones.some((z) => serves.includes(z)) ? "included" : "not_here";
+  return zones.includes(zone) ? "included" : "not_here";
 }

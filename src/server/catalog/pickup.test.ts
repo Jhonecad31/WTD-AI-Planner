@@ -31,27 +31,4 @@ describe("pickup zones", () => {
     const ride = { kind: "transfer" as const, pickupService: true, pickupPlaces: [] };
     expect(pickupCoverage(ride, "tulum")).toBe("included");
   });
-
-  it("a tour that collects in Puerto Morelos or Playa del Carmen also serves the Riviera Maya", () => {
-    const fromPlaya = {
-      kind: "tour" as const,
-      pickupService: true,
-      pickupPlaces: places("Cancun", "Playa del Carmen"),
-    };
-    const fromMorelos = {
-      kind: "tour" as const,
-      pickupService: true,
-      pickupPlaces: places("Cancun", "Puerto Morelos"),
-    };
-    const cancunOnly = {
-      kind: "tour" as const,
-      pickupService: true,
-      pickupPlaces: places("Cancun"),
-    };
-    expect(pickupCoverage(fromPlaya, "riviera_maya")).toBe("included");
-    expect(pickupCoverage(fromMorelos, "riviera_maya")).toBe("included");
-    expect(pickupCoverage(cancunOnly, "riviera_maya")).toBe("not_here");
-    // The other way round still needs the zone itself.
-    expect(pickupCoverage(fromPlaya, "puerto_morelos")).toBe("not_here");
-  });
 });
