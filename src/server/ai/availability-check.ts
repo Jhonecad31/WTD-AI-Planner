@@ -167,8 +167,10 @@ export async function verifyAvailability(
           !used.has(p.bokunId) &&
           fitsAges(p, request.travelers) &&
           (!slot || fitsDay(p, slot, request)) &&
-          (partyOk || !isParty(p)) &&
+          (!isParty(p) || (request.interests.includes("party") && partyOk)) &&
           !(badWeather && isSeaTour(p)) &&
+          // Never a repeat of another day; the day goes free before that.
+          variety(p, otherTours) > 0 &&
           spentElsewhere + priceProductForParty(p, request.travelers).priceTotalUsd <= budgetTotal,
       )
       .map((p) => ({
@@ -179,9 +181,7 @@ export async function verifyAvailability(
         }),
       }))
       .filter((x) => x.score > 0)
-      // A replacement that isn't a repeat of another day first, then by fit.
-      .map((x) => ({ ...x, fresh: Number(variety(x.p, otherTours) > 0) }))
-      .sort((a, b) => b.fresh - a.fresh || b.score - a.score);
+      .sort((a, b) => b.score - a.score);
     lastIfAvoided(ranked, avoid, (x) => x.p.bokunId);
     const candidates = ranked.slice(0, MAX_ALTERNATIVES_CHECKED);
 

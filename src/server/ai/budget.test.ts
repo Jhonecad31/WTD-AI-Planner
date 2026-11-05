@@ -129,6 +129,60 @@ describe("fitBudget", () => {
     expect(tourIds(fixed).length).toBeGreaterThan(0);
   });
 
+  it("leaves the day free rather than swapping in a repeat of another day", () => {
+    // The only cheaper swap for the whale shark day is a catamaran, but the trip already
+    // has a catamaran day (which is too cheap to swap itself): drop, don't repeat.
+    const sea = [
+      product({
+        bokunId: 21,
+        title: "Whale Shark Snorkel",
+        interests: ["water"],
+        priceFromUsd: 150,
+      }),
+      product({
+        bokunId: 22,
+        title: "Catamaran Isla Mujeres Tour",
+        interests: ["water"],
+        priceFromUsd: 30,
+      }),
+      product({
+        bokunId: 23,
+        title: "Isla Mujeres Premium Catamaran",
+        interests: ["water"],
+        priceFromUsd: 40,
+      }),
+    ];
+    const req = { ...request, interests: ["water" as const], budgetPerPerson: 1000 };
+    const plan = buildRulesItinerary({ request: req, products: sea.slice(0, 2) });
+    expect(tourIds(plan)).toEqual([21, 22]);
+    const fixed = fitBudget(plan, { ...req, budgetPerPerson: 80 }, sea);
+    expect(spent(fixed)).toBeLessThanOrEqual(80 * 2);
+    expect(tourIds(fixed)).toEqual([22]);
+    expect(fixed.days.flatMap((d) => d.items).some((i) => i.kind === "free")).toBe(true);
+  });
+
+  it("never swaps in night life the traveler didn't ask for", () => {
+    const withClub = [
+      ...catalog,
+      product({
+        bokunId: 31,
+        title: "Mandala Beach Club",
+        interests: ["beach", "party"],
+        priceFromUsd: 20,
+      }),
+    ];
+    const plan = buildRulesItinerary({
+      request: { ...request, interests: ["cultural", "beach"] },
+      products: withClub,
+    });
+    const fixed = fitBudget(
+      plan,
+      { ...request, interests: ["cultural", "beach"], budgetPerPerson: 100 },
+      withClub,
+    );
+    expect(tourIds(fixed)).not.toContain(31);
+  });
+
   it("drops tours when nothing cheaper fits, but keeps at least one", () => {
     const broke = { ...request, budgetPerPerson: 10 };
     const fixed = fitBudget(rich, broke, catalog);

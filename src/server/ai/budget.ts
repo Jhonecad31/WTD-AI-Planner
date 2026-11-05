@@ -76,8 +76,12 @@ export function fitBudget(
             !used.has(p.bokunId) &&
             fitsAges(p, request.travelers) &&
             fitsDay(p, slot, request) &&
-            (!isParty(p) || partyNightOk(days, index)) &&
+            // Night life only when asked for, and only before a rest or departure day.
+            (!isParty(p) || (request.interests.includes("party") && partyNightOk(days, index))) &&
             !(badWeather && (isSeaTour(p) || p.interests.includes("beach"))) &&
+            // Never a repeat of another day (a second catamaran or speedboat): when no
+            // different kind of tour is cheaper, the day goes free instead.
+            variety(p, otherTours) > 0 &&
             price(p) < item.priceTotalUsd,
         )
         .map((p) => ({
@@ -86,8 +90,6 @@ export function fitBudget(
           cost: price(p),
           // Keeps what would otherwise vanish from the trip (e.g. the only ruins day).
           keepsLost: Number(p.interests.some((i) => lost.includes(i))),
-          // A second ATV or dolphin day reads as a repeat, whatever the interest tags say.
-          fresh: Number(variety(p, otherTours) > 0),
           // Same kind of day as the tour it replaces (ruins for ruins, adventure for adventure).
           sameTheme: Number(p.interests.some((i) => original?.interests.includes(i))),
         }))
@@ -103,17 +105,12 @@ export function fitBudget(
         ? fixes.sort(
             (a, b) =>
               b.keepsLost - a.keepsLost ||
-              b.fresh - a.fresh ||
               b.sameTheme - a.sameTheme ||
               b.score - a.score ||
               b.cost - a.cost,
           )[0]
         : cheaper.sort(
-            (a, b) =>
-              b.keepsLost - a.keepsLost ||
-              b.fresh - a.fresh ||
-              b.sameTheme - a.sameTheme ||
-              a.cost - b.cost,
+            (a, b) => b.keepsLost - a.keepsLost || b.sameTheme - a.sameTheme || a.cost - b.cost,
           )[0];
       // The old note described the old tour, so the new one starts without a note.
       const next: ItineraryItem = toItem(pick.p, request, slot);
