@@ -1,9 +1,17 @@
 import type { CatalogProduct, Interest } from "@/server/catalog/types";
-import { effectiveZone, type TripRequest } from "@/lib/trip-schema";
+import { effectiveZone, type HotelZone, type TripRequest } from "@/lib/trip-schema";
 import type { DayWeather, Itinerary, ItineraryDay, ItineraryItem } from "@/lib/itinerary-schema";
 import { fitsAges, priceProductForParty, round2 } from "./pricing";
 import { planDays, type DaySlot } from "@/lib/plan-days";
 import { isPrivateTitle } from "@/lib/item-meta";
+import { pickupCoverage } from "@/server/catalog/pickup";
+import {
+  experienceTypes,
+  primaryInterest,
+  variety,
+  zoneDistance,
+  type Variety,
+} from "@/server/catalog/experience";
 
 export { planDays, type DaySlot } from "@/lib/plan-days";
 
@@ -37,6 +45,43 @@ export function isParty(p: { interests: Interest[] }): boolean {
   return p.interests.includes("party");
 }
 
+/** Night life must be close to the hotel: nobody rides an hour back from a club. */
+export const NIGHTLIFE_MAX_ZONES = 1;
+
+/**
+ * Whether a night-life product may go in this trip at all: only when the traveler asked
+ * for "party" and the venue is within NIGHTLIFE_MAX_ZONES of the hotel (unknown area
+ * passes). Where in the trip it goes is `partyNightOk`.
+ */
+export function partyAllowed(p: CatalogProduct, request: TripRequest): boolean {
+  if (!isParty(p)) return true;
+  if (!request.interests.includes("party")) return false;
+  const steps = zoneDistance(p, effectiveZone(request));
+  return steps === null || steps <= NIGHTLIFE_MAX_ZONES;
+}
+
+/** The traveler asked to skip this kind of experience (any of the tour's types). */
+export function isAvoided(p: { title: string; bokunId?: number }, request: TripRequest): boolean {
+  if (!request.avoidTypes?.length) return false;
+  const skip = new Set(request.avoidTypes);
+  return experienceTypes(p).some((t) => skip.has(t));
+}
+
+/**
+ * Whether a product may go in this traveler's trip at all: not a kind they asked to
+ * skip, and night life only when wanted and near the hotel. Every engine and guard
+ * filters on this, so the wizard's "I'd rather skip" chips are a guarantee.
+ */
+export function allowedForTraveler(p: CatalogProduct, request: TripRequest): boolean {
+  return (
+    !isAvoided(p, request) &&
+    partyAllowed(p, request) &&
+    // A tour that picks up along the coast but not from this hotel's zone can't be booked
+    // with pickup for this traveler: off the menu.
+    pickupCoverage(p, effectiveZone(request)) !== "not_here"
+  );
+}
+
 export function hasYoungKids(request: Pick<TripRequest, "travelers">): boolean {
   return request.travelers.some((t) => t.age < 12);
 }
@@ -56,20 +101,85 @@ export function isSeaTour(p: { title: string }): boolean {
 
 /** Tours this long (Chichén Itzá day trips) are hard on young kids. */
 export const LONG_TOUR_MINUTES = 10 * 60;
+/** Under this age, at most one tour of LONG_TOUR_MINUTES+ per trip (a hard rule, not a penalty). */
+export const LONG_TOUR_KID_AGE = 6;
+/** The tour budget may be exceeded by this much before the guard swaps or drops tours. */
+export const BUDGET_TOLERANCE = 1.05;
+
+export function isLongTour(p: { durationMinutes: number | null }): boolean {
+  return (p.durationMinutes ?? 0) >= LONG_TOUR_MINUTES;
+}
+
+/**
+ * With a child under LONG_TOUR_KID_AGE, a second 10 h+ day is never planned: one long
+ * day trip is enough. `others` are the tours already in the trip.
+ */
+export function longTourOk(
+  p: { durationMinutes: number | null },
+  request: Pick<TripRequest, "travelers">,
+  others: { durationMinutes?: number | null }[],
+): boolean {
+  if (!isLongTour(p)) return true;
+  const youngest = Math.min(...request.travelers.map((t) => t.age));
+  if (youngest >= LONG_TOUR_KID_AGE) return true;
+  return !others.some((o) => (o.durationMinutes ?? 0) >= LONG_TOUR_MINUTES);
+}
+
+/** Tours per person within the budget (with the tolerance). */
+export function withinBudget(toursUsd: number, request: TripRequest): boolean {
+  return round2(toursUsd / request.travelers.length) <= request.budgetPerPerson * BUDGET_TOLERANCE;
+}
+
+/** A tour whose main interest the traveler picked outranks one that only touches it. */
+const MAIN_INTEREST_POINTS = 6;
+const SECONDARY_INTEREST_POINTS = 1.5;
+/**
+ * Per hotel zone between the hotel and where the tour happens (Cancun → Tulum is 5).
+ * Breaks ties toward nearby tours without ever beating a main-interest match.
+ */
+const ZONE_STEP_PENALTY = 0.75;
+
+export interface ScoreOptions {
+  preferPrivate?: boolean;
+  youngKids?: boolean;
+  /** Hotel zone: tours far down the coast rank lower. */
+  zone?: HotelZone;
+}
+
+/** The scoring options every engine and guard should pass for a request. */
+export function scoreOpts(request: TripRequest): ScoreOptions {
+  return {
+    preferPrivate: request.preferPrivate,
+    youngKids: hasYoungKids(request),
+    zone: effectiveZone(request),
+  };
+}
 
 export function scoreProduct(
   p: CatalogProduct,
   interests: Interest[],
-  opts: { preferPrivate?: boolean; youngKids?: boolean } = {},
+  opts: ScoreOptions = {},
 ): number {
   if (p.kind !== "tour" && p.kind !== "ticket") return -1;
-  const overlap = p.interests.filter((i) => interests.includes(i)).length;
-  if (overlap === 0) return 0;
+  const overlap = p.interests.filter((i) => interests.includes(i));
+  if (overlap.length === 0) return 0;
+  // What the tour mainly is (ruins, ATV, dolphins…) counts far more than the tags it
+  // also carries, so a 5-tag park doesn't beat a focused tour of the asked interest.
+  const main = primaryInterest(p) ?? p.interests[0];
+  const mainHit = interests.includes(main) ? MAIN_INTEREST_POINTS : 0;
+  const secondary = overlap.filter((i) => i !== main).length * SECONDARY_INTEREST_POINTS;
   // No reviews means no rating yet (Bokun reports 0): treat as an average tour, not a bad one.
   const rating = p.reviewCount ? (p.rating ?? 4.5) : 4.5;
   const reviews = Math.log10((p.reviewCount ?? 0) + 1);
-  let score = overlap * 3 + rating + reviews;
+  let score = mainHit + secondary + rating + reviews;
   if (opts.preferPrivate && isPrivateTitle(p.title)) score += 3;
+  if (opts.zone) {
+    const steps = zoneDistance(p, opts.zone);
+    // Distance weighs half when the tour picks up at the hotel (a long ride, but included);
+    // in full when the traveler has to get to a marina or park on their own.
+    const weight = pickupCoverage(p, opts.zone) === "included" ? 0.5 : 1;
+    if (steps) score = Math.max(0.1, score - steps * ZONE_STEP_PENALTY * weight);
+  }
   // Very long day trips rank last with young kids (still allowed if nothing else fits).
   if (opts.youngKids && (p.durationMinutes ?? 0) >= LONG_TOUR_MINUTES)
     score = Math.max(0.1, score - 6);
@@ -178,18 +288,17 @@ export function buildRulesItinerary(inputs: PlanInputs): Itinerary {
   const warnings: string[] = [];
   const slots = planDays(request);
 
-  // Candidate tours ranked by interest fit and reputation.
+  // Candidate tours ranked by interest fit and reputation. Night life only when the
+  // traveler asked for it, whatever other tags a bar crawl carries.
   const candidates = products
     .filter(
       (p) => p.onSite && (p.kind === "tour" || p.kind === "ticket") && (p.priceFromUsd ?? 0) > 0,
     )
     .filter((p) => fitsAges(p, request.travelers))
+    .filter((p) => allowedForTraveler(p, request))
     .map((p) => ({
       p,
-      score: scoreProduct(p, request.interests, {
-        preferPrivate: request.preferPrivate,
-        youngKids: hasYoungKids(request),
-      }),
+      score: scoreProduct(p, request.interests, scoreOpts(request)),
     }))
     .filter((x) => x.score > 0)
     .sort((a, b) => b.score - a.score);
@@ -214,15 +323,14 @@ export function buildRulesItinerary(inputs: PlanInputs): Itinerary {
     warnings.push("No transfer product found in catalog for the requested zone.");
   }
 
-  // Reserve the transfer money up front so tours never push the party over budget.
-  const transferUnit = transferProduct
-    ? priceProductForParty(transferProduct, request.travelers).priceTotalUsd
-    : 0;
-  const transferLegs = (request.transfers.arrival ? 1 : 0) + (request.transfers.departure ? 1 : 0);
-  let spent = transferProduct ? transferUnit * transferLegs : 0;
+  // The budget is for tours only: transfers are priced per vehicle and shown as an extra
+  // ("+USD X") when the traveler picks them, so they never eat into the tour money.
+  let spent = 0;
   const used = new Set<number>();
   const coveredInterests = new Set<Interest>();
   const days: ItineraryDay[] = [];
+  /** Tours already in the trip, so no two days are the same kind of experience. */
+  const chosen: CatalogProduct[] = [];
 
   // Keep Extreme Adventure for rainy days when the forecast shows any.
   const rainyDaysAhead = slots.filter((x) => inputs.weather?.[x.date]?.kind === "rainy").length;
@@ -251,37 +359,52 @@ export function buildRulesItinerary(inputs: PlanInputs): Itinerary {
         fitsDay(p, slot, request) &&
         inputs.isAvailable?.(p.bokunId, slot.date) !== false &&
         priceProductForParty(p, request.travelers).priceTotalUsd <= remaining;
-      const rainyPick = w?.kind === "rainy" ? rainyPool.find((p) => fitsHere(p)) : undefined;
-      const pick =
-        (rainyPick ? { p: rainyPick } : undefined) ??
-        candidates.find(({ p }) => {
-          if (used.has(p.bokunId)) return false;
-          if (badWeather && isSeaTour(p)) return false;
-          if (!partyOk && isParty(p)) return false;
-          if (rainyDaysAhead > 0 && w?.kind !== "rainy" && isRainyFavorite(p)) return false;
-          if (!fitsDay(p, slot, request)) return false;
-          const avail = inputs.isAvailable?.(p.bokunId, slot.date);
-          if (avail === false) return false;
-          const cost = priceProductForParty(p, request.travelers).priceTotalUsd;
-          if (cost > remaining) return false;
-          const fresh = p.interests.some(
-            (i) => request.interests.includes(i) && !coveredInterests.has(i),
-          );
-          return fresh || coverable.every((i) => coveredInterests.has(i));
-        }) ??
-        candidates.find(({ p }) => !(badWeather && isSeaTour(p)) && fitsHere(p)) ??
-        candidates.find(({ p }) => {
-          if (used.has(p.bokunId) || !fitsDay(p, slot, request)) return false;
-          if (!partyOk && isParty(p)) return false;
-          if (inputs.isAvailable?.(p.bokunId, slot.date) === false) return false;
-          return priceProductForParty(p, request.travelers).priceTotalUsd <= budgetTotal - spent;
-        });
+      // Rainy days go to WhatToDo's parks, unless that repeats the same kind of day.
+      const rainyPick =
+        w?.kind === "rainy"
+          ? rainyPool.find((p) => variety(p, chosen) >= 1 && fitsHere(p))
+          : undefined;
+      // Variety: a tour with a different main kind than the trip's other days (Tulum after
+      // Chichén is fine, a second dolphin swim is not); only when nothing else fits, the
+      // same kind of day again. Within that, the best interest fit wins.
+      const pickWith = (min: Variety) => {
+        const varied = (p: CatalogProduct) =>
+          variety(p, chosen) >= min && longTourOk(p, request, chosen);
+        return (
+          candidates.find(({ p }) => {
+            if (!varied(p)) return false;
+            if (used.has(p.bokunId)) return false;
+            if (badWeather && isSeaTour(p)) return false;
+            if (!partyOk && isParty(p)) return false;
+            if (rainyDaysAhead > 0 && w?.kind !== "rainy" && isRainyFavorite(p)) return false;
+            if (!fitsDay(p, slot, request)) return false;
+            const avail = inputs.isAvailable?.(p.bokunId, slot.date);
+            if (avail === false) return false;
+            const cost = priceProductForParty(p, request.travelers).priceTotalUsd;
+            if (cost > remaining) return false;
+            const fresh = p.interests.some(
+              (i) => request.interests.includes(i) && !coveredInterests.has(i),
+            );
+            return fresh || coverable.every((i) => coveredInterests.has(i));
+          }) ??
+          candidates.find(({ p }) => varied(p) && !(badWeather && isSeaTour(p)) && fitsHere(p)) ??
+          candidates.find(({ p }) => {
+            if (!varied(p)) return false;
+            if (used.has(p.bokunId) || !fitsDay(p, slot, request)) return false;
+            if (!partyOk && isParty(p)) return false;
+            if (inputs.isAvailable?.(p.bokunId, slot.date) === false) return false;
+            return priceProductForParty(p, request.travelers).priceTotalUsd <= budgetTotal - spent;
+          })
+        );
+      };
+      const pick = (rainyPick ? { p: rainyPick } : undefined) ?? pickWith(1) ?? pickWith(0);
 
       if (pick) {
         const it = toItem(pick.p, request, slot);
         items.push(it);
         spent += it.priceTotalUsd;
         used.add(pick.p.bokunId);
+        chosen.push(pick.p);
         pick.p.interests.forEach((i) => request.interests.includes(i) && coveredInterests.add(i));
       } else if (slot.label === "full") {
         items.push({
@@ -347,7 +470,7 @@ export function buildRulesItinerary(inputs: PlanInputs): Itinerary {
       totalUsd,
       perPersonUsd,
       budgetPerPersonUsd: request.budgetPerPerson,
-      withinBudget: perPersonUsd <= request.budgetPerPerson,
+      withinBudget: withinBudget(toursUsd, request),
       diningEstimateUsd: 0,
     },
     introWarnings: [],

@@ -20,6 +20,7 @@ import {
 } from "@/lib/trip-schema";
 import type { Itinerary } from "@/lib/itinerary-schema";
 import type { Interest } from "@/server/catalog/types";
+import type { ExperienceType } from "@/server/catalog/experience";
 
 /**
  * Wizard state lives on the client and survives reloads via sessionStorage.
@@ -54,6 +55,8 @@ export interface WizardDraft {
   travelers: TravelerDraft[];
   travelerTitle?: TripRequest["travelerTitle"];
   interests: Interest[];
+  /** Kinds of experience to skip (from the "I'd rather skip" chips). */
+  avoidTypes?: ExperienceType[];
   preferPrivate: boolean;
   dining: Dining;
   chillDays: TripRequest["chillDays"];

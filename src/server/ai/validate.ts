@@ -7,7 +7,7 @@ import {
   type ItineraryItem,
 } from "@/lib/itinerary-schema";
 import { fitsAges, priceProductForParty, round2 } from "./pricing";
-import { planDays, transferFor } from "./rules";
+import { planDays, transferFor, withinBudget } from "./rules";
 
 /**
  * Server-side guarantees that do not depend on which engine produced the plan:
@@ -145,7 +145,8 @@ export function validateAndRepair(
         totalUsd,
         perPersonUsd,
         budgetPerPersonUsd: request.budgetPerPerson,
-        withinBudget: perPersonUsd <= request.budgetPerPerson,
+        // The budget covers tours only; transfers are an extra the traveler opted into.
+        withinBudget: withinBudget(toursUsd, request),
         diningEstimateUsd,
       },
       warnings: [...parsed.warnings, ...fixes],

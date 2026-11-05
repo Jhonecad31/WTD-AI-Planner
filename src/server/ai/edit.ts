@@ -3,7 +3,15 @@ import type { AvailabilitySlot } from "@/server/catalog/availability";
 import type { TripRequest } from "@/lib/trip-schema";
 import type { Itinerary, ItineraryItem } from "@/lib/itinerary-schema";
 import { fitsAges, priceProductForParty } from "./pricing";
-import { fitsDay, planDays, pickStartTime, scoreProduct, toItem } from "./rules";
+import {
+  allowedForTraveler,
+  fitsDay,
+  planDays,
+  pickStartTime,
+  scoreOpts,
+  scoreProduct,
+  toItem,
+} from "./rules";
 import { validateAndRepair } from "./validate";
 import { enrichItinerary } from "./enrich";
 
@@ -203,7 +211,8 @@ export async function alternativesForDay(
     .filter((p) => !used.has(p.bokunId) || p.bokunId === current)
     .filter((p) => p.bokunId !== current)
     .filter((p) => fitsAges(p, request.travelers) && fitsDay(p, slot, request))
-    .map((p) => ({ p, score: scoreProduct(p, request.interests) }))
+    .filter((p) => allowedForTraveler(p, request))
+    .map((p) => ({ p, score: scoreProduct(p, request.interests, scoreOpts(request)) }))
     .sort((a, b) => b.score - a.score)
     .slice(0, limit * 2);
 

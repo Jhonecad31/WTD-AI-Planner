@@ -103,6 +103,7 @@ export const ItinerarySchema = z.object({
     totalUsd: z.number().nonnegative(),
     perPersonUsd: z.number().nonnegative(),
     budgetPerPersonUsd: z.number().nonnegative(),
+    /** Tours per person within the budget. Transfers are an extra on top, never counted. */
     withinBudget: z.boolean(),
     /** Estimated dinner spend for the whole party (paid at the restaurants, not included above). */
     diningEstimateUsd: z.number().nonnegative().default(0),

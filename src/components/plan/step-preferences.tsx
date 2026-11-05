@@ -24,6 +24,17 @@ import { Notice } from "@/components/ui/notice";
 import { PacePicker } from "./pace-picker";
 import { INTEREST_PHOTOS } from "@/content/interest-photos";
 import { BudgetCard } from "./budget-card";
+import { fullDates } from "@/lib/plan-days";
+import { draftRestDates } from "./wizard-state";
+
+/**
+ * "Wellness & relax" has no tours behind it (the pace picker already covers rest days),
+ * so it isn't offered: a traveler who picks it would get a plan that ignores it.
+ */
+const SELECTABLE_INTERESTS = INTERESTS.filter((i) => i !== "chill");
+
+/** Typical tour price per person (catalog median ≈ USD 109), for the "fits ~N tours" hint. */
+const TYPICAL_TOUR_PP_USD = 105;
 
 const ICONS: Record<Interest, ReactNode> = {
   adventure: <AdventureIcon size={20} />,
@@ -50,6 +61,14 @@ export function StepPreferences() {
   const { draft, patch } = useWizard();
 
   const kids = draft.travelers.some((tr) => tr.age < 13);
+  // How many tours the budget buys vs. how many tour days the pace leaves.
+  const from = draft.inbound.date;
+  const to = draft.outbound.date;
+  const tourDays =
+    from && to && to > from
+      ? fullDates(from, to).length - (draftRestDates(draft)?.length ?? 0)
+      : null;
+  const toursThatFit = Math.floor(draft.budgetPerPerson / TYPICAL_TOUR_PP_USD);
 
   function toggle(i: Interest) {
     patch({
@@ -68,7 +87,7 @@ export function StepPreferences() {
 
       <section className="flex flex-col gap-3">
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-          {INTERESTS.map((i) => (
+          {SELECTABLE_INTERESTS.map((i) => (
             <OptionCard
               key={i}
               selected={draft.interests.includes(i)}
@@ -111,6 +130,17 @@ export function StepPreferences() {
           total: formatUsd(draft.budgetPerPerson * draft.travelers.length, locale),
           count: draft.travelers.length,
         })}
+        hint={
+          tourDays !== null && tourDays > 0
+            ? {
+                text:
+                  toursThatFit >= tourDays
+                    ? t("budgetFitsAll", { days: tourDays })
+                    : t("budgetFits", { tours: Math.max(1, toursThatFit), days: tourDays }),
+                tone: toursThatFit >= tourDays ? "ok" : "warn",
+              }
+            : undefined
+        }
         onChange={(budgetPerPerson) => patch({ budgetPerPerson })}
       />
 

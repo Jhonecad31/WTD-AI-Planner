@@ -5,27 +5,14 @@ import { validateAndRepair } from "@/server/ai/validate";
 import { renderTripPdf } from "@/server/pdf/trip-pdf";
 import { sendLeadEmails, pdfUrlFor } from "@/server/email";
 import { getLeadStore, newId, newRef, newToken } from "@/server/store";
+import { clientIp, rateLimit, tooMany } from "@/server/ratelimit";
 
 export const maxDuration = 60;
 
-/** Very small in-memory throttle: 5 submissions per IP per hour (Upstash in production). */
-const hits = new Map<string, number[]>();
-function throttled(ip: string): boolean {
-  const now = Date.now();
-  const recent = (hits.get(ip) ?? []).filter((t) => now - t < 60 * 60 * 1000);
-  recent.push(now);
-  hits.set(ip, recent);
-  return recent.length > 5;
-}
-
 export async function POST(request: NextRequest) {
-  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "local";
-  if (throttled(ip)) {
-    return Response.json(
-      { error: "Too many submissions. Please try again later." },
-      { status: 429 },
-    );
-  }
+  // 5 submissions per IP per hour (shared across instances when Upstash is configured).
+  const limited = await rateLimit("lead", clientIp(request), { limit: 5, windowSec: 3600 });
+  if (!limited.ok) return tooMany(limited, "Too many submissions. Please try again later.");
 
   const parsed = LeadSubmissionSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) {
@@ -41,7 +28,10 @@ export async function POST(request: NextRequest) {
     const products = await getPlannerProducts();
     const { itinerary } = validateAndRepair(rawItinerary, trip, products);
 
-    /*const store = getLeadStore();
+    const store = getLeadStore();
+    // Vercel has no writable disk: there the lead is not written locally (the team's own
+    // backend keeps it); in local dev it goes to .data/ as before.
+    const isVercel = process.env.VERCEL === "1";
     const now = new Date().toISOString();
     const lead: LeadRecord = {
       id: newId(),
@@ -51,7 +41,7 @@ export async function POST(request: NextRequest) {
       status: "new",
       name: input.name,
       email: input.email.toLowerCase(),
-      phone: input.phone ? input.phone : null,
+      phone: input.phone || null,
       locale: input.locale,
       consentAt: now,
       request: trip,
@@ -62,59 +52,15 @@ export async function POST(request: NextRequest) {
       notes: [],
       bokunConfirmationCodes: [],
     };
-    await store.createLead(lead);
+    if (!isVercel) await store.createLead(lead);
 
     const pdf = await renderTripPdf({ name: lead.name, ref: lead.ref, request: trip, itinerary });
-    lead.pdfPath = await store.savePdf(lead.id, pdf);
-    await store.updateLead(lead.id, { pdfPath: lead.pdfPath });
+    if (!isVercel) {
+      lead.pdfPath = await store.savePdf(lead.id, pdf);
+      await store.updateLead(lead.id, { pdfPath: lead.pdfPath });
+    }
 
-    const emails = await sendLeadEmails(lead);*/
-
-    /*Cambiamos el bloque del llamado de la api para que no marque ese error*/
-    const store = getLeadStore();
-const isVercel = process.env.VERCEL === "1";
-
-const now = new Date().toISOString();
-
-const lead: LeadRecord = {
-  id: newId(),
-  ref: newRef(),
-  token: newToken(),
-  createdAt: now,
-  status: "new",
-  name: input.name,
-  email: input.email.toLowerCase(),
-  phone: input.phone || null,
-  locale: input.locale,
-  consentAt: now,
-  request: trip,
-  itinerary,
-  engine: engine ?? null,
-  totalUsd: itinerary.totals.totalUsd,
-  pdfPath: null,
-  notes: [],
-  bokunConfirmationCodes: [],
-};
-
-// En local seguimos guardando el lead como antes.
-// En Vercel omitimos la escritura temporal en disco.
-if (!isVercel) {
-  await store.createLead(lead);
-}
-
-const pdf = await renderTripPdf({
-  name: lead.name,
-  ref: lead.ref,
-  request: trip,
-  itinerary,
-});
-
-if (!isVercel) {
-  lead.pdfPath = await store.savePdf(lead.id, pdf);
-  await store.updateLead(lead.id, { pdfPath: lead.pdfPath });
-}
-
-const emails = await sendLeadEmails(lead, pdf);
+    const emails = await sendLeadEmails(lead, pdf);
 
     return Response.json({
       ok: true,
@@ -124,7 +70,7 @@ const emails = await sendLeadEmails(lead, pdf);
       emails: emails.map((e) => ({ kind: e.kind, status: e.status, provider: e.provider })),
     });
   } catch (e) {
-    console.error("[api/lead]", e); 
+    console.error("[api/lead]", e);
     return Response.json(
       { error: "We couldn't save your itinerary. Please try again." },
       { status: 500 },

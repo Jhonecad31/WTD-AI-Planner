@@ -72,10 +72,11 @@ const request: TripRequest = {
   budgetPerPerson: 1000,
 };
 
+// Tours only: transfers are an extra on top of the budget.
 const spent = (it: ReturnType<typeof fitBudget>) =>
   it.days
     .flatMap((d) => d.items)
-    .filter((i) => i.kind === "tour" || i.kind === "transfer")
+    .filter((i) => i.kind === "tour")
     .reduce((s, i) => s + i.priceTotalUsd, 0);
 const tourIds = (it: ReturnType<typeof fitBudget>) =>
   it.days
@@ -95,7 +96,7 @@ describe("fitBudget", () => {
     const tight = { ...request, budgetPerPerson: 130 };
     expect(spent(rich)).toBeGreaterThan(130 * 2);
     const fixed = fitBudget(rich, tight, catalog);
-    expect(spent(fixed)).toBeLessThanOrEqual(130 * 2);
+    expect(spent(fixed)).toBeLessThanOrEqual(130 * 2 * 1.05);
     expect(tourIds(fixed)).not.toContain(1);
     expect(tourIds(fixed)).not.toContain(2);
     expect(tourIds(fixed)).not.toContain(5); // couples isn't one of their interests
@@ -118,15 +119,81 @@ describe("fitBudget", () => {
     expect(first.length).toBeGreaterThan(0);
 
     const fixed = fitBudget(rich, tight, wider, first as number[]);
-    expect(spent(fixed)).toBeLessThanOrEqual(160 * 2);
+    expect(spent(fixed)).toBeLessThanOrEqual(160 * 2 * 1.05);
     expect(tourIds(fixed).some((id) => first.includes(id))).toBe(false);
   });
 
   it("still uses an avoided tour when it's the only one that fits", () => {
     const tight = { ...request, budgetPerPerson: 130 };
     const fixed = fitBudget(rich, tight, catalog, [3, 4]);
-    expect(spent(fixed)).toBeLessThanOrEqual(130 * 2);
+    expect(spent(fixed)).toBeLessThanOrEqual(130 * 2 * 1.05);
     expect(tourIds(fixed).length).toBeGreaterThan(0);
+  });
+
+  it("leaves the day free rather than swapping in a repeat of another day", () => {
+    // The only cheaper swap for the whale shark day is a catamaran, but the trip already
+    // has a catamaran day (which is too cheap to swap itself): drop, don't repeat.
+    const sea = [
+      product({
+        bokunId: 21,
+        title: "Whale Shark Snorkel",
+        interests: ["water"],
+        priceFromUsd: 150,
+      }),
+      product({
+        bokunId: 22,
+        title: "Catamaran Isla Mujeres Tour",
+        interests: ["water"],
+        priceFromUsd: 30,
+      }),
+      product({
+        bokunId: 23,
+        title: "Isla Mujeres Premium Catamaran",
+        interests: ["water"],
+        priceFromUsd: 40,
+      }),
+    ];
+    const req = { ...request, interests: ["water" as const], budgetPerPerson: 1000 };
+    const plan = buildRulesItinerary({ request: req, products: sea.slice(0, 2) });
+    expect(tourIds(plan)).toEqual([21, 22]);
+    const fixed = fitBudget(plan, { ...req, budgetPerPerson: 80 }, sea);
+    expect(spent(fixed)).toBeLessThanOrEqual(80 * 2 * 1.05);
+    expect(tourIds(fixed)).toEqual([22]);
+    expect(fixed.days.flatMap((d) => d.items).some((i) => i.kind === "free")).toBe(true);
+  });
+
+  it("never swaps in night life the traveler didn't ask for", () => {
+    const withClub = [
+      ...catalog,
+      product({
+        bokunId: 31,
+        title: "Mandala Beach Club",
+        interests: ["beach", "party"],
+        priceFromUsd: 20,
+      }),
+    ];
+    const plan = buildRulesItinerary({
+      request: { ...request, interests: ["cultural", "beach"] },
+      products: withClub,
+    });
+    const fixed = fitBudget(
+      plan,
+      { ...request, interests: ["cultural", "beach"], budgetPerPerson: 100 },
+      withClub,
+    );
+    expect(tourIds(fixed)).not.toContain(31);
+  });
+
+  it("doesn't drop a tour for being a few dollars over (5 % tolerance), and explains a dropped day", () => {
+    // Rich plan spends 90+110+80 = 280 per adult-ish; a budget 3 % under that is left alone.
+    const toursTotal = tourIds(rich).length ? spent(rich) : 0;
+    const perPerson = toursTotal / request.travelers.length;
+    const slightlyUnder = { ...request, budgetPerPerson: Math.floor(perPerson * 0.97) };
+    expect(fitBudget(rich, slightlyUnder, catalog)).toBe(rich);
+    const broke = { ...request, budgetPerPerson: 10 };
+    const fixed = fitBudget(rich, broke, catalog);
+    const free = fixed.days.flatMap((d) => d.items).find((i) => i.kind === "free");
+    expect(free?.note).toMatch(/presupuesto|budget/);
   });
 
   it("drops tours when nothing cheaper fits, but keeps at least one", () => {

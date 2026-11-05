@@ -61,6 +61,7 @@ export function buildTripRequest(
     travelers: draft.travelers,
     travelerTitle: draft.travelerTitle,
     interests: draft.interests,
+    avoidTypes: draft.avoidTypes ?? [],
     preferPrivate: draft.preferPrivate,
     dining: draft.dining,
     chillDays: draft.chillDays,
@@ -499,6 +500,15 @@ export function StepItinerary() {
                   ? t("withinBudget", { budget: formatUsd(it.totals.budgetPerPersonUsd, locale) })
                   : t("overBudget", { budget: formatUsd(it.totals.budgetPerPersonUsd, locale) })}
               </p>
+              {request ? (
+                <p className="text-sm text-white/85">
+                  {t("breakdown", {
+                    toursPp: formatUsd(it.totals.toursUsd / request.travelers.length, locale),
+                    transfers: formatUsd(it.totals.transfersUsd, locale),
+                    count: request.travelers.length,
+                  })}
+                </p>
+              ) : null}
               {it.totals.diningEstimateUsd > 0 ? (
                 <p className="text-sm text-white/85">
                   {t("diningEstimate", { total: formatUsd(it.totals.diningEstimateUsd, locale) })}

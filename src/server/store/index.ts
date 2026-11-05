@@ -109,8 +109,8 @@ export class FileLeadStore implements LeadStore {
 }
 
 let store: LeadStore | null = null;
+/** Local JSON files. Production persistence lives in the team's own backend. */
 export function getLeadStore(): LeadStore {
-  // Phase 5: return a SupabaseLeadStore when SUPABASE_* is configured.
   store ??= new FileLeadStore();
   return store;
 }

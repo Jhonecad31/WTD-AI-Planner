@@ -2,7 +2,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { getActiveActivityIds, getActivity, getPickupPlaces } from "@/server/bokun/api";
 import { env } from "@/server/config/env";
-import { normalizeActivity, isRestaurantUrl, XCARET_PARK_RE } from "./normalize";
+import { interestsFor, isRestaurantUrl, normalizeActivity } from "./normalize";
 import type { CatalogProduct } from "./types";
 import siteLinks from "@/content/site-links.json";
 import { EXCLUDED_BOKUN_IDS } from "@/content/excluded-products";
@@ -17,12 +17,10 @@ import { EXCLUDED_BOKUN_IDS } from "@/content/excluded-products";
 /*const CACHE_DIR =
   process.env.CATALOG_CACHE_DIR ??
   (process.env.VERCEL ? "/tmp/wtd-cache" : path.join(process.cwd(), ".cache"));*/
-  /*Actualizacion de envio para elinar en ENV*/
-  const CACHE_DIR =
+/*Actualizacion de envio para elinar en ENV*/
+const CACHE_DIR =
   process.env.CATALOG_CACHE_DIR?.trim() ||
-  (process.env.VERCEL
-    ? "/tmp/wtd-cache"
-    : path.join(process.cwd(), ".cache"));
+  (process.env.VERCEL ? "/tmp/wtd-cache" : path.join(process.cwd(), ".cache"));
 const CACHE_FILE = path.join(CACHE_DIR, "catalog.json");
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 const CONCURRENCY = 6;
@@ -164,12 +162,9 @@ export async function getPlannerProducts(): Promise<CatalogProduct[]> {
           ? { ...p, kind: "restaurant" as const }
           : p,
       )
-      // Caches written before the "parks" interest existed.
-      .map((p) =>
-        !p.interests.includes("parks") && XCARET_PARK_RE.test(p.title)
-          ? { ...p, interests: [...p.interests, "parks" as const] }
-          : p,
-      )
+      // Interests are re-tagged on load, so a cache written by an older tagger
+      // (looser keywords, no "parks", no main interest) plans like a fresh sync.
+      .map((p) => ({ ...p, interests: interestsFor(p) }))
   );
 }
 

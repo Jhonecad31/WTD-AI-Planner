@@ -2,14 +2,18 @@ import type { CatalogProduct } from "@/server/catalog/types";
 import type { TripRequest } from "@/lib/trip-schema";
 import type { Itinerary, ItineraryItem } from "@/lib/itinerary-schema";
 import { fitsAges, priceProductForParty } from "./pricing";
+import { variety } from "@/server/catalog/experience";
 import {
   fitsDay,
   hasYoungKids,
   isParty,
   isSeaTour,
   lastIfAvoided,
+  longTourOk,
+  allowedForTraveler,
   partyNightOk,
   planDays,
+  scoreOpts,
   scoreProduct,
   toItem,
 } from "./rules";
@@ -151,9 +155,10 @@ export async function verifyAvailability(
     // Find a replacement with seats.
     const spentElsewhere = days
       .flatMap((x) => x.items)
-      .filter((i) => (i.kind === "tour" || i.kind === "transfer") && i !== item)
+      .filter((i) => i.kind === "tour" && i !== item)
       .reduce((s, i) => s + i.priceTotalUsd, 0);
     const slot = slots.find((s) => s.date === d.date);
+    const otherTours = days.flatMap((x) => x.items).filter((i) => i.kind === "tour" && i !== item);
     const partyOk = partyNightOk(days, index);
     const badWeather = !!d.weather && d.weather.kind !== "good";
     const ranked = products
@@ -165,16 +170,17 @@ export async function verifyAvailability(
           !used.has(p.bokunId) &&
           fitsAges(p, request.travelers) &&
           (!slot || fitsDay(p, slot, request)) &&
-          (partyOk || !isParty(p)) &&
+          allowedForTraveler(p, request) &&
+          (!isParty(p) || partyOk) &&
           !(badWeather && isSeaTour(p)) &&
+          // Never a repeat of another day; the day goes free before that.
+          variety(p, otherTours) > 0 &&
+          longTourOk(p, request, otherTours) &&
           spentElsewhere + priceProductForParty(p, request.travelers).priceTotalUsd <= budgetTotal,
       )
       .map((p) => ({
         p,
-        score: scoreProduct(p, request.interests, {
-          preferPrivate: request.preferPrivate,
-          youngKids: hasYoungKids(request),
-        }),
+        score: scoreProduct(p, request.interests, scoreOpts(request)),
       }))
       .filter((x) => x.score > 0)
       .sort((a, b) => b.score - a.score);

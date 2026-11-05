@@ -14,15 +14,15 @@
     "loading": "Loading…",
     "language": "Language"
   },
-    "footer": {
-      "tagline": "Your smart trip planner to discover the best of Cancun and the Riviera Maya.",
-      "contact": "Contact",
-      "follow": "Follow us",
-      "email": "Email",
-      "phone": "Phone",
-      "website": "Website",
-      "rights": "All rights reserved."
-    },
+  "footer": {
+    "tagline": "Your smart trip planner to discover the best of Cancun and the Riviera Maya.",
+    "contact": "Contact",
+    "follow": "Follow us",
+    "email": "Email",
+    "phone": "Phone",
+    "website": "Website",
+    "rights": "All rights reserved."
+  },
   "landing": {
     "title": "Discover, explore, and experience Cancun your way",
     "subtitle": "Create your personalized itinerary with the help of AI and discover the best Cancun experiences based on your interests, preferences, and travel style.",
@@ -92,7 +92,6 @@
       },
       "ratingLabel": "{value} out of 5"
     },
-    
     "benefits": {
       "1": {
         "title": "More than <big>100</big>+ experiences to discover",
@@ -128,7 +127,6 @@
         "title": "Less time planning, more unforgettable moments",
         "body": "Make the most of every moment in Cancun. We'll help you organize your days with experiences tailored to your interests and travel style"
       }
-      
     }
   },
   "wizard": {
@@ -166,6 +164,7 @@
       "hotel": "Your hotel",
       "transfersTitle": "Airport transportation",
       "transfersBody": "Do you need airport transfers?",
+      "luxuryExtra": "{extra} per ride over the standard transfer",
       "arrivalTransfer": "Airport to hotel",
       "departureTransfer": "Hotel to airport",
       "luxury": "Luxury vehicle",
@@ -239,7 +238,7 @@
       "notes": "Anything else?",
       "generate": "Build my itinerary",
       "budgetTitle": "Budget per person",
-      "budgetBody": "For tours and transfers throughout your stay. Restaurants are extra.",
+      "budgetBody": "For your tours during the stay. Transfers and restaurants are added on top.",
       "budgetTotal": "About {total} for {count, plural, one {# traveler} other {# travelers}}",
       "private": "Private tours",
       "tourDaysTitle": "Tour days",
@@ -265,7 +264,9 @@
         "arrival": "Arrival",
         "departure": "Departure"
       },
-      "privateBody": "Only your group, no other travelers. Usually costs more."
+      "privateBody": "Only your group, no other travelers. Usually costs more.",
+      "budgetFits": "This budget covers ~{tours} tours for your {days} tour days. Raise it or plan fewer tour days.",
+      "budgetFitsAll": "Covers a tour on each of your {days} tour days."
     },
     "itinerary": {
       "title": "Your itinerary",
@@ -283,8 +284,8 @@
       "details": "See details",
       "perPerson": "Per person",
       "total": "Total",
-      "withinBudget": "Within your {budget} per-person budget",
-      "overBudget": "Above your {budget} per-person budget — a specialist can adjust it",
+      "withinBudget": "Tours within your {budget} per-person budget",
+      "overBudget": "Tours above your {budget} per-person budget — a specialist can adjust it",
       "looksGood": "Continue",
       "edit": {
         "menu": "Options",
@@ -360,7 +361,8 @@
         "noDining": "We won’t plan your dinners",
         "anyCuisine": "Any cuisine",
         "perDinner": "{budget} per dinner"
-      }
+      },
+      "breakdown": "Tours: {toursPp} per person · transfers: {transfers} per group ({count, plural, one {# traveler} other {# travelers}})"
     },
     "contact": {
       "title": "Where should we send it?",

@@ -9,7 +9,7 @@ import type {
 import { RESTAURANTS, type RestaurantInfo } from "@/content/restaurants";
 import { placesFor, type Place } from "@/content/places";
 import { fitsAges, priceProductForParty } from "./pricing";
-import { hasYoungKids, isParty, partyNightOk, scoreProduct, toItem } from "./rules";
+import { isParty, partyAllowed, partyNightOk, scoreOpts, scoreProduct, toItem } from "./rules";
 
 /**
  * Deterministic trip rules applied after either engine picked the tours, so they
@@ -99,6 +99,16 @@ function placeItem(place: Place, locale: "en" | "es"): ItineraryItem {
     note: place.note[locale],
     placeId: place.id,
     mapsUrl: place.mapsUrl,
+  };
+}
+
+function freeItem(locale: "en" | "es"): ItineraryItem {
+  return {
+    kind: "free",
+    title: locale === "es" ? "Día libre" : "Free day",
+    priceTotalUsd: 0,
+    pricing: [],
+    pickup: false,
   };
 }
 
@@ -199,10 +209,7 @@ export function placePartyNights(
       )
       .map((p) => ({
         p,
-        s: scoreProduct(p, request.interests, {
-          preferPrivate: request.preferPrivate,
-          youngKids: hasYoungKids(request),
-        }),
+        s: scoreProduct(p, request.interests, scoreOpts(request)),
       }))
       .filter((x) => x.s > 0)
       .sort((a, b) => b.s - a.s)[0]?.p;
@@ -288,6 +295,25 @@ export function kidWarnings(request: TripRequest, days: ItineraryDay[] = []): st
         : "Chichén Itzá is a ~12-hour day; it can be tiring for kids.",
     );
   return lines;
+}
+
+/**
+ * The traveler asked for night life but every club is too far from their hotel zone
+ * (all of them are in Cancun): say so once, instead of a plan that silently ignores it.
+ */
+export function partyWarnings(request: TripRequest, products: CatalogProduct[]): string[] {
+  if (!request.interests.includes("party")) return [];
+  const kids = request.travelers.some((t) => t.age < 13);
+  if (kids) return []; // kidWarnings already explains it
+  const anyClub = products.some(
+    (p) => p.onSite && isParty(p) && fitsAges(p, request.travelers) && partyAllowed(p, request),
+  );
+  if (anyClub) return [];
+  return [
+    request.locale === "es"
+      ? "Los antros y shows nocturnos están en Cancún, a más de una hora de tu hotel; no los incluimos. Tu especialista puede sugerirte opciones si quieres una noche de fiesta."
+      : "The night clubs and shows are in Cancun, over an hour from your hotel, so we left them out. Your specialist can suggest options if you'd like a party night.",
+  ];
 }
 
 function dayTitle(day: ItineraryDay, items: ItineraryItem[], locale: "en" | "es"): string {
@@ -404,7 +430,10 @@ export function enrichItinerary(
       const d = dinner(dayIndex);
       if (d) items.push(d);
     } else {
-      items.push(...tours, ...base.filter((i) => i.kind === "free" && !tours.length));
+      items.push(...tours);
+      // A full day with no tour (Claude skipped it, or the tour was dropped) still shows
+      // a "free day" block, so the traveler sees the day and can add a tour to it.
+      if (!tours.length) items.push(base.find((i) => i.kind === "free") ?? freeItem(locale));
       const d = dinner(dayIndex);
       if (d) items.push(d);
     }
@@ -415,7 +444,7 @@ export function enrichItinerary(
   return {
     ...itinerary,
     days,
-    introWarnings: kidWarnings(request, days),
+    introWarnings: [...kidWarnings(request, days), ...partyWarnings(request, products)],
     weatherNote: rainyTripNote(days, locale),
     diningNote:
       restaurants.length || skipDining

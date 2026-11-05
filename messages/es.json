@@ -14,15 +14,15 @@
     "loading": "Cargando…",
     "language": "Idioma"
   },
-    "footer": {
-      "tagline": "Tu planificador inteligente para descubrir lo mejor de Cancún y la Riviera Maya.",
-      "contact": "Contacto",
-      "follow": "Síguenos",
-      "email": "Correo",
-      "phone": "Teléfono",
-      "website": "Sitio web",
-      "rights": "Todos los derechos reservados."
-    },
+  "footer": {
+    "tagline": "Tu planificador inteligente para descubrir lo mejor de Cancún y la Riviera Maya.",
+    "contact": "Contacto",
+    "follow": "Síguenos",
+    "email": "Correo",
+    "phone": "Teléfono",
+    "website": "Sitio web",
+    "rights": "Todos los derechos reservados."
+  },
   "landing": {
     "title": "Descubre, explora y vive Cancún a tu manera",
     "subtitle": "Con nuestro planificador inteligente encuentra las mejores actividades y experiencias con un itinerario hecho a la medida.",
@@ -92,7 +92,6 @@
       },
       "ratingLabel": "{value} de 5"
     },
-    
     "benefits": {
       "1": {
         "title": " Mas de <big>100</big> experiencias por descubrir",
@@ -129,7 +128,6 @@
         "title": "Buena planeación. Recuerdos inolvidables.",
         "body": "Creemos que un viaje bien planeado crea experiencias inolvidables que te hacen querer volver a Cancún y la Riviera Maya."
       }
-      
     }
   },
   "wizard": {
@@ -167,6 +165,7 @@
       "hotel": "Tu hotel",
       "transfersTitle": "Servicio de transporte aeropuerto",
       "transfersBody": "Requieres traslados desde y hacia el aeropuerto?",
+      "luxuryExtra": "{extra} por trayecto sobre el traslado estándar",
       "arrivalTransfer": "Aeropuerto a hotel",
       "departureTransfer": "Hotel a aeropuerto",
       "luxury": "Vehículo de lujo",
@@ -240,7 +239,7 @@
       "notes": "¿Algo más?",
       "generate": "Armar mi itinerario",
       "budgetTitle": "Presupuesto por persona",
-      "budgetBody": "Para tours y traslados durante tu estancia. Los restaurantes son adicionales.",
+      "budgetBody": "Para tus tours durante la estancia. Traslados y restaurantes se suman aparte.",
       "budgetTotal": "Aprox. {total} para {count, plural, one {# viajero} other {# viajeros}}",
       "private": "Tours privados",
       "tourDaysTitle": "Días de tour",
@@ -266,7 +265,9 @@
         "arrival": "Llegada",
         "departure": "Salida"
       },
-      "privateBody": "Solo tu grupo, sin otros viajeros. Suelen costar más."
+      "privateBody": "Solo tu grupo, sin otros viajeros. Suelen costar más.",
+      "budgetFits": "Con este presupuesto alcanzan ~{tours} tours para tus {days} días con tour. Sube el presupuesto o quita días con tour.",
+      "budgetFitsAll": "Alcanza para un tour en cada uno de tus {days} días con tour."
     },
     "itinerary": {
       "title": "Tu itinerario",
@@ -284,8 +285,8 @@
       "details": "Ver detalles",
       "perPerson": "Por persona",
       "total": "Total",
-      "withinBudget": "Dentro de tu presupuesto de {budget} por persona",
-      "overBudget": "Arriba de tu presupuesto de {budget} por persona — un especialista lo puede ajustar",
+      "withinBudget": "Tours dentro de tu presupuesto de {budget} por persona",
+      "overBudget": "Tours arriba de tu presupuesto de {budget} por persona — un especialista lo puede ajustar",
       "looksGood": "Continuar",
       "edit": {
         "menu": "Opciones",
@@ -361,7 +362,8 @@
         "noDining": "No planeamos tus cenas",
         "anyCuisine": "Cualquier cocina",
         "perDinner": "{budget} por cena"
-      }
+      },
+      "breakdown": "Tours: {toursPp} por persona · traslados: {transfers} por grupo ({count, plural, one {# viajero} other {# viajeros}})"
     },
     "contact": {
       "title": "¿A dónde te lo enviamos?",

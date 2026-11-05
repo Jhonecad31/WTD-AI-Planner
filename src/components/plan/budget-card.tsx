@@ -18,6 +18,7 @@ export function BudgetCard({
   step,
   typedMax,
   footnote,
+  hint,
   onChange,
 }: {
   id: string;
@@ -31,6 +32,8 @@ export function BudgetCard({
   typedMax?: number;
   /** Line under the amount, e.g. "About USD 600 for 2 travelers". */
   footnote?: string;
+  /** Highlighted line, e.g. how many tours the budget buys vs. the tour days. */
+  hint?: { text: string; tone: "ok" | "warn" };
   onChange: (value: number) => void;
 }) {
   const locale = useLocale();
@@ -78,6 +81,16 @@ export function BudgetCard({
         </label>
         {footnote ? <span className="text-sm text-white/85">{footnote}</span> : null}
       </div>
+      {hint ? (
+        <p
+          className={`mt-4 flex items-center gap-2 rounded-[12px] px-3 py-2 text-sm font-semibold ${
+            hint.tone === "warn" ? "bg-white text-primary" : "bg-white/15 text-white"
+          }`}
+        >
+          <span aria-hidden>{hint.tone === "warn" ? "⚠︎" : "✓"}</span>
+          {hint.text}
+        </p>
+      ) : null}
       <input
         type="range"
         className="budget-slider mt-6 w-full"

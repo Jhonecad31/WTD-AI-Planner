@@ -4,37 +4,38 @@ import type { Itinerary, ItineraryItem } from "@/lib/itinerary-schema";
 import { fitsAges, priceProductForParty, round2 } from "./pricing";
 import {
   fitsDay,
-  hasYoungKids,
   isParty,
   isSeaTour,
+  allowedForTraveler,
   partyNightOk,
+  scoreOpts,
   scoreProduct,
   toItem,
+  BUDGET_TOLERANCE,
+  longTourOk,
 } from "./rules";
-
-/** Kinds of experience a title names, to avoid two days of the same thing. */
-const EXPERIENCE_KINDS: [string, RegExp][] = [
-  ["atv", /\batv\b|buggy|buggies|cuatrimoto/i],
-  ["zipline", /zip-?line|tirolesa/i],
-  ["cenote", /cenote/i],
-  ["ruins", /ruin|ruinas|chich[eé]n|cob[aá]|tulum|ek balam/i],
-  ["sea", /catamar[aá]n|sail|velero|yacht|yate|snorkel|isla mujeres/i],
-  ["park", /xcaret|xel-?h[aá]|xplor|xenses|xavage/i],
-  ["dolphin", /dolphin|delf[ií]n/i],
-];
-function experienceKinds(title: string): string[] {
-  return EXPERIENCE_KINDS.filter(([, re]) => re.test(title)).map(([k]) => k);
-}
+import { variety } from "@/server/catalog/experience";
 
 /**
  * Budget guard after the engine (Claude is only *asked* to respect the budget).
- * While tours + transfers go over the traveler's budget, swap the priciest tour for a
+ * While the tours go over the traveler's budget (transfers are extra), swap the priciest tour for a
  * cheaper one that still fits their interests, ages, party nights and weather. If no
  * swap helps, drop the priciest tour (the day becomes free), keeping at least one tour.
  * Transfers are never touched: the traveler asked for them. No traveler notice: this is
  * their first version of the plan; the agent sees the changes in `warnings`.
  * `avoid`: tours of earlier versions ("try another version"), used only if nothing else fits.
  */
+/** "Left free to fit your budget: «Tour» would add +USD X (Y per person)." */
+export function budgetNote(
+  tour: { title: string; priceTotalUsd: number },
+  request: TripRequest,
+): string {
+  const pp = round2(tour.priceTotalUsd / request.travelers.length);
+  return request.locale === "es"
+    ? `Quedó libre para ajustarse a tu presupuesto: «${tour.title}» sumaría +USD ${tour.priceTotalUsd} (USD ${pp} por persona).`
+    : `Left free to fit your budget: "${tour.title}" would add +USD ${tour.priceTotalUsd} (USD ${pp} per person).`;
+}
+
 export function fitBudget(
   itinerary: Itinerary,
   request: TripRequest,
@@ -44,23 +45,26 @@ export function fitBudget(
   const budgetTotal = request.budgetPerPerson * request.travelers.length;
   const days = itinerary.days.map((d) => ({ ...d, items: [...d.items] }));
   const warnings: string[] = [];
+  // Tours only: transfers are paid on top of the budget.
   const spent = () =>
     days
       .flatMap((d) => d.items)
-      .filter((i) => i.kind === "tour" || i.kind === "transfer")
+      .filter((i) => i.kind === "tour")
       .reduce((s, i) => s + i.priceTotalUsd, 0);
   const tours = () =>
     days.flatMap((d, index) =>
       d.items.filter((i) => i.kind === "tour").map((item) => ({ index, item })),
     );
   const price = (p: CatalogProduct) => priceProductForParty(p, request.travelers).priceTotalUsd;
-  const opts = { preferPrivate: request.preferPrivate, youngKids: hasYoungKids(request) };
+  const opts = scoreOpts(request);
   const byId = new Map(products.map((p) => [p.bokunId, p]));
   const skip = new Set(avoid);
 
   // Each pass fixes one tour; skipping avoided tours can take a tour two smaller swaps.
-  for (let guard = tours().length * 2; guard > 0 && spent() > budgetTotal; guard--) {
-    const over = spent() - budgetTotal;
+  // A little over is fine (BUDGET_TOLERANCE): dropping a 298 USD tour for 16 USD isn't.
+  const ceiling = budgetTotal * BUDGET_TOLERANCE;
+  for (let guard = tours().length * 2; guard > 0 && spent() > ceiling; guard--) {
+    const over = spent() - ceiling;
     const used = new Set(days.flatMap((d) => d.items.map((i) => i.bokunId)).filter(Boolean));
     const byPrice = tours().sort((a, b) => b.item.priceTotalUsd - a.item.priceTotalUsd);
 
@@ -77,11 +81,9 @@ export function fitBudget(
       const lost = (original?.interests ?? []).filter(
         (i) => request.interests.includes(i) && !others.includes(i),
       );
-      const otherKinds = new Set(
-        tours()
-          .filter((t) => t.item !== item)
-          .flatMap((t) => experienceKinds(t.item.title)),
-      );
+      const otherTours = tours()
+        .filter((t) => t.item !== item)
+        .map((t) => t.item);
       const affordable = products
         .filter(
           (p) =>
@@ -91,8 +93,14 @@ export function fitBudget(
             !used.has(p.bokunId) &&
             fitsAges(p, request.travelers) &&
             fitsDay(p, slot, request) &&
+            // Night life only when asked for, and only before a rest or departure day.
+            allowedForTraveler(p, request) &&
             (!isParty(p) || partyNightOk(days, index)) &&
             !(badWeather && (isSeaTour(p) || p.interests.includes("beach"))) &&
+            // Never a repeat of another day (a second catamaran or speedboat): when no
+            // different kind of tour is cheaper, the day goes free instead.
+            variety(p, otherTours) > 0 &&
+            longTourOk(p, request, otherTours) &&
             price(p) < item.priceTotalUsd,
         )
         .map((p) => ({
@@ -101,8 +109,6 @@ export function fitBudget(
           cost: price(p),
           // Keeps what would otherwise vanish from the trip (e.g. the only ruins day).
           keepsLost: Number(p.interests.some((i) => lost.includes(i))),
-          // A second ATV or cenote day reads as a repeat, whatever the interest tags say.
-          fresh: Number(!experienceKinds(p.title).some((k) => otherKinds.has(k))),
           // Same kind of day as the tour it replaces (ruins for ruins, adventure for adventure).
           sameTheme: Number(p.interests.some((i) => original?.interests.includes(i))),
         }))
@@ -118,17 +124,12 @@ export function fitBudget(
         ? fixes.sort(
             (a, b) =>
               b.keepsLost - a.keepsLost ||
-              b.fresh - a.fresh ||
               b.sameTheme - a.sameTheme ||
               b.score - a.score ||
               b.cost - a.cost,
           )[0]
         : cheaper.sort(
-            (a, b) =>
-              b.keepsLost - a.keepsLost ||
-              b.fresh - a.fresh ||
-              b.sameTheme - a.sameTheme ||
-              a.cost - b.cost,
+            (a, b) => b.keepsLost - a.keepsLost || b.sameTheme - a.sameTheme || a.cost - b.cost,
           )[0];
       // The old note described the old tour, so the new one starts without a note.
       const next: ItineraryItem = toItem(pick.p, request, slot);
@@ -158,6 +159,8 @@ export function fitBudget(
           priceTotalUsd: 0,
           pricing: [],
           pickup: false,
+          // Say why, and what it would take: the traveler (and the agent) can decide.
+          note: budgetNote(item, request),
         }),
     };
     warnings.push(
@@ -166,6 +169,6 @@ export function fitBudget(
   }
 
   if (!warnings.length) return itinerary;
-  warnings.push(`Budget guard: tours + transfers now ${round2(spent())} of ${budgetTotal} USD.`);
+  warnings.push(`Budget guard: tours now ${round2(spent())} of ${budgetTotal} USD.`);
   return { ...itinerary, days, warnings: [...itinerary.warnings, ...warnings] };
 }
