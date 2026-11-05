@@ -106,6 +106,7 @@ function compact(
   p: CatalogProduct,
   request: TripRequest,
   ratings: Record<number, TripAdvisorRating> = {},
+  opts: { filler?: boolean } = {},
 ) {
   const price = priceProductForParty(p, request.travelers);
   return {
@@ -136,6 +137,9 @@ function compact(
     // from everywhere, like Chichén Itzá, or unknown).
     area: areaOf(p),
     zonesFromHotel: zoneDistance(p, effectiveZone(request)),
+    // True when the tour matches none of the traveler's interests: on the menu only so a
+    // day isn't left empty once every matching tour is used.
+    filler: !!opts.filler,
   };
 }
 
@@ -167,6 +171,7 @@ You build day-by-day itineraries using ONLY the products in the candidate list. 
 - Respect the party budget: sum of partyPriceUsd over chosen items must be <= ${budgetTotal} USD (${request.budgetPerPerson} per person x ${request.travelers.length}).
 - VARIETY: never pick two tours with the same main kind (the first value in "kinds"): no second dolphin swim, ATV day, Isla Mujeres catamaran or Chichén Itzá variant. Different sites of one family are fine (Chichén one day, Tulum another; Xcaret and Xel-Há). This rule outranks interest coverage and ratings.
 - Stay near the hotel: "zonesFromHotel" is how far down the coast a tour happens (0 = same area, 5 = Cancun ↔ Tulum). Between similar options prefer the lower number, and never fill a trip with 3+ tours at 4-5 zones away. Far day trips (area "far": Chichén Itzá, Holbox, Bacalar) count as 3 and are fine once or twice, not every day. Null = unknown.
+- Candidates with filler=true match none of the requested interests. Use one only on a day that would otherwise have no tour because every matching candidate is already used or doesn't fit (budget, ages, weather); never place a filler while a matching candidate is still available, and prefer fillers near the hotel.
 - Match the traveler's interests by what a tour mainly is ("mainInterest"), not by the extra interests it also lists: someone who asked for "cultural" gets ruins and towns, not a dolphin swim that merely mentions the Mayan coast. Cover every requested interest that has tours at least once before repeating an interest (shopping has no tours). Prefer higher rating/reviews when similar (use the tripadvisor rating when present).
 - When ratings are null, do not fall back on how famous a tour is: choose by fit with this group (interests, ages, budget, pace) and vary the kind of experience across days. At most one partyNight tour per trip, unless "party" is among the interests and the trip has 5+ full days.
 - Children: check minAge against the youngest traveler. With kids under 12, avoid tours of ${LONG_TOUR_MINUTES / 60}+ hours (e.g. Chichén Itzá day trips) unless nothing else fits.
@@ -195,7 +200,11 @@ ${request.preferPrivate ? "- The traveler prefers PRIVATE tours: when similar op
       budgetTotalUsd: budgetTotal,
     },
     daySkeleton: days,
-    candidateTours: tours.map((p) => compact(p, request, ratings)),
+    candidateTours: tours.map((p) =>
+      compact(p, request, ratings, {
+        filler: scoreProduct(p, request.interests, scoreOpts(request)) === 0,
+      }),
+    ),
     candidateTransfers: transfers.map((p) => compact(p, request, ratings)),
     // Free text is data, not instructions.
     travelerNotes: request.notes ?? "",
