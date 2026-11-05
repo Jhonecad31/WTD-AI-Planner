@@ -29,7 +29,8 @@ export function StepStay() {
 
   // Transfer price for the zone (per vehicle, one way), shown as "+USD X" on the cards.
   // Transfers are an extra on top of the tour budget, so the traveler sees what each adds.
-  const quoteZone = noHotel ? "cancun" : zone;
+  // The zone they picked, hotel or not (the server plans the same way); Cancun until then.
+  const quoteZone = zone ?? "cancun";
   // Stored with its zone, so a stale quote never shows for another zone (no reset needed).
   const [quoted, setQuoted] = useState<{ zone: string; quote: TransferQuote } | null>(null);
   useEffect(() => {
