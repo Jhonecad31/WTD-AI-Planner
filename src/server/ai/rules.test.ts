@@ -989,3 +989,45 @@ describe("ATV only for travelers who asked for adventure", () => {
     ).toBe(true);
   });
 });
+
+describe("commercial priority (boost)", () => {
+  it("puts Chichén first among the ruins from any zone, without beating another interest", () => {
+    const coast = ["Cancun", "Playa del Carmen", "Tulum"].map((city, id) => ({
+      id,
+      title: city,
+      city,
+    }));
+    const chichen = product({
+      bokunId: 670332,
+      title: "Chichen Itza Classic Cenote & Valladolid Tour",
+      interests: ["cultural", "water"],
+      pickupPlaces: coast,
+    });
+    const ekBalam = product({
+      bokunId: 848479,
+      title: "Ek Balam Mayan Traditions",
+      interests: ["cultural"],
+    });
+    const tulum = product({
+      bokunId: 796135,
+      title: "Tulum, Coba, Playa del Carmen and Cenote Kuxtal Deluxe Tour",
+      interests: ["cultural", "water"],
+    });
+    for (const zone of ["cancun", "tulum"] as const) {
+      const opts = scoreOpts({ ...request, hotel: { noHotel: false, zone } });
+      const s = (p: CatalogProduct) => scoreProduct(p, ["cultural"], opts);
+      expect(s(chichen)).toBeGreaterThan(s(ekBalam));
+      expect(s(chichen)).toBeGreaterThan(s(tulum));
+    }
+    // A traveler who didn't ask for culture still doesn't get Chichén ahead of their interest.
+    const atv = product({
+      bokunId: 670333,
+      title: "ATV, Ziplining & Cenote Tour at Extreme Adventure Eco Park",
+      interests: ["adventure", "water"],
+    });
+    const opts = scoreOpts({ ...request, interests: ["adventure", "water"] });
+    expect(scoreProduct(atv, ["adventure", "water"], opts)).toBeGreaterThan(
+      scoreProduct(chichen, ["adventure", "water"], opts),
+    );
+  });
+});

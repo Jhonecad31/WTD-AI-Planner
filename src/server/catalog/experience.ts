@@ -158,6 +158,11 @@ export function experienceTypes(p: Product): ExperienceType[] {
   return [...ordered, ...extra];
 }
 
+/** Commercial priority points from the overrides (0 when none). */
+export function commercialBoost(p: Product): number {
+  return overrideFor(p)?.boost ?? 0;
+}
+
 /** The main type (first match) or null. */
 export function mainExperience(p: Product): ExperienceType | null {
   return experienceTypes(p)[0] ?? null;

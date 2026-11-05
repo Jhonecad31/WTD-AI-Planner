@@ -6,6 +6,7 @@ import { planDays, type DaySlot } from "@/lib/plan-days";
 import { isPrivateTitle } from "@/lib/item-meta";
 import { pickupCoverage } from "@/server/catalog/pickup";
 import {
+  commercialBoost,
   experienceTypes,
   mainExperience,
   primaryInterest,
@@ -178,7 +179,8 @@ export function scoreProduct(
   // No reviews means no rating yet (Bokun reports 0): treat as an average tour, not a bad one.
   const rating = p.reviewCount ? (p.rating ?? 4.5) : 4.5;
   const reviews = Math.log10((p.reviewCount ?? 0) + 1);
-  let score = mainHit + secondary + rating + reviews;
+  // Small commercial priority among tours of the same interest (Chichén first).
+  let score = mainHit + secondary + rating + reviews + commercialBoost(p);
   if (opts.preferPrivate && isPrivateTitle(p.title)) score += 3;
   if (opts.zone) {
     const steps = zoneDistance(p, opts.zone);

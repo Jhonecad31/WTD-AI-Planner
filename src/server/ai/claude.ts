@@ -27,6 +27,7 @@ import {
 import { fitsAges, priceProductForParty } from "./pricing";
 import {
   areaOf,
+  commercialBoost,
   experienceTypes,
   primaryInterest,
   zoneDistance,
@@ -168,6 +169,8 @@ function compact(
     // True when the tour matches none of the traveler's interests: on the menu only so a
     // day isn't left empty once every matching tour is used.
     filler: !!opts.filler,
+    // WhatToDo's flagship for its interest (Chichén Itzá among the ruins): prefer it.
+    flagship: commercialBoost(p) > 0,
   };
 }
 
@@ -202,6 +205,7 @@ You build day-by-day itineraries using ONLY the products in the candidate list. 
 - "pickupFromHotel": "included" means the tour collects them at the hotel, so a few zones of distance are fine; "self" means they must reach the meeting point on their own, so keep those close to the hotel (zonesFromHotel 0-1) unless the traveler clearly wants it.
 - Stay near the hotel: "zonesFromHotel" is how far down the coast a tour happens (0 = same area, 5 = Cancun ↔ Tulum). Between similar options prefer the lower number, and never fill a trip with 3+ tours at 4-5 zones away. Far day trips (area "far": Chichén Itzá, Holbox, Bacalar) count as 3 and are fine once or twice, not every day. Null = unknown.
 - Candidates with filler=true match none of the requested interests. Use one only on a day that would otherwise have no tour because every matching candidate is already used or doesn't fit (budget, ages, weather); never place a filler while a matching candidate is still available, and prefer fillers near the hotel.
+- When two candidates serve the same interest, prefer the one with flagship=true (e.g. Chichén Itzá before other ruins), still never two of the same kind.
 - Match the traveler's interests by what a tour mainly is ("mainInterest"), not by the extra interests it also lists: someone who asked for "cultural" gets ruins and towns, not a dolphin swim that merely mentions the Mayan coast. Cover every requested interest that has tours at least once before repeating an interest (shopping has no tours). Prefer higher rating/reviews when similar (use the tripadvisor rating when present).
 - When ratings are null, do not fall back on how famous a tour is: choose by fit with this group (interests, ages, budget, pace) and vary the kind of experience across days. At most one partyNight tour per trip, unless "party" is among the interests and the trip has 5+ full days.
 - Children: check minAge against the youngest traveler. With kids under 12, avoid tours of ${LONG_TOUR_MINUTES / 60}+ hours (e.g. Chichén Itzá day trips) unless nothing else fits; with a child under ${LONG_TOUR_KID_AGE}, never more than ONE such tour in the whole trip.
