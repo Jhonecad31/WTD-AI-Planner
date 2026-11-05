@@ -2,8 +2,18 @@ import { describe, expect, it } from "vitest";
 import type { CatalogProduct } from "@/server/catalog/types";
 import type { TripRequest } from "@/lib/trip-schema";
 import { ItinerarySchema } from "@/lib/itinerary-schema";
-import { buildRulesItinerary, isRainyFavorite, isSeaTour, planDays, transferFor } from "./rules";
+import {
+  buildRulesItinerary,
+  isRainyFavorite,
+  isSeaTour,
+  planDays,
+  scoreProduct,
+  toItem,
+  transferFor,
+} from "./rules";
 import { validateAndRepair } from "./validate";
+import { diversify } from "./diversify";
+import { mainExperience } from "@/server/catalog/experience";
 import type { DayWeather } from "@/lib/itinerary-schema";
 import { categoryForAge, fitsAges, priceProductForParty } from "./pricing";
 import { pickCandidates } from "./claude";
@@ -252,7 +262,7 @@ describe("weather-aware picking", () => {
     }),
     product({
       bokunId: 8,
-      title: "Extreme Buggy Adventure with Ziplines & Cenote",
+      title: "Cenotes Adventuring Park",
       interests: ["adventure"],
       priceFromUsd: 100,
     }),
@@ -298,6 +308,199 @@ describe("weather-aware picking", () => {
     expect(ids.filter((id) => id === 7 || id === 8)).toHaveLength(2);
     expect(ids).not.toContain(3);
   });
+
+  it("doesn't repeat an ATV day even when both rainy favorites are ATV parks", () => {
+    const buggy = product({
+      bokunId: 9,
+      title: "Extreme Buggy Adventure with Ziplines",
+      interests: ["adventure"],
+      priceFromUsd: 100,
+    });
+    const it_ = buildRulesItinerary({
+      request: generous,
+      products: [...catalog, extreme[0], buggy],
+      weather: { "2026-12-11": w("rainy"), "2026-12-13": w("rainy") },
+    });
+    const ids = ["2026-12-11", "2026-12-13"].map((d) => tourOn(it_, d)?.bokunId);
+    expect(ids.filter((id) => id === 7 || id === 9)).toHaveLength(1);
+  });
+});
+
+describe("scoreProduct follows what the tour mainly is", () => {
+  it("ranks a focused tour of the asked interest above a many-tag park", () => {
+    const ruins = product({ bokunId: 51, title: "Coba Ruins", interests: ["cultural"] });
+    const park = product({
+      bokunId: 52,
+      title: "Xcaret Plus Admission",
+      interests: ["parks", "adventure", "water", "cultural", "beach"],
+    });
+    const dolphins = product({
+      bokunId: 53,
+      title: "Dolphin Discovery Tulum",
+      interests: ["water", "adventure", "cultural"],
+    });
+    const forCulture = (p: CatalogProduct) => scoreProduct(p, ["cultural"]);
+    expect(forCulture(ruins)).toBeGreaterThan(forCulture(park));
+    expect(forCulture(ruins)).toBeGreaterThan(forCulture(dolphins));
+    // Still on the list (it touches the interest), just lower.
+    expect(forCulture(dolphins)).toBeGreaterThan(0);
+    expect(scoreProduct(ruins, ["water"])).toBe(0);
+  });
+
+  it("gives the main interest more than several secondary ones", () => {
+    const atv = product({ bokunId: 54, title: "ATV Jungle Adventure", interests: ["adventure"] });
+    const combo = product({
+      bokunId: 55,
+      title: "Chichen Itza with Cenote & Tequila",
+      interests: ["cultural", "water", "food"],
+    });
+    // Asked for adventure + water + food: the ATV is what they mean by adventure.
+    expect(scoreProduct(atv, ["adventure", "water", "food"])).toBeGreaterThan(
+      scoreProduct(combo, ["adventure", "water", "food"]),
+    );
+  });
+});
+
+describe("variety", () => {
+  it("never plans two tours of the same kind when others fit", () => {
+    const products = [
+      product({ bokunId: 31, title: "Jungle ATV & Zipline", interests: ["adventure"] }),
+      product({ bokunId: 32, title: "ATV Private Signature", interests: ["adventure"] }),
+      product({ bokunId: 33, title: "Hidden Cenotes Swim", interests: ["water", "adventure"] }),
+      product({ bokunId: 34, title: "Semi-private 3 Cenotes", interests: ["water", "adventure"] }),
+      product({ bokunId: 35, title: "Coba Ruins", interests: ["cultural"] }),
+      product({ bokunId: 36, title: "Isla Mujeres Catamaran", interests: ["water"] }),
+    ];
+    const it_ = buildRulesItinerary({
+      request: { ...request, budgetPerPerson: 1000, interests: ["adventure", "water"] },
+      products,
+    });
+    const tours = it_.days.flatMap((d) => d.items).filter((i) => i.kind === "tour");
+    const main = tours.map((t) => mainExperience(t));
+    expect(tours).toHaveLength(3);
+    expect(new Set(main).size).toBe(main.length);
+  });
+
+  it("swaps a repeated kind of day the engine chose for a different tour", () => {
+    const products = [
+      product({ bokunId: 41, title: "3 Hidden Cenotes", interests: ["water", "adventure"] }),
+      product({ bokunId: 42, title: "Semi-private Cenotes", interests: ["water", "adventure"] }),
+      product({ bokunId: 43, title: "Coba Ruins", interests: ["cultural"] }),
+      product({ bokunId: 44, title: "Isla Mujeres Catamaran", interests: ["water"] }),
+      product({ bokunId: 45, title: "Jungle ATV", interests: ["adventure"] }),
+      product({ bokunId: 46, title: "Speedboat Safari", interests: ["adventure", "water"] }),
+    ];
+    const req = {
+      ...request,
+      budgetPerPerson: 1000,
+      interests: ["adventure" as const, "water" as const],
+    };
+    const raw = buildRulesItinerary({ request: req, products });
+    const tourDays = raw.days.filter((d) => d.items.some((i) => i.kind === "tour"));
+    // Pretend the engine planned two cenote days in a row.
+    const [a, b] = tourDays;
+    const forced = {
+      ...raw,
+      days: raw.days.map((d) =>
+        d === a || d === b
+          ? {
+              ...d,
+              items: d.items.map((i) =>
+                i.kind === "tour" ? toItem(products[d === a ? 0 : 1], req, d) : i,
+              ),
+            }
+          : d,
+      ),
+    };
+    const out = diversify(forced, req, products);
+    const ids = out.days
+      .flatMap((d) => d.items)
+      .filter((i) => i.kind === "tour")
+      .map((i) => i.bokunId);
+    expect(ids).toContain(41);
+    expect(ids).not.toContain(42);
+    expect(out.warnings.some((w) => w.startsWith("Variety:"))).toBe(true);
+  });
+
+  it("plans different sites of the same family, not the same site twice", () => {
+    const products = [
+      product({
+        bokunId: 71,
+        title: "Chichen Itza Classic Cenote & Valladolid",
+        interests: ["cultural", "water"],
+      }),
+      product({
+        bokunId: 72,
+        title: "Chichen Itza Deluxe with Cenote & Valladolid",
+        interests: ["cultural", "water"],
+      }),
+      product({
+        bokunId: 73,
+        title: "Tulum, Coba and Cenote Kuxtal",
+        interests: ["cultural", "water"],
+      }),
+      product({ bokunId: 74, title: "Ek Balam Mayan Traditions", interests: ["cultural"] }),
+      product({ bokunId: 75, title: "Xcaret Plus Admission", interests: ["parks", "cultural"] }),
+    ];
+    const it_ = buildRulesItinerary({
+      request: { ...request, budgetPerPerson: 1000, interests: ["cultural"] },
+      products,
+    });
+    const ids = it_.days
+      .flatMap((d) => d.items)
+      .filter((i) => i.kind === "tour")
+      .map((i) => i.bokunId);
+    expect(ids).toEqual([71, 73, 74]);
+  });
+
+  it("keeps night life out unless the traveler picked party, whatever else it's tagged", () => {
+    const crawl = product({
+      bokunId: 81,
+      title: "Madness Tour with Nightclub Admission",
+      interests: ["party", "cultural", "food"],
+    });
+    const it_ = buildRulesItinerary({
+      request: {
+        ...request,
+        travelers: [{ age: 30 }, { age: 30 }],
+        interests: ["cultural", "food"],
+      },
+      products: [...catalog, crawl],
+    });
+    const ids = it_.days.flatMap((d) => d.items).map((i) => i.bokunId);
+    expect(ids).not.toContain(81);
+  });
+
+  it("never swaps back in a tour of the previous version", () => {
+    const products = [
+      product({ bokunId: 61, title: "3 Hidden Cenotes", interests: ["water"] }),
+      product({ bokunId: 62, title: "Semi-private Cenotes", interests: ["water"] }),
+      product({ bokunId: 63, title: "Isla Mujeres Catamaran", interests: ["water"] }),
+    ];
+    const req = { ...request, budgetPerPerson: 1000, interests: ["water" as const] };
+    const raw = buildRulesItinerary({ request: req, products });
+    const [a, b] = raw.days.filter((d) => d.items.some((i) => i.kind === "tour"));
+    const forced = {
+      ...raw,
+      days: raw.days.map((d) =>
+        d === a || d === b
+          ? {
+              ...d,
+              items: d.items.map((i) =>
+                i.kind === "tour" ? toItem(products[d === a ? 0 : 1], req, d) : i,
+              ),
+            }
+          : d,
+      ),
+    };
+    // The catamaran was in the previous version: the repeated cenote day stays as is.
+    const out = diversify(forced, req, products, [63]);
+    const ids = out.days
+      .flatMap((d) => d.items)
+      .filter((i) => i.kind === "tour")
+      .map((i) => i.bokunId);
+    expect(ids).not.toContain(63);
+  });
 });
 
 describe("pickCandidates (Claude's menu)", () => {
@@ -306,6 +509,16 @@ describe("pickCandidates (Claude's menu)", () => {
 
   it("keeps night life off the menu when the traveler didn't pick party", () => {
     expect(ids({ ...request, travelers: adults, interests: ["cultural"] })).not.toContain(4);
+    const crawl = product({
+      bokunId: 82,
+      title: "Madness Tour with Nightclub Admission",
+      interests: ["party", "cultural"],
+    });
+    const menu = pickCandidates({ ...request, travelers: adults, interests: ["cultural"] }, [
+      ...catalog,
+      crawl,
+    ]).tours.map((p) => p.bokunId);
+    expect(menu).not.toContain(82);
   });
 
   it("offers night life when party is an interest", () => {

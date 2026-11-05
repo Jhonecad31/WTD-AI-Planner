@@ -4,6 +4,7 @@ import {
   detectInterests,
   detectKind,
   durationToMinutes,
+  interestsFor,
   normalizeActivity,
   siteUrlFor,
 } from "./normalize";
@@ -60,8 +61,9 @@ describe("normalizeActivity", () => {
     expect(p.kind).toBe("tour");
   });
 
-  it("derives interests from categories and text", () => {
+  it("derives interests from categories and title, main interest first", () => {
     expect(p.interests).toEqual(expect.arrayContaining(["adventure", "water"]));
+    expect(p.interests[0]).toBe("adventure"); // an ATV & zipline day is adventure first
     expect(p.interests).not.toContain("party");
   });
 
@@ -135,6 +137,40 @@ describe("helpers", () => {
   it("detects cultural and party from keywords", () => {
     expect(detectInterests({ id: 1, title: "Chichen Itza & Valladolid" })).toContain("cultural");
     expect(detectInterests({ id: 2, title: "Coco Bongo Open Bar" })).toContain("party");
+  });
+
+  it("ignores the excerpt, so a dolphin swim on the Mayan coast is not cultural", () => {
+    const dolphins = detectInterests({
+      id: 3,
+      title: "Dolphin Discovery in Riviera Maya",
+      excerpt: "Swim with dolphins on the Mayan Riviera, next to a beach and a reef.",
+      activityCategories: ["WATER"],
+    });
+    expect(dolphins[0]).toBe("water");
+    expect(dolphins).not.toContain("cultural");
+    expect(dolphins).not.toContain("beach");
+  });
+
+  it("puts the main interest first on a combo tour", () => {
+    const chichen = detectInterests({
+      id: 4,
+      title: "Chichén Itzá Deluxe Tour with Cenote & Valladolid",
+      activityCategories: ["CULTURAL_AND_THEME_TOURS"],
+    });
+    expect(chichen[0]).toBe("cultural");
+    expect(chichen).toContain("water");
+  });
+
+  it("re-tags a product from an old cache the same way", () => {
+    expect(
+      interestsFor({
+        title: "Xcaret Plus Admission From Cancun",
+        bokunCategories: ["THEME_PARKS"],
+        keywords: [],
+        kind: "tour",
+      })[0],
+    ).toBe("parks");
+    expect(interestsFor({ title: "Airport Transfer to Hotel Zone", kind: "transfer" })).toEqual([]);
   });
 
   it("converts durations", () => {

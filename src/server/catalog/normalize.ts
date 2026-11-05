@@ -1,6 +1,7 @@
 import type { BokunActivity, BokunPhoto, BokunPickupPlace } from "@/server/bokun/types";
 import type { CatalogProduct, Interest, PickupPlace, ProductKind } from "./types";
 import siteLinks from "@/content/site-links.json";
+import { primaryInterest } from "./experience";
 
 const SITE_URL = "https://whattodoincancun.com";
 const EXTRANET_URL = "https://extranet.bokun.io";
@@ -37,7 +38,7 @@ const CATEGORY_TO_INTEREST: Record<string, Interest[]> = {
   KAYAKING: ["water"],
   SAILING_OR_BOAT_TOUR: ["water", "couples"],
   MINI_CRUISE: ["water", "couples"],
-  SUN_AND_BEACH: ["water", "chill"],
+  SUN_AND_BEACH: ["beach", "chill"],
   DOLPHIN_OR_WHALEWATCHING: ["water"],
   FISHING: ["water"],
   SEA_ANGLING: ["water"],
@@ -45,11 +46,11 @@ const CATEGORY_TO_INTEREST: Record<string, Interest[]> = {
   CULTURAL_AND_THEME_TOURS: ["cultural"],
   ARTS_AND_CULTURE: ["cultural"],
   MUSEUMS_AND_EXHIBITIONS: ["cultural"],
-  SIGHTSEEING: ["cultural"],
+  // SIGHTSEEING and DAY_TRIPS_AND_EXCURSIONS are not mapped: Bokun puts them on
+  // catamarans, parasailing and snorkel trips too, which made them "cultural".
   SIGHTSEEING_ATTRACTION: ["cultural"],
   CITY_TOURS: ["cultural"],
   WALKING_TOUR: ["cultural"],
-  DAY_TRIPS_AND_EXCURSIONS: ["cultural"],
   PILGRIMAGE_OR_RELIGION: ["cultural"],
   EDUCATIONAL_TOUR: ["cultural"],
   CULINARY: ["food"],
@@ -68,19 +69,24 @@ const CATEGORY_TO_INTEREST: Record<string, Interest[]> = {
 export const XCARET_PARK_RE =
   /\bx(caret|el.?h[aá]|elha|plor|oximilco|enses|avage|ich[eé]n|enotes)(?![a-z])|grupo xcaret/i;
 
+/**
+ * Secondary tags read from the title and Bokun keywords only. The excerpt is left
+ * out on purpose: "Mayan reef" or "Riviera Maya" in a dolphin tour's blurb used to
+ * make it "cultural", and "beach" made everything "water".
+ */
 const KEYWORD_RULES: { re: RegExp; interests: Interest[] }[] = [
   {
-    re: /\b(atv|zip ?line|tirolesa|buggy|jungle|xplor|selvatica|adrenal)/i,
+    re: /\b(atv|zip ?lin|tirolesa|buggy|jungle|xplor|selvatica|adrenal)/i,
     interests: ["adventure"],
   },
   {
-    re: /\b(cenote|snorkel|dive|scuba|catamaran|reef|turtle|whale shark|isla mujeres|cozumel|contoy|holbox|beach)/i,
+    re: /\b(cenote|snorkel|dive|scuba|catamaran|reef|turtle|whale shark|isla mujeres|cozumel|contoy|holbox)/i,
     interests: ["water"],
   },
-  {
-    re: /\b(chich[eé]n|itz[aá]|tulum|cob[aá]|ek balam|ruins|ruinas|maya|mayan|museum|colonial|valladolid|xcaret)/i,
-    interests: ["cultural"],
-  },
+  // Site names (Chichén, Tulum, Cobá, Ek Balam) are not here on purpose: they make a
+  // tour cultural only as its main type (see experience.ts), so "Dolphin Discovery
+  // Tulum" stays a dolphin day.
+  { re: /\b(ruins|ruinas|museum|museo|colonial|valladolid|xcaret)\b/i, interests: ["cultural"] },
   {
     re: /\b(food|gastro|tasting|taco|mezcal|tequila|cooking|dinner|wine|culinary)/i,
     interests: ["food"],
@@ -94,7 +100,8 @@ const KEYWORD_RULES: { re: RegExp; interests: Interest[] }[] = [
     interests: ["couples"],
   },
   { re: /\b(spa|temazcal|relax|wellness|massage|yoga|beach club)/i, interests: ["chill"] },
-  { re: /\b(beach|playa)\b/i, interests: ["beach"] },
+  // "Playa del Carmen" is a town in the title, not a beach day.
+  { re: /\bbeach\b|\bplaya\b(?! del carmen)/i, interests: ["beach"] },
   // Grupo Xcaret theme parks.
   { re: XCARET_PARK_RE, interests: ["parks"] },
   { re: /\b(shopping|mall|market|mercado|outlet)\b/i, interests: ["shopping"] },
@@ -133,17 +140,39 @@ export function detectKind(a: BokunActivity): ProductKind {
   return "other";
 }
 
-export function detectInterests(a: BokunActivity): Interest[] {
+/**
+ * Planner interests of a product: its main interest first (from the kind of
+ * experience the title names, see `experience.ts`), then the secondary tags from
+ * Bokun's categories and the title + keywords. Works on a normalized product too,
+ * so caches tagged by an older version can be re-tagged when loaded.
+ */
+export function interestsFor(p: {
+  title: string;
+  bokunCategories?: string[];
+  keywords?: string[];
+  kind?: ProductKind;
+}): Interest[] {
+  if (p.kind === "transfer") return [];
   const set = new Set<Interest>();
-  for (const c of a.activityCategories ?? []) {
+  const main = primaryInterest(p);
+  if (main) set.add(main);
+  for (const c of p.bokunCategories ?? []) {
     for (const i of CATEGORY_TO_INTEREST[c] ?? []) set.add(i);
   }
-  if (detectKind(a) === "transfer") return [];
-  const text = [a.title, a.excerpt, ...(a.keywords ?? [])].filter(Boolean).join(" ");
+  const text = [p.title, ...(p.keywords ?? [])].filter(Boolean).join(" ");
   for (const rule of KEYWORD_RULES) {
     if (rule.re.test(text)) rule.interests.forEach((i) => set.add(i));
   }
   return [...set];
+}
+
+export function detectInterests(a: BokunActivity): Interest[] {
+  return interestsFor({
+    title: a.title ?? "",
+    bokunCategories: a.activityCategories ?? [],
+    keywords: a.keywords ?? [],
+    kind: detectKind(a),
+  });
 }
 
 export function durationToMinutes(a: BokunActivity): number | null {

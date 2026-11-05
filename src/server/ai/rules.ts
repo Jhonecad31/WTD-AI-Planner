@@ -4,6 +4,7 @@ import type { DayWeather, Itinerary, ItineraryDay, ItineraryItem } from "@/lib/i
 import { fitsAges, priceProductForParty, round2 } from "./pricing";
 import { planDays, type DaySlot } from "@/lib/plan-days";
 import { isPrivateTitle } from "@/lib/item-meta";
+import { primaryInterest, variety, type Variety } from "@/server/catalog/experience";
 
 export { planDays, type DaySlot } from "@/lib/plan-days";
 
@@ -57,18 +58,27 @@ export function isSeaTour(p: { title: string }): boolean {
 /** Tours this long (Chichén Itzá day trips) are hard on young kids. */
 export const LONG_TOUR_MINUTES = 10 * 60;
 
+/** A tour whose main interest the traveler picked outranks one that only touches it. */
+const MAIN_INTEREST_POINTS = 6;
+const SECONDARY_INTEREST_POINTS = 1.5;
+
 export function scoreProduct(
   p: CatalogProduct,
   interests: Interest[],
   opts: { preferPrivate?: boolean; youngKids?: boolean } = {},
 ): number {
   if (p.kind !== "tour" && p.kind !== "ticket") return -1;
-  const overlap = p.interests.filter((i) => interests.includes(i)).length;
-  if (overlap === 0) return 0;
+  const overlap = p.interests.filter((i) => interests.includes(i));
+  if (overlap.length === 0) return 0;
+  // What the tour mainly is (ruins, ATV, dolphins…) counts far more than the tags it
+  // also carries, so a 5-tag park doesn't beat a focused tour of the asked interest.
+  const main = primaryInterest(p) ?? p.interests[0];
+  const mainHit = interests.includes(main) ? MAIN_INTEREST_POINTS : 0;
+  const secondary = overlap.filter((i) => i !== main).length * SECONDARY_INTEREST_POINTS;
   // No reviews means no rating yet (Bokun reports 0): treat as an average tour, not a bad one.
   const rating = p.reviewCount ? (p.rating ?? 4.5) : 4.5;
   const reviews = Math.log10((p.reviewCount ?? 0) + 1);
-  let score = overlap * 3 + rating + reviews;
+  let score = mainHit + secondary + rating + reviews;
   if (opts.preferPrivate && isPrivateTitle(p.title)) score += 3;
   // Very long day trips rank last with young kids (still allowed if nothing else fits).
   if (opts.youngKids && (p.durationMinutes ?? 0) >= LONG_TOUR_MINUTES)
@@ -178,12 +188,14 @@ export function buildRulesItinerary(inputs: PlanInputs): Itinerary {
   const warnings: string[] = [];
   const slots = planDays(request);
 
-  // Candidate tours ranked by interest fit and reputation.
+  // Candidate tours ranked by interest fit and reputation. Night life only when the
+  // traveler asked for it, whatever other tags a bar crawl carries.
   const candidates = products
     .filter(
       (p) => p.onSite && (p.kind === "tour" || p.kind === "ticket") && (p.priceFromUsd ?? 0) > 0,
     )
     .filter((p) => fitsAges(p, request.travelers))
+    .filter((p) => request.interests.includes("party") || !isParty(p))
     .map((p) => ({
       p,
       score: scoreProduct(p, request.interests, {
@@ -223,6 +235,8 @@ export function buildRulesItinerary(inputs: PlanInputs): Itinerary {
   const used = new Set<number>();
   const coveredInterests = new Set<Interest>();
   const days: ItineraryDay[] = [];
+  /** Tours already in the trip, so no two days are the same kind of experience. */
+  const chosen: CatalogProduct[] = [];
 
   // Keep Extreme Adventure for rainy days when the forecast shows any.
   const rainyDaysAhead = slots.filter((x) => inputs.weather?.[x.date]?.kind === "rainy").length;
@@ -251,37 +265,51 @@ export function buildRulesItinerary(inputs: PlanInputs): Itinerary {
         fitsDay(p, slot, request) &&
         inputs.isAvailable?.(p.bokunId, slot.date) !== false &&
         priceProductForParty(p, request.travelers).priceTotalUsd <= remaining;
-      const rainyPick = w?.kind === "rainy" ? rainyPool.find((p) => fitsHere(p)) : undefined;
-      const pick =
-        (rainyPick ? { p: rainyPick } : undefined) ??
-        candidates.find(({ p }) => {
-          if (used.has(p.bokunId)) return false;
-          if (badWeather && isSeaTour(p)) return false;
-          if (!partyOk && isParty(p)) return false;
-          if (rainyDaysAhead > 0 && w?.kind !== "rainy" && isRainyFavorite(p)) return false;
-          if (!fitsDay(p, slot, request)) return false;
-          const avail = inputs.isAvailable?.(p.bokunId, slot.date);
-          if (avail === false) return false;
-          const cost = priceProductForParty(p, request.travelers).priceTotalUsd;
-          if (cost > remaining) return false;
-          const fresh = p.interests.some(
-            (i) => request.interests.includes(i) && !coveredInterests.has(i),
-          );
-          return fresh || coverable.every((i) => coveredInterests.has(i));
-        }) ??
-        candidates.find(({ p }) => !(badWeather && isSeaTour(p)) && fitsHere(p)) ??
-        candidates.find(({ p }) => {
-          if (used.has(p.bokunId) || !fitsDay(p, slot, request)) return false;
-          if (!partyOk && isParty(p)) return false;
-          if (inputs.isAvailable?.(p.bokunId, slot.date) === false) return false;
-          return priceProductForParty(p, request.travelers).priceTotalUsd <= budgetTotal - spent;
-        });
+      // Rainy days go to WhatToDo's parks, unless that repeats the same kind of day.
+      const rainyPick =
+        w?.kind === "rainy"
+          ? rainyPool.find((p) => variety(p, chosen) >= 1 && fitsHere(p))
+          : undefined;
+      // Variety: a tour with a different main kind than the trip's other days (Tulum after
+      // Chichén is fine, a second dolphin swim is not); only when nothing else fits, the
+      // same kind of day again. Within that, the best interest fit wins.
+      const pickWith = (min: Variety) => {
+        const varied = (p: CatalogProduct) => variety(p, chosen) >= min;
+        return (
+          candidates.find(({ p }) => {
+            if (!varied(p)) return false;
+            if (used.has(p.bokunId)) return false;
+            if (badWeather && isSeaTour(p)) return false;
+            if (!partyOk && isParty(p)) return false;
+            if (rainyDaysAhead > 0 && w?.kind !== "rainy" && isRainyFavorite(p)) return false;
+            if (!fitsDay(p, slot, request)) return false;
+            const avail = inputs.isAvailable?.(p.bokunId, slot.date);
+            if (avail === false) return false;
+            const cost = priceProductForParty(p, request.travelers).priceTotalUsd;
+            if (cost > remaining) return false;
+            const fresh = p.interests.some(
+              (i) => request.interests.includes(i) && !coveredInterests.has(i),
+            );
+            return fresh || coverable.every((i) => coveredInterests.has(i));
+          }) ??
+          candidates.find(({ p }) => varied(p) && !(badWeather && isSeaTour(p)) && fitsHere(p)) ??
+          candidates.find(({ p }) => {
+            if (!varied(p)) return false;
+            if (used.has(p.bokunId) || !fitsDay(p, slot, request)) return false;
+            if (!partyOk && isParty(p)) return false;
+            if (inputs.isAvailable?.(p.bokunId, slot.date) === false) return false;
+            return priceProductForParty(p, request.travelers).priceTotalUsd <= budgetTotal - spent;
+          })
+        );
+      };
+      const pick = (rainyPick ? { p: rainyPick } : undefined) ?? pickWith(1) ?? pickWith(0);
 
       if (pick) {
         const it = toItem(pick.p, request, slot);
         items.push(it);
         spent += it.priceTotalUsd;
         used.add(pick.p.bokunId);
+        chosen.push(pick.p);
         pick.p.interests.forEach((i) => request.interests.includes(i) && coveredInterests.add(i));
       } else if (slot.label === "full") {
         items.push({

@@ -2,6 +2,7 @@ import type { CatalogProduct } from "@/server/catalog/types";
 import type { TripRequest } from "@/lib/trip-schema";
 import type { Itinerary, ItineraryItem } from "@/lib/itinerary-schema";
 import { fitsAges, priceProductForParty } from "./pricing";
+import { variety } from "@/server/catalog/experience";
 import {
   fitsDay,
   hasYoungKids,
@@ -154,6 +155,7 @@ export async function verifyAvailability(
       .filter((i) => (i.kind === "tour" || i.kind === "transfer") && i !== item)
       .reduce((s, i) => s + i.priceTotalUsd, 0);
     const slot = slots.find((s) => s.date === d.date);
+    const otherTours = days.flatMap((x) => x.items).filter((i) => i.kind === "tour" && i !== item);
     const partyOk = partyNightOk(days, index);
     const badWeather = !!d.weather && d.weather.kind !== "good";
     const ranked = products
@@ -177,7 +179,9 @@ export async function verifyAvailability(
         }),
       }))
       .filter((x) => x.score > 0)
-      .sort((a, b) => b.score - a.score);
+      // A replacement that isn't a repeat of another day first, then by fit.
+      .map((x) => ({ ...x, fresh: Number(variety(x.p, otherTours) > 0) }))
+      .sort((a, b) => b.fresh - a.fresh || b.score - a.score);
     lastIfAvoided(ranked, avoid, (x) => x.p.bokunId);
     const candidates = ranked.slice(0, MAX_ALTERNATIVES_CHECKED);
 
