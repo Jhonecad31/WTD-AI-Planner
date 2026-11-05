@@ -36,10 +36,11 @@ export function fillEmptyDays(
   const opts = scoreOpts(request);
   const price = (p: CatalogProduct) => priceProductForParty(p, request.travelers).priceTotalUsd;
   const warnings: string[] = [];
+  // Tours only: transfers are paid on top of the budget.
   const spent = () =>
     days
       .flatMap((d) => d.items)
-      .filter((i) => i.kind === "tour" || i.kind === "transfer")
+      .filter((i) => i.kind === "tour")
       .reduce((s, i) => s + i.priceTotalUsd, 0);
   const rainyAhead = days.some((d) => d.weather?.kind === "rainy");
 

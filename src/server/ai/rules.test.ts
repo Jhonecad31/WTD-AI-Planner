@@ -215,7 +215,10 @@ describe("buildRulesItinerary", () => {
     );
     for (const i of request.interests) expect(covered.has(i)).toBe(true);
     expect(tours.map((t) => t.bokunId)).not.toContain(4); // party not requested
-    expect(it_.totals.perPersonUsd).toBeLessThanOrEqual(request.budgetPerPerson);
+    // The budget covers tours only; transfers are added on top.
+    expect(it_.totals.toursUsd / request.travelers.length).toBeLessThanOrEqual(
+      request.budgetPerPerson,
+    );
     expect(it_.totals.withinBudget).toBe(true);
     expect(it_.totals.totalUsd).toBe(it_.totals.toursUsd + it_.totals.transfersUsd);
   });
@@ -672,7 +675,7 @@ describe("fillEmptyDays", () => {
 
   it("stops when the budget is gone and leaves the day free", async () => {
     const { fillEmptyDays } = await import("./fill");
-    const tight = { ...request, budgetPerPerson: 120 }; // 360 total, transfers take 90
+    const tight = { ...request, budgetPerPerson: 90 }; // 270 total for tours; transfers are extra
     const raw = buildRulesItinerary({ request: tight, products: catalog });
     const emptied = {
       ...raw,
@@ -716,5 +719,22 @@ describe("night life near the hotel", () => {
     const menu = pickCandidates(at("playa_del_carmen"), products).tours.map((p) => p.bokunId);
     expect(menu).not.toContain(95);
     expect(pickCandidates(at("cancun"), products).tours.map((p) => p.bokunId)).toContain(95);
+  });
+});
+
+describe("transfers are extra, not part of the tour budget", () => {
+  it("spends the whole budget on tours even with both transfers on", () => {
+    // Catalog: Chichen 90, Cenotes ATV 110, Catamaran 80 for 2 adults + 1 child; transfer 45 x 2.
+    const req = { ...request, budgetPerPerson: 100, chillDays: "none" as const };
+    const it_ = buildRulesItinerary({ request: req, products: catalog });
+    const tours = it_.days.flatMap((d) => d.items).filter((i) => i.kind === "tour");
+    const transfers = it_.days.flatMap((d) => d.items).filter((i) => i.kind === "transfer");
+    expect(transfers).toHaveLength(2);
+    // 300 USD of tours fit without the 90 USD of transfers being subtracted first.
+    expect(it_.totals.toursUsd).toBeGreaterThan(300 - 90);
+    expect(it_.totals.toursUsd / req.travelers.length).toBeLessThanOrEqual(100);
+    expect(it_.totals.withinBudget).toBe(true);
+    expect(it_.totals.totalUsd).toBe(it_.totals.toursUsd + it_.totals.transfersUsd);
+    expect(tours.length).toBeGreaterThan(0);
   });
 });

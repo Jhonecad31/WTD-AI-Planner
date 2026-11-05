@@ -263,12 +263,9 @@ export function buildRulesItinerary(inputs: PlanInputs): Itinerary {
     warnings.push("No transfer product found in catalog for the requested zone.");
   }
 
-  // Reserve the transfer money up front so tours never push the party over budget.
-  const transferUnit = transferProduct
-    ? priceProductForParty(transferProduct, request.travelers).priceTotalUsd
-    : 0;
-  const transferLegs = (request.transfers.arrival ? 1 : 0) + (request.transfers.departure ? 1 : 0);
-  let spent = transferProduct ? transferUnit * transferLegs : 0;
+  // The budget is for tours only: transfers are priced per vehicle and shown as an extra
+  // ("+USD X") when the traveler picks them, so they never eat into the tour money.
+  let spent = 0;
   const used = new Set<number>();
   const coveredInterests = new Set<Interest>();
   const days: ItineraryDay[] = [];
@@ -412,7 +409,7 @@ export function buildRulesItinerary(inputs: PlanInputs): Itinerary {
       totalUsd,
       perPersonUsd,
       budgetPerPersonUsd: request.budgetPerPerson,
-      withinBudget: perPersonUsd <= request.budgetPerPerson,
+      withinBudget: round2(toursUsd / request.travelers.length) <= request.budgetPerPerson,
       diningEstimateUsd: 0,
     },
     introWarnings: [],

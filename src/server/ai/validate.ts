@@ -145,7 +145,8 @@ export function validateAndRepair(
         totalUsd,
         perPersonUsd,
         budgetPerPersonUsd: request.budgetPerPerson,
-        withinBudget: perPersonUsd <= request.budgetPerPerson,
+        // The budget covers tours only; transfers are an extra the traveler opted into.
+        withinBudget: round2(toursUsd / request.travelers.length) <= request.budgetPerPerson,
         diningEstimateUsd,
       },
       warnings: [...parsed.warnings, ...fixes],

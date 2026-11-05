@@ -154,7 +154,7 @@ export async function verifyAvailability(
     // Find a replacement with seats.
     const spentElsewhere = days
       .flatMap((x) => x.items)
-      .filter((i) => (i.kind === "tour" || i.kind === "transfer") && i !== item)
+      .filter((i) => i.kind === "tour" && i !== item)
       .reduce((s, i) => s + i.priceTotalUsd, 0);
     const slot = slots.find((s) => s.date === d.date);
     const otherTours = days.flatMap((x) => x.items).filter((i) => i.kind === "tour" && i !== item);

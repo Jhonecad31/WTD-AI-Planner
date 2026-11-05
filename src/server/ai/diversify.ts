@@ -50,7 +50,7 @@ export function diversify(
     ]);
     const spentElsewhere = days
       .flatMap((x) => x.items)
-      .filter((i) => (i.kind === "tour" || i.kind === "transfer") && i !== item)
+      .filter((i) => i.kind === "tour" && i !== item)
       .reduce((s, i) => s + i.priceTotalUsd, 0);
     const slot = { date: d.date, dayNumber: d.dayNumber, label: d.label };
     const badWeather = !!d.weather && d.weather.kind !== "good";

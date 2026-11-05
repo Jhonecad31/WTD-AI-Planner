@@ -1,7 +1,10 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { HOTEL_ZONES } from "@/lib/trip-schema";
+import { formatUsd } from "@/lib/format";
+import type { TransferQuote } from "@/app/api/transfers/route";
 import { Field } from "@/components/ui/field";
 import { OptionCard } from "@/components/ui/option-card";
 import {
@@ -19,9 +22,35 @@ import { HotelSearch } from "./hotel-search";
 
 export function StepStay() {
   const t = useTranslations("wizard.stay");
+  const locale = useLocale();
   const { draft, patch } = useWizard();
   const tr = draft.transfers;
   const { zone, noHotel } = draft.hotel;
+
+  // Transfer price for the zone (per vehicle, one way), shown as "+USD X" on the cards.
+  // Transfers are an extra on top of the tour budget, so the traveler sees what each adds.
+  const quoteZone = noHotel ? "cancun" : zone;
+  // Stored with its zone, so a stale quote never shows for another zone (no reset needed).
+  const [quoted, setQuoted] = useState<{ zone: string; quote: TransferQuote } | null>(null);
+  useEffect(() => {
+    if (!quoteZone) return;
+    let alive = true;
+    fetch(`/api/transfers?zone=${quoteZone}`)
+      .then((r) => (r.ok ? (r.json() as Promise<TransferQuote>) : null))
+      .then((q) => alive && q && setQuoted({ zone: quoteZone, quote: q }))
+      .catch(() => {});
+    return () => {
+      alive = false;
+    };
+  }, [quoteZone]);
+  const quote = quoted && quoted.zone === quoteZone ? quoted.quote : null;
+  const plus = (usd: number | null | undefined) =>
+    typeof usd === "number" ? `+${formatUsd(usd, locale)}` : undefined;
+  const perLeg = plus(quote?.perLegUsd);
+  const luxuryExtra =
+    typeof quote?.luxuryPerLegUsd === "number" && typeof quote?.perLegUsd === "number"
+      ? plus(quote.luxuryPerLegUsd - quote.perLegUsd)
+      : undefined;
   // Areas that fit the chosen activities go first, with a gold "recommended" badge.
   const recommended = recommendedZones(draft.interests);
   const zones = [...recommended, ...HOTEL_ZONES.filter((z) => !recommended.includes(z))];
@@ -111,13 +140,15 @@ export function StepStay() {
 
       <section>
         <h3 className="text-lg font-bold">{t("transfersTitle")}</h3>
-        <p className="mt-1 mb-4 text-sm text-brand-ink/70">{t("transfersBody")}</p>
+        <p className="mt-1 text-sm text-brand-ink/70">{t("transfersBody")}</p>
+        <p className="mt-1 mb-4 text-xs text-brand-ink/60">{t("transfersExtra")}</p>
         <div className="grid gap-3 sm:grid-cols-2">
           <OptionCard
             selected={tr.arrival}
             onSelect={() => setTransfer("arrival")}
             icon={<PlaneLandIcon size={20} />}
             title={t("arrivalTransfer")}
+            badge={perLeg}
             compact
           />
           <OptionCard
@@ -125,6 +156,7 @@ export function StepStay() {
             onSelect={() => setTransfer("departure")}
             icon={<HotelIcon size={20} />}
             title={t("departureTransfer")}
+            badge={perLeg}
             compact
           />
           <OptionCard
@@ -132,6 +164,7 @@ export function StepStay() {
             onSelect={() => setTransfer("luxury")}
             icon={tr.luxury ? <SparkleIcon size={20} /> : <CarIcon size={20} />}
             title={t("luxury")}
+            description={luxuryExtra ? t("luxuryExtra", { extra: luxuryExtra }) : undefined}
             compact
           />
           <OptionCard

@@ -72,10 +72,11 @@ const request: TripRequest = {
   budgetPerPerson: 1000,
 };
 
+// Tours only: transfers are an extra on top of the budget.
 const spent = (it: ReturnType<typeof fitBudget>) =>
   it.days
     .flatMap((d) => d.items)
-    .filter((i) => i.kind === "tour" || i.kind === "transfer")
+    .filter((i) => i.kind === "tour")
     .reduce((s, i) => s + i.priceTotalUsd, 0);
 const tourIds = (it: ReturnType<typeof fitBudget>) =>
   it.days

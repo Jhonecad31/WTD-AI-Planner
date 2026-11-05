@@ -16,7 +16,7 @@ import { variety } from "@/server/catalog/experience";
 
 /**
  * Budget guard after the engine (Claude is only *asked* to respect the budget).
- * While tours + transfers go over the traveler's budget, swap the priciest tour for a
+ * While the tours go over the traveler's budget (transfers are extra), swap the priciest tour for a
  * cheaper one that still fits their interests, ages, party nights and weather. If no
  * swap helps, drop the priciest tour (the day becomes free), keeping at least one tour.
  * Transfers are never touched: the traveler asked for them. No traveler notice: this is
@@ -32,10 +32,11 @@ export function fitBudget(
   const budgetTotal = request.budgetPerPerson * request.travelers.length;
   const days = itinerary.days.map((d) => ({ ...d, items: [...d.items] }));
   const warnings: string[] = [];
+  // Tours only: transfers are paid on top of the budget.
   const spent = () =>
     days
       .flatMap((d) => d.items)
-      .filter((i) => i.kind === "tour" || i.kind === "transfer")
+      .filter((i) => i.kind === "tour")
       .reduce((s, i) => s + i.priceTotalUsd, 0);
   const tours = () =>
     days.flatMap((d, index) =>
@@ -150,6 +151,6 @@ export function fitBudget(
   }
 
   if (!warnings.length) return itinerary;
-  warnings.push(`Budget guard: tours + transfers now ${round2(spent())} of ${budgetTotal} USD.`);
+  warnings.push(`Budget guard: tours now ${round2(spent())} of ${budgetTotal} USD.`);
   return { ...itinerary, days, warnings: [...itinerary.warnings, ...warnings] };
 }
