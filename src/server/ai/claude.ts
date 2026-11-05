@@ -106,7 +106,8 @@ export function pickCandidates(
     const fresh = tours.filter((p) => !skip.has(p.bokunId));
     if (fresh.length >= MIN_CANDIDATES) tours = fresh;
   }
-  // On a rainy trip, Extreme Adventure must be on the menu even if it ranked low.
+  // On a rainy trip, WhatToDo's parks must be on the menu even if they ranked low, but
+  // only when they fit the traveler (an ATV park needs "adventure").
   if (opts.rainy) {
     for (const p of products) {
       if (
@@ -114,6 +115,8 @@ export function pickCandidates(
         p.kind === "tour" &&
         isRainyFavorite(p) &&
         fitsAges(p, request.travelers) &&
+        allowedForTraveler(p, request) &&
+        scoreProduct(p, request.interests, scoreOpts(request)) > 0 &&
         !tours.some((t) => t.bokunId === p.bokunId)
       )
         tours.push(p);
@@ -204,7 +207,7 @@ You build day-by-day itineraries using ONLY the products in the candidate list. 
 - Children: check minAge against the youngest traveler. With kids under 12, avoid tours of ${LONG_TOUR_MINUTES / 60}+ hours (e.g. Chichén Itzá day trips) unless nothing else fits; with a child under ${LONG_TOUR_KID_AGE}, never more than ONE such tour in the whole trip.
 ${request.preferPrivate ? "- The traveler prefers PRIVATE tours: when similar options exist, pick the one with Private/Privado in the title.\n" : ""}- If the traveler asked for transfers, place the transfer item on the arrival day and/or departure day using a transfer bokunId, startTime null.
 - Each item note: one short, warm, specific sentence (max ~20 words) in ${lang} about why it fits this group. Day titles short (2-5 words), in ${lang}. Summary: one sentence in ${lang}, max 25 words.
-- Weather: each skeleton day may carry weather {kind, source}. On every "rainy" day, in date order, use a not-yet-used candidate with rainyFavorite=true (WhatToDo's Extreme Adventuring and Cenote Adventuring parks) as long as it fits budget and ages. This rule outranks interest coverage and ratings. Only when no unused rainyFavorite candidate fits, prefer cenotes, ruins, food or other non-sea tours. On "rainy" or "windy" days never pick a tour with seaTour=true when another option fits. Save rainyFavorite tours for rainy days when the trip has any. Mention the weather in that day's note only when it changed the choice. "typical" weather is a monthly average, not a forecast: do not change plans because of it.
+- Weather: each skeleton day may carry weather {kind, source}. On every "rainy" day, in date order, prefer a not-yet-used candidate with rainyFavorite=true (WhatToDo's Extreme Adventuring and Cenote Adventuring parks) IF one is on the menu: they are only listed when they match the traveler's interests (an ATV park is never offered to someone who didn't ask for adventure). Otherwise, on rainy days prefer cenotes, ruins, caves, parks, food or other non-sea tours from the traveler's interests. On "rainy" or "windy" days never pick a tour with seaTour=true when another option fits. Save rainyFavorite tours for rainy days when the trip has any. Mention the weather in that day's note only when it changed the choice. "typical" weather is a monthly average, not a forecast: do not change plans because of it.
 - Output every day in the skeleton, in order, even if a day has only a free item.${
     avoid.length
       ? `\n- The traveler asked for ANOTHER VERSION of the trip: do not use these bokunIds (from the previous version) unless no other candidate fits: ${avoid.join(", ")}. Choose a noticeably different set of experiences.`

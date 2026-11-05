@@ -565,10 +565,11 @@ describe("pickCandidates (Claude's menu)", () => {
     expect(ids({ ...request, travelers: adults, interests: ["party"] })).toContain(4);
   });
 
-  it("lists interest matches first, then tops up with other tours", () => {
+  it("lists interest matches first, then tops up with other tours (never an ATV park)", () => {
     const tours = ids({ ...request, travelers: adults, interests: ["cultural"] });
     expect(tours[0]).toBe(1);
-    expect(tours).toEqual(expect.arrayContaining([2, 3]));
+    expect(tours).toContain(3);
+    expect(tours).not.toContain(2); // "Cenotes ATV" needs "adventure"
   });
 
   it("never offers adults-only night life to a group with kids", () => {
@@ -928,5 +929,63 @@ describe("pickup coverage by hotel zone", () => {
     expect(scoreProduct(dolphinsWithRide, ["water"], fromCancun)).toBeGreaterThan(
       scoreProduct(dolphinsSelf, ["water"], fromCancun),
     );
+  });
+});
+
+describe("ATV only for travelers who asked for adventure", () => {
+  const atv = product({
+    bokunId: 801,
+    title: "ATV, Ziplining & Cenote Tour at Extreme Adventure Eco Park",
+    interests: ["adventure", "water"],
+  });
+  const ruins = product({ bokunId: 802, title: "Tulum Ruins", interests: ["cultural"] });
+  const cenotes = product({
+    bokunId: 803,
+    title: "Cenotes Adventuring Park",
+    interests: ["water", "adventure"],
+  });
+  const adults = [{ age: 30 }, { age: 30 }];
+  const rain = (): DayWeather => ({ source: "forecast", kind: "rainy", tMaxC: 28, tMinC: 23 });
+
+  it("keeps the ATV park out when adventure wasn't picked, even on a rainy day", () => {
+    const req: TripRequest = {
+      ...request,
+      travelers: adults,
+      interests: ["cultural", "water"],
+      budgetPerPerson: 1000,
+    };
+    expect(allowedForTraveler(atv, req)).toBe(false);
+    const it_ = buildRulesItinerary({
+      request: req,
+      products: [atv, ruins, cenotes],
+      weather: { "2026-12-11": rain(), "2026-12-13": rain() },
+    });
+    const ids = it_.days.flatMap((d) => d.items).map((i) => i.bokunId);
+    expect(ids).not.toContain(801);
+    // The cenote park is water, so it still serves the rainy day.
+    expect(ids).toContain(803);
+    expect(
+      pickCandidates(req, [atv, ruins, cenotes], { rainy: true }).tours.map((p) => p.bokunId),
+    ).not.toContain(801);
+  });
+
+  it("gives the ATV park to adventure travelers, rain or shine", () => {
+    const req: TripRequest = {
+      ...request,
+      travelers: adults,
+      interests: ["adventure"],
+      budgetPerPerson: 1000,
+    };
+    expect(allowedForTraveler(atv, req)).toBe(true);
+    const dry = buildRulesItinerary({ request: req, products: [atv, ruins, cenotes] });
+    expect(dry.days.flatMap((d) => d.items).map((i) => i.bokunId)).toContain(801);
+    const wet = buildRulesItinerary({
+      request: req,
+      products: [atv, ruins, cenotes],
+      weather: { "2026-12-11": rain() },
+    });
+    expect(
+      wet.days.find((d) => d.date === "2026-12-11")?.items.some((i) => i.bokunId === 801),
+    ).toBe(true);
   });
 });
