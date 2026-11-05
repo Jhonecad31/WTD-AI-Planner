@@ -859,3 +859,21 @@ describe("budget tolerance", () => {
     expect(withinBudget(212, req)).toBe(false);
   });
 });
+
+describe("fillEmptyDays explains a day only the budget blocks", () => {
+  it("writes what the cheapest fitting tour would add", async () => {
+    const { fillEmptyDays } = await import("./fill");
+    const tight = { ...request, travelers: [{ age: 30 }, { age: 30 }], budgetPerPerson: 60 };
+    const raw = buildRulesItinerary({ request: tight, products: catalog });
+    const emptied = {
+      ...raw,
+      days: raw.days.map((d) => ({ ...d, items: d.items.filter((i) => i.kind === "transfer") })),
+    };
+    const out = fillEmptyDays(emptied, tight, catalog);
+    const notes = out.days
+      .flatMap((d) => d.items)
+      .filter((i) => i.kind === "free")
+      .map((i) => i.note ?? "");
+    expect(notes.some((n) => /\+USD \d+/.test(n))).toBe(true);
+  });
+});

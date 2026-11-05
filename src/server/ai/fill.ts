@@ -45,6 +45,7 @@ export function fillEmptyDays(
       .filter((i) => i.kind === "tour")
       .reduce((s, i) => s + i.priceTotalUsd, 0);
   const rainyAhead = days.some((d) => d.weather?.kind === "rainy");
+  let changed = false;
 
   for (const [index, d] of days.entries()) {
     if (d.label !== "full" || d.items.some((i) => i.kind === "tour")) continue;
@@ -79,7 +80,9 @@ export function fillEmptyDays(
     if (!pick) {
       // Something fits except for the money: say so on the free day, with the cheapest option.
       const cheapest = [...ranked].sort((a, b) => a.cost - b.cost)[0];
-      if (cheapest && !d.items.some((i) => i.kind === "free" && i.note)) {
+      // Replaces whatever generic "free day" text the engine wrote: the money is the reason.
+      if (cheapest) {
+        changed = true;
         days[index] = {
           ...d,
           items: [
@@ -103,8 +106,9 @@ export function fillEmptyDays(
       items: [toItem(pick.p, request, slot), ...d.items.filter((i) => i.kind !== "free")],
     };
     warnings.push(`Filled ${d.date} (no tour from the engine) with "${pick.p.title}".`);
+    changed = true;
   }
 
-  if (!warnings.length) return itinerary;
+  if (!changed) return itinerary;
   return { ...itinerary, days, warnings: [...itinerary.warnings, ...warnings] };
 }
