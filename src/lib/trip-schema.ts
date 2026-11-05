@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { INTERESTS } from "@/server/catalog/types";
+import { EXPERIENCE_TYPES } from "@/server/catalog/experience";
 
 /**
  * Shared (client + server) shape of what the traveler tells us in the wizard.
@@ -99,6 +100,8 @@ export const TripRequestSchema = z.object({
   /** Courtesy title for the lead traveler's greeting; absent = first name only. */
   travelerTitle: z.enum(TRAVELER_TITLES).optional(),
   interests: z.array(z.enum(INTERESTS)).min(1).max(INTERESTS.length),
+  /** Kinds of experience the traveler asked to skip (dolphins, ATV…): a hard filter everywhere. */
+  avoidTypes: z.array(z.enum(EXPERIENCE_TYPES)).max(EXPERIENCE_TYPES.length).optional(),
   /** Prefer private tours (usually pricier). */
   preferPrivate: z.boolean().default(false),
   chillDays: z.enum(CHILL_OPTIONS).default("none"),

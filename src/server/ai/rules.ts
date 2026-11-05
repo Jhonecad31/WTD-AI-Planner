@@ -4,7 +4,13 @@ import type { DayWeather, Itinerary, ItineraryDay, ItineraryItem } from "@/lib/i
 import { fitsAges, priceProductForParty, round2 } from "./pricing";
 import { planDays, type DaySlot } from "@/lib/plan-days";
 import { isPrivateTitle } from "@/lib/item-meta";
-import { primaryInterest, variety, zoneDistance, type Variety } from "@/server/catalog/experience";
+import {
+  experienceTypes,
+  primaryInterest,
+  variety,
+  zoneDistance,
+  type Variety,
+} from "@/server/catalog/experience";
 
 export { planDays, type DaySlot } from "@/lib/plan-days";
 
@@ -51,6 +57,22 @@ export function partyAllowed(p: CatalogProduct, request: TripRequest): boolean {
   if (!request.interests.includes("party")) return false;
   const steps = zoneDistance(p, effectiveZone(request));
   return steps === null || steps <= NIGHTLIFE_MAX_ZONES;
+}
+
+/** The traveler asked to skip this kind of experience (any of the tour's types). */
+export function isAvoided(p: { title: string; bokunId?: number }, request: TripRequest): boolean {
+  if (!request.avoidTypes?.length) return false;
+  const skip = new Set(request.avoidTypes);
+  return experienceTypes(p).some((t) => skip.has(t));
+}
+
+/**
+ * Whether a product may go in this traveler's trip at all: not a kind they asked to
+ * skip, and night life only when wanted and near the hotel. Every engine and guard
+ * filters on this, so the wizard's "I'd rather skip" chips are a guarantee.
+ */
+export function allowedForTraveler(p: CatalogProduct, request: TripRequest): boolean {
+  return !isAvoided(p, request) && partyAllowed(p, request);
 }
 
 export function hasYoungKids(request: Pick<TripRequest, "travelers">): boolean {
@@ -235,7 +257,7 @@ export function buildRulesItinerary(inputs: PlanInputs): Itinerary {
       (p) => p.onSite && (p.kind === "tour" || p.kind === "ticket") && (p.priceFromUsd ?? 0) > 0,
     )
     .filter((p) => fitsAges(p, request.travelers))
-    .filter((p) => partyAllowed(p, request))
+    .filter((p) => allowedForTraveler(p, request))
     .map((p) => ({
       p,
       score: scoreProduct(p, request.interests, scoreOpts(request)),

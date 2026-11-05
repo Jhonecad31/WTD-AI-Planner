@@ -92,7 +92,6 @@
       },
       "ratingLabel": "{value} de 5"
     },
-
     "benefits": {
       "1": {
         "title": " Mas de <big>100</big> experiencias por descubrir",
@@ -267,7 +266,22 @@
         "arrival": "Llegada",
         "departure": "Salida"
       },
-      "privateBody": "Solo tu grupo, sin otros viajeros. Suelen costar más."
+      "privateBody": "Solo tu grupo, sin otros viajeros. Suelen costar más.",
+      "avoidTitle": "¿Algo que prefieras evitar?",
+      "avoidBody": "Lo que marques aquí no aparece en tu plan, garantizado.",
+      "avoid": {
+        "dolphins": "Delfines y tiburón ballena",
+        "boats": "Lanchas y catamaranes",
+        "snorkel": "Snorkel",
+        "atv": "ATV y caballos",
+        "cenotes": "Cenotes y cavernas",
+        "zipline": "Tirolesas",
+        "ruins": "Ruinas y días largos de bus",
+        "parks": "Parques temáticos",
+        "nightlife": "Antros y shows"
+      },
+      "budgetFits": "alcanza para ~{tours} de tus {days} días con tour",
+      "budgetFitsAll": "alcanza para un tour cada uno de tus {days} días con tour"
     },
     "itinerary": {
       "title": "Tu itinerario",

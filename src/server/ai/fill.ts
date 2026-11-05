@@ -9,7 +9,7 @@ import {
   isRainyFavorite,
   isSeaTour,
   lastIfAvoided,
-  partyAllowed,
+  allowedForTraveler,
   partyNightOk,
   scoreOpts,
   scoreProduct,
@@ -61,7 +61,7 @@ export function fillEmptyDays(
           !used.has(p.bokunId) &&
           fitsAges(p, request.travelers) &&
           fitsDay(p, slot, request) &&
-          partyAllowed(p, request) &&
+          allowedForTraveler(p, request) &&
           (!isParty(p) || partyNightOk(days, index)) &&
           !(badWeather && isSeaTour(p)) &&
           // Keep WhatToDo's parks for the rainy days of the trip.

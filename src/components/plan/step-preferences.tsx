@@ -24,6 +24,19 @@ import { Notice } from "@/components/ui/notice";
 import { PacePicker } from "./pace-picker";
 import { INTEREST_PHOTOS } from "@/content/interest-photos";
 import { BudgetCard } from "./budget-card";
+import { ChipToggle } from "@/components/ui/chip-toggle";
+import { AVOID_GROUPS, groupsFromTypes, typesFromGroups, type AvoidGroup } from "@/lib/avoid";
+import { fullDates } from "@/lib/plan-days";
+import { draftRestDates } from "./wizard-state";
+
+/**
+ * "Wellness & relax" has no tours behind it (the pace picker already covers rest days),
+ * so it isn't offered: a traveler who picks it would get a plan that ignores it.
+ */
+const SELECTABLE_INTERESTS = INTERESTS.filter((i) => i !== "chill");
+
+/** Typical tour price per person (catalog median ≈ USD 109), for the "fits ~N tours" hint. */
+const TYPICAL_TOUR_PP_USD = 105;
 
 const ICONS: Record<Interest, ReactNode> = {
   adventure: <AdventureIcon size={20} />,
@@ -50,6 +63,19 @@ export function StepPreferences() {
   const { draft, patch } = useWizard();
 
   const kids = draft.travelers.some((tr) => tr.age < 13);
+  const avoidGroups = groupsFromTypes(draft.avoidTypes ?? []);
+  function toggleAvoid(g: AvoidGroup) {
+    const next = avoidGroups.includes(g) ? avoidGroups.filter((x) => x !== g) : [...avoidGroups, g];
+    patch({ avoidTypes: typesFromGroups(next) });
+  }
+  // How many tours the budget buys vs. how many tour days the pace leaves.
+  const from = draft.inbound.date;
+  const to = draft.outbound.date;
+  const tourDays =
+    from && to && to > from
+      ? fullDates(from, to).length - (draftRestDates(draft)?.length ?? 0)
+      : null;
+  const toursThatFit = Math.floor(draft.budgetPerPerson / TYPICAL_TOUR_PP_USD);
 
   function toggle(i: Interest) {
     patch({
@@ -68,7 +94,7 @@ export function StepPreferences() {
 
       <section className="flex flex-col gap-3">
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-          {INTERESTS.map((i) => (
+          {SELECTABLE_INTERESTS.map((i) => (
             <OptionCard
               key={i}
               selected={draft.interests.includes(i)}
@@ -96,6 +122,20 @@ export function StepPreferences() {
         />
       </section>
 
+      <section className="flex flex-col gap-3">
+        <div>
+          <h3 className="text-lg font-bold">{t("avoidTitle")}</h3>
+          <p className="mt-1 text-sm text-brand-ink/70">{t("avoidBody")}</p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {AVOID_GROUPS.map((g) => (
+            <ChipToggle key={g} selected={avoidGroups.includes(g)} onToggle={() => toggleAvoid(g)}>
+              {t(`avoid.${g}`)}
+            </ChipToggle>
+          ))}
+        </div>
+      </section>
+
       <PacePicker />
 
       <BudgetCard
@@ -107,10 +147,18 @@ export function StepPreferences() {
         max={BUDGET_MAX}
         typedMax={BUDGET_TYPED_MAX}
         step={BUDGET_STEP}
-        footnote={t("budgetTotal", {
-          total: formatUsd(draft.budgetPerPerson * draft.travelers.length, locale),
-          count: draft.travelers.length,
-        })}
+        footnote={
+          t("budgetTotal", {
+            total: formatUsd(draft.budgetPerPerson * draft.travelers.length, locale),
+            count: draft.travelers.length,
+          }) +
+          (tourDays !== null && tourDays > 0
+            ? " · " +
+              (toursThatFit >= tourDays
+                ? t("budgetFitsAll", { days: tourDays })
+                : t("budgetFits", { tours: Math.max(1, toursThatFit), days: tourDays }))
+            : "")
+        }
         onChange={(budgetPerPerson) => patch({ budgetPerPerson })}
       />
 

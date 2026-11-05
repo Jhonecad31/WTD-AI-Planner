@@ -92,7 +92,6 @@
       },
       "ratingLabel": "{value} out of 5"
     },
-
     "benefits": {
       "1": {
         "title": "More than <big>100</big>+ experiences to discover",
@@ -266,7 +265,22 @@
         "arrival": "Arrival",
         "departure": "Departure"
       },
-      "privateBody": "Only your group, no other travelers. Usually costs more."
+      "privateBody": "Only your group, no other travelers. Usually costs more.",
+      "avoidTitle": "Anything you'd rather skip?",
+      "avoidBody": "Whatever you mark here stays out of your plan, guaranteed.",
+      "avoid": {
+        "dolphins": "Dolphins & whale sharks",
+        "boats": "Boats & catamarans",
+        "snorkel": "Snorkeling",
+        "atv": "ATVs & horseback",
+        "cenotes": "Cenotes & caves",
+        "zipline": "Ziplines",
+        "ruins": "Ruins & long bus days",
+        "parks": "Theme parks",
+        "nightlife": "Clubs & shows"
+      },
+      "budgetFits": "covers ~{tours} of your {days} tour days",
+      "budgetFitsAll": "covers a tour on each of your {days} tour days"
     },
     "itinerary": {
       "title": "Your itinerary",

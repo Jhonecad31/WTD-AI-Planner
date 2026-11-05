@@ -5,6 +5,7 @@ import { ItinerarySchema } from "@/lib/itinerary-schema";
 import {
   buildRulesItinerary,
   isRainyFavorite,
+  isAvoided,
   isSeaTour,
   partyAllowed,
   planDays,
@@ -774,5 +775,46 @@ describe("Claude's menu for another version", () => {
     const few = many.slice(0, 6);
     const menu2 = pickCandidates(req, few, { avoid }).tours.map((p) => p.bokunId);
     expect(menu2.slice(-3)).toEqual(expect.arrayContaining(avoid));
+  });
+});
+
+describe('"I\'d rather skip" (avoidTypes)', () => {
+  const adults = [{ age: 30 }, { age: 30 }];
+  const req: TripRequest = {
+    ...request,
+    travelers: adults,
+    interests: ["water", "adventure"],
+    avoidTypes: ["dolphin", "whale_shark", "atv", "horseback"],
+  };
+  const sea = [
+    product({ bokunId: 501, title: "Dolphin Discovery in Cancun", interests: ["water"] }),
+    product({ bokunId: 502, title: "ATV Jungle Adventure", interests: ["adventure"] }),
+    product({ bokunId: 503, title: "Isla Mujeres Catamaran", interests: ["water"] }),
+    product({ bokunId: 504, title: "Cenote Swim", interests: ["water", "adventure"] }),
+  ];
+
+  it("keeps avoided kinds out of the rules engine, Claude's menu and the editor", async () => {
+    const plan = buildRulesItinerary({ request: req, products: sea });
+    const ids = plan.days.flatMap((d) => d.items).map((i) => i.bokunId);
+    expect(ids).not.toContain(501);
+    expect(ids).not.toContain(502);
+    expect(ids).toEqual(expect.arrayContaining([503, 504]));
+    const menu = pickCandidates(req, sea).tours.map((p) => p.bokunId);
+    expect(menu.sort()).toEqual([503, 504]);
+    const { fillEmptyDays } = await import("./fill");
+    const emptied = { ...plan, days: plan.days.map((d) => ({ ...d, items: [] })) };
+    const filled = fillEmptyDays(emptied, req, sea);
+    const filledIds = filled.days.flatMap((d) => d.items).map((i) => i.bokunId);
+    expect(filledIds).not.toContain(501);
+    expect(filledIds).not.toContain(502);
+  });
+
+  it("a combo that includes an avoided kind is out too", () => {
+    expect(isAvoided({ title: "ATV, Ziplining & Cenote Tour" }, req)).toBe(true);
+    expect(isAvoided({ title: "Catamaran tour & Dolphin Swim" }, req)).toBe(true);
+    expect(isAvoided({ title: "Isla Mujeres Catamaran" }, req)).toBe(false);
+    expect(isAvoided({ title: "Isla Mujeres Catamaran" }, { ...req, avoidTypes: undefined })).toBe(
+      false,
+    );
   });
 });

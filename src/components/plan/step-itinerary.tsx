@@ -61,6 +61,7 @@ export function buildTripRequest(
     travelers: draft.travelers,
     travelerTitle: draft.travelerTitle,
     interests: draft.interests,
+    avoidTypes: draft.avoidTypes ?? [],
     preferPrivate: draft.preferPrivate,
     dining: draft.dining,
     chillDays: draft.chillDays,

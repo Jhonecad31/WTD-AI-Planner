@@ -19,8 +19,8 @@ import {
   planDays,
   scoreOpts,
   scoreProduct,
+  allowedForTraveler,
   lastIfAvoided,
-  partyAllowed,
   transferFor,
 } from "./rules";
 import { fitsAges, priceProductForParty } from "./pricing";
@@ -89,10 +89,10 @@ export function pickCandidates(
   const nearEnough = (p: CatalogProduct) =>
     (zoneDistance(p, zone) ?? 0) < FAR_ZONES || far++ < MAX_FAR_CANDIDATES;
   const matched = scored.filter(
-    (x) => x.score > 0 && partyAllowed(x.p, request) && nearEnough(x.p),
+    (x) => x.score > 0 && allowedForTraveler(x.p, request) && nearEnough(x.p),
   );
   const fillers = scored.filter(
-    (x) => x.score === 0 && partyAllowed(x.p, request) && nearEnough(x.p),
+    (x) => x.score === 0 && allowedForTraveler(x.p, request) && nearEnough(x.p),
   );
   let tours = [...matched, ...fillers.slice(0, Math.max(0, MIN_CANDIDATES - matched.length))]
     .slice(0, MAX_CANDIDATES)
@@ -216,6 +216,9 @@ ${request.preferPrivate ? "- The traveler prefers PRIVATE tours: when similar op
       transfers: request.transfers,
       travelers: request.travelers,
       interests: request.interests,
+      // Kinds the traveler asked to skip: already removed from the menu, listed so notes
+      // can say "no dolphins, as you asked".
+      avoidKinds: request.avoidTypes ?? [],
       chillDays: request.chillDays,
       budgetPerPersonUsd: request.budgetPerPerson,
       budgetTotalUsd: budgetTotal,
