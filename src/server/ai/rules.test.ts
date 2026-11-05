@@ -3,6 +3,7 @@ import type { CatalogProduct } from "@/server/catalog/types";
 import type { TripRequest } from "@/lib/trip-schema";
 import { ItinerarySchema } from "@/lib/itinerary-schema";
 import {
+  allowedForTraveler,
   buildRulesItinerary,
   isRainyFavorite,
   isAvoided,
@@ -875,5 +876,57 @@ describe("fillEmptyDays explains a day only the budget blocks", () => {
       .filter((i) => i.kind === "free")
       .map((i) => i.note ?? "");
     expect(notes.some((n) => /\+USD \d+/.test(n))).toBe(true);
+  });
+});
+
+describe("pickup coverage by hotel zone", () => {
+  const places = (...cities: string[]) => cities.map((city, id) => ({ id, title: city, city }));
+  const ekBalam = product({
+    bokunId: 701,
+    title: "Ek Balam Mayan Traditions",
+    interests: ["cultural"],
+    pickupService: true,
+    pickupPlaces: places("Cancun"),
+  });
+  const chichen = product({
+    bokunId: 702,
+    title: "Chichen Itza Classic Cenote & Valladolid Tour",
+    interests: ["cultural"],
+    pickupService: true,
+    pickupPlaces: places("Cancun", "Playa del Carmen", "Tulum"),
+  });
+  const at = (zone: TripRequest["hotel"]["zone"]): TripRequest => ({
+    ...request,
+    travelers: [{ age: 30 }, { age: 30 }],
+    interests: ["cultural"],
+    hotel: { noHotel: false, zone },
+  });
+
+  it("keeps a tour that doesn't pick up in the traveler's zone off the menu", () => {
+    expect(allowedForTraveler(ekBalam, at("cancun"))).toBe(true);
+    expect(allowedForTraveler(ekBalam, at("tulum"))).toBe(false);
+    expect(allowedForTraveler(chichen, at("tulum"))).toBe(true);
+    const menu = pickCandidates(at("tulum"), [ekBalam, chichen]).tours.map((p) => p.bokunId);
+    expect(menu).toEqual([702]);
+  });
+
+  it("weighs distance less when the hotel pickup is included", () => {
+    const dolphinsWithRide = product({
+      bokunId: 703,
+      title: "Dolphin Discovery Tulum - Akumal",
+      interests: ["water"],
+      pickupService: true,
+      pickupPlaces: places("Cancun", "Tulum"),
+    });
+    const dolphinsSelf = {
+      ...dolphinsWithRide,
+      bokunId: 704,
+      pickupService: false,
+      pickupPlaces: [],
+    };
+    const fromCancun = scoreOpts(at("cancun"));
+    expect(scoreProduct(dolphinsWithRide, ["water"], fromCancun)).toBeGreaterThan(
+      scoreProduct(dolphinsSelf, ["water"], fromCancun),
+    );
   });
 });

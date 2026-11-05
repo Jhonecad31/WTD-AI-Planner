@@ -8,6 +8,7 @@ import {
   primaryInterest,
 } from "@/server/catalog/experience";
 import { EXPERIENCE_OVERRIDES } from "@/content/experience-overrides";
+import { pickupZones } from "@/server/catalog/pickup";
 import { interestsFor } from "@/server/catalog/normalize";
 
 /**
@@ -71,6 +72,11 @@ function ProductCard({ p }: { p: CatalogProduct }) {
             )}
             <span className="rounded-pill bg-black/5 px-2 py-0.5 text-brand-ink/70">
               {area ?? "unknown area"}
+            </span>
+            <span className="rounded-pill bg-black/5 px-2 py-0.5 text-brand-ink/70">
+              {p.pickupService
+                ? `pickup: ${pickupZones(p).join(", ") || "places without a known zone"}`
+                : "no pickup (meeting point)"}
             </span>
             {experienceTypes(p).length > 1 ? (
               <span className="text-brand-ink/60" title="Everything the tour includes">

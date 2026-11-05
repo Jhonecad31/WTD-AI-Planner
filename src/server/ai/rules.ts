@@ -4,6 +4,7 @@ import type { DayWeather, Itinerary, ItineraryDay, ItineraryItem } from "@/lib/i
 import { fitsAges, priceProductForParty, round2 } from "./pricing";
 import { planDays, type DaySlot } from "@/lib/plan-days";
 import { isPrivateTitle } from "@/lib/item-meta";
+import { pickupCoverage } from "@/server/catalog/pickup";
 import {
   experienceTypes,
   primaryInterest,
@@ -72,7 +73,13 @@ export function isAvoided(p: { title: string; bokunId?: number }, request: TripR
  * filters on this, so the wizard's "I'd rather skip" chips are a guarantee.
  */
 export function allowedForTraveler(p: CatalogProduct, request: TripRequest): boolean {
-  return !isAvoided(p, request) && partyAllowed(p, request);
+  return (
+    !isAvoided(p, request) &&
+    partyAllowed(p, request) &&
+    // A tour that picks up along the coast but not from this hotel's zone can't be booked
+    // with pickup for this traveler: off the menu.
+    pickupCoverage(p, effectiveZone(request)) !== "not_here"
+  );
 }
 
 export function hasYoungKids(request: Pick<TripRequest, "travelers">): boolean {
@@ -168,7 +175,10 @@ export function scoreProduct(
   if (opts.preferPrivate && isPrivateTitle(p.title)) score += 3;
   if (opts.zone) {
     const steps = zoneDistance(p, opts.zone);
-    if (steps) score = Math.max(0.1, score - steps * ZONE_STEP_PENALTY);
+    // Distance weighs half when the tour picks up at the hotel (a long ride, but included);
+    // in full when the traveler has to get to a marina or park on their own.
+    const weight = pickupCoverage(p, opts.zone) === "included" ? 0.5 : 1;
+    if (steps) score = Math.max(0.1, score - steps * ZONE_STEP_PENALTY * weight);
   }
   // Very long day trips rank last with young kids (still allowed if nothing else fits).
   if (opts.youngKids && (p.durationMinutes ?? 0) >= LONG_TOUR_MINUTES)

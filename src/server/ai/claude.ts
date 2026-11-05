@@ -31,6 +31,7 @@ import {
   primaryInterest,
   zoneDistance,
 } from "@/server/catalog/experience";
+import { pickupCoverage } from "@/server/catalog/pickup";
 
 /**
  * Claude engine. Claude only *chooses and explains*; it never invents products
@@ -158,6 +159,9 @@ function compact(
     // from everywhere, like Chichén Itzá, or unknown).
     area: areaOf(p),
     zonesFromHotel: zoneDistance(p, effectiveZone(request)),
+    // "included" = hotel pickup from the traveler's zone; "self" = they get to the meeting
+    // point on their own (boats from the Cancun marina, dolphin parks, clubs).
+    pickupFromHotel: pickupCoverage(p, effectiveZone(request)),
     // True when the tour matches none of the traveler's interests: on the menu only so a
     // day isn't left empty once every matching tour is used.
     filler: !!opts.filler,
@@ -192,6 +196,7 @@ You build day-by-day itineraries using ONLY the products in the candidate list. 
 - Respect the party budget: sum of partyPriceUsd over the chosen TOURS must be <= ${budgetTotal} USD (${request.budgetPerPerson} per person x ${request.travelers.length}). Transfers are paid on top of that budget: never count them against it, and never skip a tour to pay for a transfer.
 - VARIETY: never pick two tours with the same main kind (the first value in "kinds"): no second dolphin swim, ATV day, Isla Mujeres catamaran or Chichén Itzá variant. Different sites of one family are fine (Chichén one day, Tulum another; Xcaret and Xel-Há). This rule outranks interest coverage and ratings.
 - Night life (partyNight=true) is only on the menu when it is within 1 zone of the hotel; a traveler staying in Playa del Carmen or Tulum who asked for party gets no Cancun club, say nothing about it.
+- "pickupFromHotel": "included" means the tour collects them at the hotel, so a few zones of distance are fine; "self" means they must reach the meeting point on their own, so keep those close to the hotel (zonesFromHotel 0-1) unless the traveler clearly wants it.
 - Stay near the hotel: "zonesFromHotel" is how far down the coast a tour happens (0 = same area, 5 = Cancun ↔ Tulum). Between similar options prefer the lower number, and never fill a trip with 3+ tours at 4-5 zones away. Far day trips (area "far": Chichén Itzá, Holbox, Bacalar) count as 3 and are fine once or twice, not every day. Null = unknown.
 - Candidates with filler=true match none of the requested interests. Use one only on a day that would otherwise have no tour because every matching candidate is already used or doesn't fit (budget, ages, weather); never place a filler while a matching candidate is still available, and prefer fillers near the hotel.
 - Match the traveler's interests by what a tour mainly is ("mainInterest"), not by the extra interests it also lists: someone who asked for "cultural" gets ruins and towns, not a dolphin swim that merely mentions the Mayan coast. Cover every requested interest that has tours at least once before repeating an interest (shopping has no tours). Prefer higher rating/reviews when similar (use the tripadvisor rating when present).
