@@ -13,20 +13,42 @@ import type { Interest } from "@/server/catalog/types";
  *   Decides the tour's main interest and what counts as a repeat.
  * - `interests`: the full interest list, main interest first. Replaces the tags.
  * - `area`: where the tour happens along the coast, so a Tulum hotel isn't sent
- *   to Isla Mujeres every day. Leave it out for places that are far from every
- *   hotel zone (Chichén Itzá, Holbox, Bacalar).
+ *   to Isla Mujeres every day. Use "far" for places that are a long drive from
+ *   every hotel zone (Chichén Itzá, Ek Balam, Holbox, Bacalar, Río Lagartos).
+ *
+ * Areas below come from the Bokun description (meeting point, park name) where
+ * it says one; the ones marked "(check)" are our best guess for Jhonny to confirm.
  */
 export const EXPERIENCE_OVERRIDES: Record<
   number,
-  { type?: ExperienceType; interests?: Interest[]; area?: Area }
+  { type?: ExperienceType; interests?: Interest[]; area?: Area | "far" }
 > = {
-  // Semi-private 3 waterfall Cenotes experience (Cenotes Adventuring): Ruta de los
-  // Cenotes, Puerto Morelos.
-  705158: { area: "puerto_morelos" },
-  // Speedboat Jungle Safari Adventure: Nichupté lagoon, Cancun hotel zone.
-  1169010: { area: "cancun" },
-  // Horseback Riding & ATV Jungle Adventure: jungle park on the Cancun side.
-  670328: { area: "cancun" },
+  // --- Ruta de los Cenotes / Extreme Adventure Eco Park (Puerto Morelos) ---
+  // Horseback Riding & ATV Jungle Adventure: Extreme Adventure Eco Park.
+  670328: { area: "puerto_morelos" },
   // 5x1 Adventure: ATV, Snorkel, Cenote, Ziplines & Beach club: Puerto Morelos.
   855545: { area: "puerto_morelos" },
+  // Semi-private 3 waterfall Cenotes (Cenotes Adventuring): "Cancun's cenotes" in
+  // the jungle, i.e. Ruta de los Cenotes (check).
+  705158: { area: "puerto_morelos" },
+  // ATV Jungle Adventure Zip-Line, Cenote & Tequila Tasting: Ruta de los Cenotes.
+  1277988: { area: "puerto_morelos" },
+  // ATV Private Signature Experience: WhatToDo's own park, Ruta de los Cenotes (check).
+  1181148: { area: "puerto_morelos" },
+  // Private Signature Beach Taco Tour: the beachside taco tour runs in Puerto Morelos (check).
+  1181903: { area: "puerto_morelos" },
+
+  // --- Cancun hotel zone / Nichupté lagoon / Isla Mujeres piers ---
+  // Speedboat Jungle Safari Adventure: Nichupté lagoon.
+  1169010: { area: "cancun" },
+  // ATV Jungle Adventure Experience & Speedboat combo: Nichupté lagoon.
+  885792: { area: "cancun" },
+  // ATV Jungle Adventure & Premium Catamaran Combo: sails to Isla Mujeres from Cancun.
+  885793: { area: "cancun" },
+  // Catamaran tour & Dolphin Swim: Isla Mujeres.
+  1021390: { area: "cancun" },
+  // Private catamarans (20–30, 35–45, 60 passengers): Cancun hotel zone marina.
+  1164687: { area: "cancun" },
+  1166052: { area: "cancun" },
+  1166270: { area: "cancun" },
 };

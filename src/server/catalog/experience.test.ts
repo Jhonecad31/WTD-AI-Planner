@@ -132,9 +132,11 @@ describe("areas along the coast", () => {
     expect(areaOf({ title: "ATV, Ziplining & Cenote Tour at Extreme Adventure Eco Park" })).toBe(
       "puerto_morelos",
     );
-    // Far from every zone: no area, no penalty.
-    expect(areaOf({ title: "Chichen Itza Classic Cenote & Valladolid Tour" })).toBeNull();
-    expect(areaOf({ title: "Tour Holbox Essentials" })).toBeNull();
+    // A long drive from every zone.
+    expect(areaOf({ title: "Chichen Itza Classic Cenote & Valladolid Tour" })).toBe("far");
+    expect(areaOf({ title: "Tour Holbox Essentials" })).toBe("far");
+    // Nothing known: no penalty.
+    expect(areaOf({ title: "Mystery Jungle Experience" })).toBeNull();
   });
 
   it("counts hotel zones between the hotel and the tour", () => {
@@ -142,7 +144,8 @@ describe("areas along the coast", () => {
     expect(zoneDistance(isla, "cancun")).toBe(0);
     expect(zoneDistance(isla, "costa_mujeres")).toBe(1);
     expect(zoneDistance(isla, "tulum")).toBe(5);
-    expect(zoneDistance({ title: "Chichen Itza Deluxe" }, "tulum")).toBeNull();
+    expect(zoneDistance({ title: "Chichen Itza Deluxe" }, "tulum")).toBe(3);
+    expect(zoneDistance({ title: "Mystery Jungle Experience" }, "tulum")).toBeNull();
   });
 });
 

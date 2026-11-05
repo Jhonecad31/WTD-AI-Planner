@@ -64,7 +64,7 @@ function ProductCard({ p }: { p: CatalogProduct }) {
               </span>
             )}
             <span className="rounded-pill bg-black/5 px-2 py-0.5 text-brand-ink/70">
-              {area ?? "far / unknown area"}
+              {area ?? "unknown area"}
             </span>
           </div>
         ) : null}

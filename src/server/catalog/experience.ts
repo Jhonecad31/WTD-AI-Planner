@@ -172,8 +172,8 @@ export function primaryInterest(p: Product): Interest | null {
 
 /**
  * Where a tour happens along the coast, north to south, on the same scale as the
- * hotel zones. Null = far from every zone (Chichén Itzá, Holbox, Bacalar) or unknown:
- * no distance penalty either way.
+ * hotel zones. "far" = a long drive from every zone (Chichén Itzá, Holbox, Bacalar),
+ * which counts as a fixed FAR_STEPS away. Null = unknown: no distance penalty.
  */
 export const AREAS = [
   "costa_mujeres",
@@ -185,8 +185,14 @@ export const AREAS = [
   "tulum",
 ] as const;
 export type Area = (typeof AREAS)[number];
+/** What a "far" day trip costs in hotel zones (about a 2-3 h drive each way). */
+export const FAR_STEPS = 3;
 
-const AREA_RULES: { area: Area; re: RegExp }[] = [
+const AREA_RULES: { area: Area | "far"; re: RegExp }[] = [
+  {
+    area: "far",
+    re: /chich[eé]n|\bitz[aá]\b|ek ?balam|valladolid|holbox|chiquil[aá]|bacalar|coloradas|r[ií]o lagartos?|izamal|m[eé]rida/i,
+  },
   { area: "tulum", re: /tulum|kaan ?luum|\bcob[aá]\b|casa tortuga/i },
   { area: "puerto_aventuras", re: /akumal|puerto aventuras/i },
   {
@@ -204,16 +210,17 @@ const AREA_RULES: { area: Area; re: RegExp }[] = [
   },
 ];
 
-export function areaOf(p: Product): Area | null {
+export function areaOf(p: Product): Area | "far" | null {
   const forced = overrideFor(p)?.area;
   if (forced) return forced;
   return AREA_RULES.find((r) => r.re.test(p.title))?.area ?? null;
 }
 
-/** Zones apart between the hotel and the tour (0 = same area); null when unknown. */
+/** Zones apart between the hotel and the tour (0 = same area, far = FAR_STEPS); null when unknown. */
 export function zoneDistance(p: Product, zone: Area): number | null {
   const area = areaOf(p);
   if (!area) return null;
+  if (area === "far") return FAR_STEPS;
   return Math.abs(AREAS.indexOf(area) - AREAS.indexOf(zone));
 }
 
