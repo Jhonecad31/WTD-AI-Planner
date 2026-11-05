@@ -7,6 +7,7 @@ import {
   dinnerCount,
   enrichItinerary,
   kidWarnings,
+  partyWarnings,
   placePartyNights,
   rankRestaurants,
 } from "./enrich";
@@ -344,5 +345,20 @@ describe("tour days and rain", () => {
     // One rainy day is not a rainy trip.
     const once = { ...raw, days: raw.days.map((d, i) => (i === 2 ? { ...d, weather: rainy } : d)) };
     expect(enrichItinerary(once, req, catalog).weatherNote).toBeUndefined();
+  });
+});
+
+describe("partyWarnings", () => {
+  const adults = [{ age: 30 }, { age: 30 }];
+  it("tells a traveler far from Cancun why there is no night life in the plan", () => {
+    const club = product({ bokunId: 61, title: "Mandala Nightclub Cancun", interests: ["party"] });
+    const tulum = { ...base, travelers: adults, interests: ["party", "water"] } as typeof base;
+    expect(partyWarnings({ ...tulum, hotel: { noHotel: false, zone: "tulum" } }, [club])).toEqual([
+      expect.stringMatching(/Cancún|Cancun/),
+    ]);
+    expect(partyWarnings({ ...tulum, hotel: { noHotel: false, zone: "cancun" } }, [club])).toEqual(
+      [],
+    );
+    expect(partyWarnings({ ...tulum, interests: ["water"] }, [club])).toEqual([]);
   });
 });

@@ -9,7 +9,7 @@ import type {
 import { RESTAURANTS, type RestaurantInfo } from "@/content/restaurants";
 import { placesFor, type Place } from "@/content/places";
 import { fitsAges, priceProductForParty } from "./pricing";
-import { isParty, partyNightOk, scoreOpts, scoreProduct, toItem } from "./rules";
+import { isParty, partyAllowed, partyNightOk, scoreOpts, scoreProduct, toItem } from "./rules";
 
 /**
  * Deterministic trip rules applied after either engine picked the tours, so they
@@ -297,6 +297,25 @@ export function kidWarnings(request: TripRequest, days: ItineraryDay[] = []): st
   return lines;
 }
 
+/**
+ * The traveler asked for night life but every club is too far from their hotel zone
+ * (all of them are in Cancun): say so once, instead of a plan that silently ignores it.
+ */
+export function partyWarnings(request: TripRequest, products: CatalogProduct[]): string[] {
+  if (!request.interests.includes("party")) return [];
+  const kids = request.travelers.some((t) => t.age < 13);
+  if (kids) return []; // kidWarnings already explains it
+  const anyClub = products.some(
+    (p) => p.onSite && isParty(p) && fitsAges(p, request.travelers) && partyAllowed(p, request),
+  );
+  if (anyClub) return [];
+  return [
+    request.locale === "es"
+      ? "Los antros y shows nocturnos están en Cancún, a más de una hora de tu hotel; no los incluimos. Tu especialista puede sugerirte opciones si quieres una noche de fiesta."
+      : "The night clubs and shows are in Cancun, over an hour from your hotel, so we left them out. Your specialist can suggest options if you'd like a party night.",
+  ];
+}
+
 function dayTitle(day: ItineraryDay, items: ItineraryItem[], locale: "en" | "es"): string {
   const es = locale === "es";
   const place = items.find((i) => i.kind === "beach" || i.kind === "shopping");
@@ -425,7 +444,7 @@ export function enrichItinerary(
   return {
     ...itinerary,
     days,
-    introWarnings: kidWarnings(request, days),
+    introWarnings: [...kidWarnings(request, days), ...partyWarnings(request, products)],
     weatherNote: rainyTripNote(days, locale),
     diningNote:
       restaurants.length || skipDining
