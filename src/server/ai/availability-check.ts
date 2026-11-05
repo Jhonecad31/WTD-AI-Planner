@@ -9,6 +9,7 @@ import {
   isParty,
   isSeaTour,
   lastIfAvoided,
+  partyAllowed,
   partyNightOk,
   planDays,
   scoreOpts,
@@ -168,7 +169,8 @@ export async function verifyAvailability(
           !used.has(p.bokunId) &&
           fitsAges(p, request.travelers) &&
           (!slot || fitsDay(p, slot, request)) &&
-          (!isParty(p) || (request.interests.includes("party") && partyOk)) &&
+          partyAllowed(p, request) &&
+          (!isParty(p) || partyOk) &&
           !(badWeather && isSeaTour(p)) &&
           // Never a repeat of another day; the day goes free before that.
           variety(p, otherTours) > 0 &&

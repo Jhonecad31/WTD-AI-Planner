@@ -6,6 +6,7 @@ import {
   buildRulesItinerary,
   isRainyFavorite,
   isSeaTour,
+  partyAllowed,
   planDays,
   scoreOpts,
   scoreProduct,
@@ -646,5 +647,74 @@ describe("shared tickets", () => {
     const p = priceProductForParty(atv, [{ age: 30 }, { age: 30 }]);
     expect(p.pricing[0]).toMatchObject({ count: 2, unitUsd: 63 });
     expect(p.priceTotalUsd).toBe(126);
+  });
+});
+
+describe("fillEmptyDays", () => {
+  it("gives a full day the engine skipped the best matching tour within budget", async () => {
+    const { fillEmptyDays } = await import("./fill");
+    const raw = buildRulesItinerary({
+      request: { ...request, budgetPerPerson: 1000 },
+      products: catalog,
+    });
+    // Pretend the engine left every full day empty (what Claude does on long, cheap trips).
+    const emptied = {
+      ...raw,
+      days: raw.days.map((d) => (d.label === "full" ? { ...d, items: [] } : d)),
+    };
+    const out = fillEmptyDays(emptied, { ...request, budgetPerPerson: 1000 }, catalog);
+    const tours = out.days.flatMap((d) => d.items).filter((i) => i.kind === "tour");
+    expect(tours.length).toBe(out.days.filter((d) => d.label === "full").length);
+    expect(new Set(tours.map((t) => t.bokunId)).size).toBe(tours.length);
+    expect(tours.map((t) => t.bokunId)).not.toContain(4); // party not requested
+    expect(out.warnings.some((w) => w.startsWith("Filled"))).toBe(true);
+  });
+
+  it("stops when the budget is gone and leaves the day free", async () => {
+    const { fillEmptyDays } = await import("./fill");
+    const tight = { ...request, budgetPerPerson: 120 }; // 360 total, transfers take 90
+    const raw = buildRulesItinerary({ request: tight, products: catalog });
+    const emptied = {
+      ...raw,
+      days: raw.days.map((d) => (d.label === "full" ? { ...d, items: [] } : d)),
+    };
+    const out = fillEmptyDays(emptied, tight, catalog);
+    const spent = out.days
+      .flatMap((d) => d.items)
+      .filter((i) => i.kind === "tour" || i.kind === "transfer")
+      .reduce((s, i) => s + i.priceTotalUsd, 0);
+    expect(spent).toBeLessThanOrEqual(360);
+    expect(
+      out.days.some((d) => d.label === "full" && !d.items.some((i) => i.kind === "tour")),
+    ).toBe(true);
+  });
+});
+
+describe("night life near the hotel", () => {
+  const club = product({ bokunId: 95, title: "Coco Bongo Cancun", interests: ["party"] });
+  const adults = [{ age: 30 }, { age: 30 }];
+  const at = (zone: TripRequest["hotel"]["zone"]) => ({
+    ...request,
+    travelers: adults,
+    interests: ["party", "water"] as TripRequest["interests"],
+    hotel: { noHotel: false, zone },
+  });
+
+  it("allows a Cancun club from Cancun, Costa Mujeres and Puerto Morelos only", () => {
+    expect(partyAllowed(club, at("cancun"))).toBe(true);
+    expect(partyAllowed(club, at("costa_mujeres"))).toBe(true);
+    expect(partyAllowed(club, at("puerto_morelos"))).toBe(true);
+    expect(partyAllowed(club, at("playa_del_carmen"))).toBe(false);
+    expect(partyAllowed(club, at("tulum"))).toBe(false);
+    expect(partyAllowed(club, { ...at("cancun"), interests: ["water"] })).toBe(false);
+  });
+
+  it("keeps Cancun clubs out of a Playa del Carmen trip, in both engines' menus", () => {
+    const products = [...catalog, club];
+    const rules = buildRulesItinerary({ request: at("playa_del_carmen"), products });
+    expect(rules.days.flatMap((d) => d.items).map((i) => i.bokunId)).not.toContain(95);
+    const menu = pickCandidates(at("playa_del_carmen"), products).tours.map((p) => p.bokunId);
+    expect(menu).not.toContain(95);
+    expect(pickCandidates(at("cancun"), products).tours.map((p) => p.bokunId)).toContain(95);
   });
 });

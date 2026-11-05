@@ -102,6 +102,16 @@ function placeItem(place: Place, locale: "en" | "es"): ItineraryItem {
   };
 }
 
+function freeItem(locale: "en" | "es"): ItineraryItem {
+  return {
+    kind: "free",
+    title: locale === "es" ? "Día libre" : "Free day",
+    priceTotalUsd: 0,
+    pricing: [],
+    pickup: false,
+  };
+}
+
 function restItem(locale: "en" | "es"): ItineraryItem {
   const es = locale === "es";
   return {
@@ -401,7 +411,10 @@ export function enrichItinerary(
       const d = dinner(dayIndex);
       if (d) items.push(d);
     } else {
-      items.push(...tours, ...base.filter((i) => i.kind === "free" && !tours.length));
+      items.push(...tours);
+      // A full day with no tour (Claude skipped it, or the tour was dropped) still shows
+      // a "free day" block, so the traveler sees the day and can add a tour to it.
+      if (!tours.length) items.push(base.find((i) => i.kind === "free") ?? freeItem(locale));
       const d = dinner(dayIndex);
       if (d) items.push(d);
     }

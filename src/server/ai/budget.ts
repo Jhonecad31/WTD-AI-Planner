@@ -6,6 +6,7 @@ import {
   fitsDay,
   isParty,
   isSeaTour,
+  partyAllowed,
   partyNightOk,
   scoreOpts,
   scoreProduct,
@@ -77,7 +78,8 @@ export function fitBudget(
             fitsAges(p, request.travelers) &&
             fitsDay(p, slot, request) &&
             // Night life only when asked for, and only before a rest or departure day.
-            (!isParty(p) || (request.interests.includes("party") && partyNightOk(days, index))) &&
+            partyAllowed(p, request) &&
+            (!isParty(p) || partyNightOk(days, index)) &&
             !(badWeather && (isSeaTour(p) || p.interests.includes("beach"))) &&
             // Never a repeat of another day (a second catamaran or speedboat): when no
             // different kind of tour is cheaper, the day goes free instead.

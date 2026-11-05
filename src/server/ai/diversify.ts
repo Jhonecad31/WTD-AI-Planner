@@ -7,6 +7,7 @@ import {
   fitsDay,
   isParty,
   isSeaTour,
+  partyAllowed,
   partyNightOk,
   scoreOpts,
   scoreProduct,
@@ -63,7 +64,8 @@ export function diversify(
           !used.has(p.bokunId) &&
           fitsAges(p, request.travelers) &&
           fitsDay(p, slot, request) &&
-          (!isParty(p) || (request.interests.includes("party") && partyNightOk(days, index))) &&
+          partyAllowed(p, request) &&
+          (!isParty(p) || partyNightOk(days, index)) &&
           !(badWeather && isSeaTour(p)) &&
           spentElsewhere + price(p) <= budgetTotal &&
           variety(p, chosen) > 0,

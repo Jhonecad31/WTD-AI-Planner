@@ -234,6 +234,23 @@ describe("enrichItinerary", () => {
     expect(it_.days[idx].items.some((i) => i.kind === "restaurant")).toBe(false);
   });
 
+  it("a full day that another engine left empty still gets a free-day block", () => {
+    const raw = buildRulesItinerary({ request: base, products: catalog });
+    // Claude sometimes returns a full day with a title and no items at all.
+    const emptied = {
+      ...raw,
+      days: raw.days.map((d) =>
+        d.label === "full" ? { ...d, title: "Playa y compras", items: [] } : d,
+      ),
+    };
+    const out = enrichItinerary(emptied, base, catalog);
+    for (const d of out.days.filter((d) => d.label === "full")) {
+      expect(d.items.some((i) => i.kind === "free")).toBe(true);
+      expect(d.items.filter((i) => i.kind === "free")).toHaveLength(1);
+    }
+    expect(ItinerarySchema.safeParse(out).success).toBe(true);
+  });
+
   it("moves a misplaced party night from another engine to a valid day", () => {
     const req = { ...base, interests: ["party", "adventure"] as TripRequest["interests"] };
     const raw = buildRulesItinerary({ request: req, products: catalog });

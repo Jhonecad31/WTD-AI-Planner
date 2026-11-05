@@ -38,6 +38,21 @@ export function isParty(p: { interests: Interest[] }): boolean {
   return p.interests.includes("party");
 }
 
+/** Night life must be close to the hotel: nobody rides an hour back from a club. */
+export const NIGHTLIFE_MAX_ZONES = 1;
+
+/**
+ * Whether a night-life product may go in this trip at all: only when the traveler asked
+ * for "party" and the venue is within NIGHTLIFE_MAX_ZONES of the hotel (unknown area
+ * passes). Where in the trip it goes is `partyNightOk`.
+ */
+export function partyAllowed(p: CatalogProduct, request: TripRequest): boolean {
+  if (!isParty(p)) return true;
+  if (!request.interests.includes("party")) return false;
+  const steps = zoneDistance(p, effectiveZone(request));
+  return steps === null || steps <= NIGHTLIFE_MAX_ZONES;
+}
+
 export function hasYoungKids(request: Pick<TripRequest, "travelers">): boolean {
   return request.travelers.some((t) => t.age < 12);
 }
@@ -220,7 +235,7 @@ export function buildRulesItinerary(inputs: PlanInputs): Itinerary {
       (p) => p.onSite && (p.kind === "tour" || p.kind === "ticket") && (p.priceFromUsd ?? 0) > 0,
     )
     .filter((p) => fitsAges(p, request.travelers))
-    .filter((p) => request.interests.includes("party") || !isParty(p))
+    .filter((p) => partyAllowed(p, request))
     .map((p) => ({
       p,
       score: scoreProduct(p, request.interests, scoreOpts(request)),
