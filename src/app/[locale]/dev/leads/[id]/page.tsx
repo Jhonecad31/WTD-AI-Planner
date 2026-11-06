@@ -34,6 +34,16 @@ export default async function LeadPage({ params }: { params: Promise<{ id: strin
         >
           Open PDF
         </a>
+        {lead.agentPdfPath ? (
+          <a
+            className="rounded-pill border border-line px-4 py-2"
+            href={`${pdfUrlFor(lead)}&v=lead`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Sales PDF
+          </a>
+        ) : null}
         {emails.map((e) => (
           <Link
             key={e.id}

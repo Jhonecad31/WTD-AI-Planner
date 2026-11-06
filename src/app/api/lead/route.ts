@@ -3,6 +3,7 @@ import { LeadSubmissionSchema, type LeadRecord } from "@/lib/lead-schema";
 import { getPlannerProducts } from "@/server/catalog/service";
 import { validateAndRepair } from "@/server/ai/validate";
 import { renderTripPdf } from "@/server/pdf/trip-pdf";
+import { renderLeadPdf } from "@/server/pdf/lead-pdf";
 import { sendLeadEmails, pdfUrlFor } from "@/server/email";
 import { getLeadStore, newId, newRef, newToken } from "@/server/store";
 import { clientIp, rateLimit, tooMany } from "@/server/ratelimit";
@@ -49,18 +50,25 @@ export async function POST(request: NextRequest) {
       engine: engine ?? null,
       totalUsd: itinerary.totals.totalUsd,
       pdfPath: null,
+      agentPdfPath: null,
       notes: [],
       bokunConfirmationCodes: [],
     };
     if (!isVercel) await store.createLead(lead);
 
-    const pdf = await renderTripPdf({ name: lead.name, ref: lead.ref, request: trip, itinerary });
+    // Two PDFs: the branded itinerary for the traveler and the extended lead sheet
+    // (flights, hotel, budget, Bokun ids and links) for the sales team.
+    const [pdf, agentPdf] = await Promise.all([
+      renderTripPdf({ name: lead.name, ref: lead.ref, request: trip, itinerary }),
+      renderLeadPdf(lead, products),
+    ]);
     if (!isVercel) {
       lead.pdfPath = await store.savePdf(lead.id, pdf);
-      await store.updateLead(lead.id, { pdfPath: lead.pdfPath });
+      lead.agentPdfPath = await store.savePdf(lead.id, agentPdf, "lead");
+      await store.updateLead(lead.id, { pdfPath: lead.pdfPath, agentPdfPath: lead.agentPdfPath });
     }
 
-    const emails = await sendLeadEmails(lead, pdf);
+    const emails = await sendLeadEmails(lead, { customer: pdf, agent: agentPdf });
 
     return Response.json({
       ok: true,
