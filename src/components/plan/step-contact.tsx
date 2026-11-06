@@ -10,7 +10,7 @@ import { formatDate, formatUsd } from "@/lib/format";
 import { useWizard } from "./wizard-state";
 import { buildTripRequest } from "./step-itinerary";
 
-type Done = { leadId: string; ref: string; pdfUrl: string };
+type Done = { leadId: string; ref: string; pdfUrl: string | null };
 
 export function StepContact() {
   const t = useTranslations("wizard.contact");
@@ -24,6 +24,8 @@ export function StepContact() {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState<Done | null>(draft.submitted ?? null);
+  const [downloading, setDownloading] = useState(false);
+  const [downloadError, setDownloadError] = useState<string | null>(null);
   const hours = Number(process.env.NEXT_PUBLIC_RESPONSE_TIME_HOURS ?? 24);
 
   const request = buildTripRequest(draft, locale);
@@ -62,14 +64,43 @@ export function StepContact() {
         }),
       });
       const j = (await r.json()) as Partial<Done> & { error?: string };
-      if (!r.ok || !j.leadId || !j.pdfUrl || !j.ref) throw new Error(j.error ?? t("failed"));
-      const result = { leadId: j.leadId, ref: j.ref, pdfUrl: j.pdfUrl };
+      if (!r.ok || !j.leadId || !j.ref) throw new Error(j.error ?? t("failed"));
+      const result = { leadId: j.leadId, ref: j.ref, pdfUrl: j.pdfUrl ?? null };
       setDone(result);
       patch({ submitted: result, contact: { email: email.trim(), phone: phone.trim() } });
     } catch (err) {
       setError(err instanceof Error ? err.message : t("failed"));
     } finally {
       setSending(false);
+    }
+  }
+
+  // The PDF is rendered on demand from the itinerary the wizard holds: production has
+  // no disk to keep a copy, so there is no stored file to link to.
+  async function downloadPdf(ref: string) {
+    if (!request || !itinerary) return;
+    setDownloading(true);
+    setDownloadError(null);
+    try {
+      const r = await fetch("/api/pdf", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ name: name.trim() || "Traveler", ref, request, itinerary }),
+      });
+      if (!r.ok) throw new Error(t("downloadFailed"));
+      const url = URL.createObjectURL(await r.blob());
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `WhatToDo-itinerary-${ref}.pdf`;
+      a.rel = "noreferrer";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 60_000);
+    } catch (err) {
+      setDownloadError(err instanceof Error ? err.message : t("downloadFailed"));
+    } finally {
+      setDownloading(false);
     }
   }
 
@@ -89,18 +120,18 @@ export function StepContact() {
           </p>
         </div>
         <div className="flex flex-wrap justify-center gap-3">
-          <a
-            href={done.pdfUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-pill bg-primary px-7 py-3.5 text-base font-bold text-white shadow-sm transition hover:bg-primary-hover"
-          >
-            {t("download")}
-          </a>
+          <Button size="lg" onClick={() => downloadPdf(done.ref)} disabled={downloading}>
+            {downloading ? t("downloading") : t("download")}
+          </Button>
           <Button variant="secondary" size="lg" onClick={reset}>
             {t("again")}
           </Button>
         </div>
+        {downloadError ? (
+          <p className="rounded-card bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+            {downloadError}
+          </p>
+        ) : null}
         <p className="text-xs text-muted">
           {brand.salesEmail} · {brand.phone}
         </p>

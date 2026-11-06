@@ -378,6 +378,8 @@
       "doneTitle": "¡Listo! Revisa tu correo",
       "doneBody": "Enviamos tu itinerario a {email}. Un especialista te contactará en menos de {hours} horas para reservarlo.",
       "download": "Descargar PDF",
+      "downloading": "Generando PDF…",
+      "downloadFailed": "No pudimos generar el PDF. Inténtalo de nuevo.",
       "again": "Planear otro viaje",
       "reference": "Referencia",
       "failed": "No pudimos enviar tu itinerario. Inténtalo de nuevo.",

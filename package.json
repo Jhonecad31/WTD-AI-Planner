@@ -11,7 +11,8 @@
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "catalog:snapshot": "node scripts/build-catalog-snapshot.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.133.0",

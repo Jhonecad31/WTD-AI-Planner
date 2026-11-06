@@ -54,7 +54,7 @@ export function CustomerTripEmail({
 }: {
   lead: LeadRecord;
   appUrl: string;
-  pdfUrl: string;
+  pdfUrl: string | null;
   responseHours: number;
 }) {
   const { itinerary, request, locale } = lead;
@@ -257,22 +257,24 @@ export function CustomerTripEmail({
                 ? `Un especialista de viajes de WhatToDo In Cancun te contactará en menos de ${responseHours} horas para confirmar disponibilidad y reservar todo por ti. Tu itinerario también va adjunto en PDF.`
                 : `A WhatToDo In Cancun travel specialist will contact you within ${responseHours} hours to confirm availability and book everything for you. Your itinerary is also attached as a PDF.`}
             </Text>
-            <Link
-              href={pdfUrl}
-              style={{
-                display: "inline-block",
-                marginTop: 14,
-                backgroundColor: GREEN,
-                color: "#fff",
-                fontWeight: 700,
-                fontSize: 14,
-                padding: "12px 20px",
-                borderRadius: 999,
-                textDecoration: "none",
-              }}
-            >
-              {es ? "Descargar PDF" : "Download PDF"}
-            </Link>
+            {pdfUrl ? (
+              <Link
+                href={pdfUrl}
+                style={{
+                  display: "inline-block",
+                  marginTop: 14,
+                  backgroundColor: GREEN,
+                  color: "#fff",
+                  fontWeight: 700,
+                  fontSize: 14,
+                  padding: "12px 20px",
+                  borderRadius: 999,
+                  textDecoration: "none",
+                }}
+              >
+                {es ? "Descargar PDF" : "Download PDF"}
+              </Link>
+            ) : null}
             <Text style={{ margin: "14px 0 0", fontSize: 12, color: MUTED }}>
               {es ? "Referencia" : "Reference"}: {lead.ref}
             </Text>
@@ -309,7 +311,7 @@ export function AgentLeadEmail({
 }: {
   lead: LeadRecord;
   appUrl: string;
-  pdfUrl: string;
+  pdfUrl: string | null;
   engine: string | null;
 }) {
   const { itinerary, request } = lead;
@@ -607,22 +609,24 @@ export function AgentLeadEmail({
             ) : null}
 
             <Hr style={{ borderColor: LINE, margin: "18px 0" }} />
-            <Link
-              href={pdfUrl}
-              style={{
-                display: "inline-block",
-                backgroundColor: GREEN,
-                color: "#fff",
-                fontWeight: 700,
-                fontSize: 13,
-                padding: "10px 16px",
-                borderRadius: 999,
-                textDecoration: "none",
-                marginRight: 8,
-              }}
-            >
-              Customer PDF
-            </Link>
+            {pdfUrl ? (
+              <Link
+                href={pdfUrl}
+                style={{
+                  display: "inline-block",
+                  backgroundColor: GREEN,
+                  color: "#fff",
+                  fontWeight: 700,
+                  fontSize: 13,
+                  padding: "10px 16px",
+                  borderRadius: 999,
+                  textDecoration: "none",
+                  marginRight: 8,
+                }}
+              >
+                Customer PDF
+              </Link>
+            ) : null}
             <Link
               href={`${appUrl}/dev/leads/${lead.id}`}
               style={{

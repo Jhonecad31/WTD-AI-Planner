@@ -40,7 +40,10 @@ export interface LeadRecord {
   itinerary: Itinerary;
   engine: "rules" | "claude" | null;
   totalUsd: number;
+  /** Local path of the traveler's itinerary PDF (dev only). */
   pdfPath: string | null;
+  /** Local path of the sales-team lead PDF (dev only; absent on records written before it existed). */
+  agentPdfPath?: string | null;
   notes: string[];
   bokunConfirmationCodes: string[];
 }

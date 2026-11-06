@@ -15,7 +15,8 @@ export interface LeadStore {
   getLead(id: string): Promise<LeadRecord | null>;
   updateLead(id: string, patch: Partial<LeadRecord>): Promise<LeadRecord | null>;
   listLeads(limit?: number): Promise<LeadRecord[]>;
-  savePdf(leadId: string, bytes: Uint8Array): Promise<string>;
+  /** `variant` "lead" stores the sales-team PDF next to the traveler's one. */
+  savePdf(leadId: string, bytes: Uint8Array, variant?: "trip" | "lead"): Promise<string>;
   readPdf(pdfPath: string): Promise<Uint8Array | null>;
   enqueueEmail(email: OutboundEmail): Promise<void>;
   updateEmail(id: string, patch: Partial<OutboundEmail>): Promise<void>;
@@ -77,9 +78,9 @@ export class FileLeadStore implements LeadStore {
   listLeads(limit = 50) {
     return listJson<LeadRecord>(dirs.leads, limit);
   }
-  async savePdf(leadId: string, bytes: Uint8Array) {
+  async savePdf(leadId: string, bytes: Uint8Array, variant: "trip" | "lead" = "trip") {
     await ensureDirs();
-    const file = fileFor(dirs.pdf, leadId, "pdf");
+    const file = fileFor(dirs.pdf, leadId, variant === "lead" ? "lead.pdf" : "pdf");
     await writeFile(file, bytes);
     return path.relative(ROOT, file);
   }
