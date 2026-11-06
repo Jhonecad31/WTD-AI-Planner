@@ -8,10 +8,14 @@ import { z } from "zod";
  */
 const schema = z.object({
   NEXT_PUBLIC_APP_URL: z.string().url().default("http://localhost:3000"),
-  LEADS_TO: z.string().default("sales@example.com"),
+  LEADS_TO: z.string().default("sales@whattodoincancun.com"),
   NEXT_PUBLIC_RESPONSE_TIME_HOURS: z.coerce.number().int().positive().default(24),
 
-  EMAIL_PROVIDER: z.enum(["db", "resend"]).default("db"),
+  /**
+   * auto = send through Resend whenever RESEND_API_KEY is set, otherwise keep the
+   * emails in the outbox; db / resend force one or the other.
+   */
+  EMAIL_PROVIDER: z.enum(["auto", "db", "resend"]).default("auto"),
   /** rules = deterministic engine, claude = Claude API with rules fallback */
   AI_PROVIDER: z.enum(["rules", "claude"]).default("claude"),
   CAPTCHA_ENABLED: z

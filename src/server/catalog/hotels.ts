@@ -1,9 +1,11 @@
 import type { HotelZone } from "@/lib/trip-schema";
-import type { CatalogProduct } from "./types";
+import hotelsJson from "@/content/hotels.json";
 
 /**
- * Hotel search built from Bokun pickup places: WhatToDo's own list of hotels it
- * picks up from (~1,400). No extra API, always in sync with the catalog.
+ * Hotel search over WhatToDo's own pickup list (~1,400 hotels), shipped as a static
+ * JSON (`src/content/hotels.json`, built by `scripts/build-hotels.mjs`) so a search
+ * never waits for the Bokun catalog — on Vercel a cold start used to sync the whole
+ * catalog before answering the first keystroke.
  */
 
 export interface HotelOption {
@@ -36,29 +38,32 @@ export function zoneForPlace(city: string | null, name: string): HotelZone | nul
   return null;
 }
 
-let index: { key: string; option: HotelOption }[] | null = null;
-let indexedFrom: CatalogProduct[] | null = null;
+type Entry = { key: string; option: HotelOption };
+let index: Entry[] | null = null;
 
-function buildIndex(products: CatalogProduct[]) {
-  if (index && indexedFrom === products) return index;
+/** Builds the index once per process from the static list (or a custom list, for tests). */
+export function hotelIndex(list: { name: string; city: string | null }[] = hotelsJson): Entry[] {
+  if (list === hotelsJson && index) return index;
   const byName = new Map<string, HotelOption>();
-  for (const p of products) {
-    for (const pp of p.pickupPlaces) {
-      const name = pp.title?.trim();
-      if (!name || byName.has(fold(name))) continue;
-      byName.set(fold(name), { name, city: pp.city || null, zone: zoneForPlace(pp.city, name) });
-    }
+  for (const h of list) {
+    const name = h.name.trim();
+    if (!name || byName.has(fold(name))) continue;
+    byName.set(fold(name), { name, city: h.city || null, zone: zoneForPlace(h.city, name) });
   }
-  index = [...byName.entries()].map(([key, option]) => ({ key, option }));
-  indexedFrom = products;
-  return index;
+  const built = [...byName.entries()].map(([key, option]) => ({ key, option }));
+  if (list === hotelsJson) index = built;
+  return built;
 }
 
 /** Up to `limit` hotels whose name contains every word of the query (accent-insensitive). */
-export function searchHotels(products: CatalogProduct[], query: string, limit = 8): HotelOption[] {
+export function searchHotels(
+  query: string,
+  opts: { limit?: number; list?: { name: string; city: string | null }[] } = {},
+): HotelOption[] {
+  const limit = opts.limit ?? 8;
   const words = fold(query).split(/\s+/).filter(Boolean);
   if (!words.length) return [];
-  const hits = buildIndex(products).filter(({ key }) => words.every((w) => key.includes(w)));
+  const hits = hotelIndex(opts.list).filter(({ key }) => words.every((w) => key.includes(w)));
   // Known city first, then names that start with the query, then shorter names.
   hits.sort(
     (a, b) =>

@@ -1,0 +1,5462 @@
+[
+  {
+    "name": "\"Centro de la Ciudad\" Hotel Eleven",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "12 Bees Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "3B | Wellness Hotel & Hostel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "3beca Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "50 Mts 5TA Avenida",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "5th Avenue Apartment By Select",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "5th Avenue Sol Del Caribe Apart Hotel By BFH",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Acamaya Reef",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "Acanto Playa Del Carmen Trademark Collection by Wyndham",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Adelia Maria Hotel and Suites",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Adhara Express",
+    "city": "Cancun"
+  },
+  {
+    "name": "Adventure Experience Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Ahau Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Akkuun Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Akuazul Exotic Resorts",
+    "city": "Cancun"
+  },
+  {
+    "name": "Akuazul Resorts Only Adults",
+    "city": "Cancun"
+  },
+  {
+    "name": "Akumal Bay Beach & Wellness Resort",
+    "city": "Akumal"
+  },
+  {
+    "name": "AKUMAL CARIBE / BEACH",
+    "city": null
+  },
+  {
+    "name": "Akumal Natura Glamping",
+    "city": "Akumal"
+  },
+  {
+    "name": "Al Cielo Hotel",
+    "city": "Xpu-Ha"
+  },
+  {
+    "name": "Alamos INN",
+    "city": "Cancun"
+  },
+  {
+    "name": "Alaya Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Aldea Thai by AR Vacations",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Aldea Thai By Blue Oceanfront",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Aldea Thai By Smart",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Aldea Thai Luxury Condohotel by Mistik",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Aldea Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Alea Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Alea Tulum by Blue Sky",
+    "city": "Tulum"
+  },
+  {
+    "name": "All Inclusive Arts Party Central",
+    "city": "Cancun"
+  },
+  {
+    "name": "ALL RITMO",
+    "city": null
+  },
+  {
+    "name": "All Ritmo Cancun Resort & Waterpark",
+    "city": "Cancun"
+  },
+  {
+    "name": "All Riviera Resort",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Allegro Cozumel",
+    "city": null
+  },
+  {
+    "name": "Allegro Playacar",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Allergo Playacar",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Alma y Mar Hotel & Suites",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Alma y Mar Hotel & Suites by BFH",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Alma y Mar Suites",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "ALOFT",
+    "city": null
+  },
+  {
+    "name": "Aloft Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "ALOFT PDC",
+    "city": null
+  },
+  {
+    "name": "Aloft Playa Del Carmen",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Aloft Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Alphonso's Villas",
+    "city": null
+  },
+  {
+    "name": "Amaite Playa Hotel Boutique",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Amaka Calma Riviera Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "AMANAA Hotel Boutique",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Amansala Eco Chic Resort & Spa",
+    "city": "Tulum"
+  },
+  {
+    "name": "Amarte Hotel",
+    "city": "Playa Maroma"
+  },
+  {
+    "name": "Ambassador At Grand Velas All Inclusive",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Ambiance Suites Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Ambre & Epices Jungle Hotel & Spa",
+    "city": "Tulum"
+  },
+  {
+    "name": "Ame Hotel Boutique & Spa",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Amelie Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "America Cancun Beach and Club",
+    "city": "Cancun"
+  },
+  {
+    "name": "Ammare Hotel Boutique",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Ana y Jose Hotel & Spa",
+    "city": "Tulum"
+  },
+  {
+    "name": "Anah Suites",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Anah Suites by Las Flores",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Andaz Mayakoba Resort Riviera Maya",
+    "city": "Solidaridad"
+  },
+  {
+    "name": "Andre Ha Caribbean Suites",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Angelo's Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Antika - Tulum Boutique Hotel",
+    "city": "Tulum"
+  },
+  {
+    "name": "Antillano Hotel",
+    "city": "Cancun"
+  },
+  {
+    "name": "Apart Hotel Casaejido",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Apartamentos Anah Playa by Csr",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Apartamentos Cancun Plaza",
+    "city": "Cancun"
+  },
+  {
+    "name": "AQUA MARINA",
+    "city": null
+  },
+  {
+    "name": "Aquamarina Beach Hotel",
+    "city": "Cancun"
+  },
+  {
+    "name": "Areia Playa del Carmen-Beach front Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Arena Hotel Zone Room",
+    "city": "Cancun"
+  },
+  {
+    "name": "Armar House, All-Inclusive, a W Hotel",
+    "city": "Cancun"
+  },
+  {
+    "name": "Aroma Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Arrecifes Suites",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "ARTISAN SENSES RIVIERA",
+    "city": null
+  },
+  {
+    "name": "Aspira Hotel & Club Beach",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "ATELIER",
+    "city": null
+  },
+  {
+    "name": "Atelier Playa Mujeres",
+    "city": "Playa Mujeres"
+  },
+  {
+    "name": "Atman Tulum Hotel",
+    "city": "Tulum"
+  },
+  {
+    "name": "Ava Resort Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Avalon Bay Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Aventura Mexicana Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Azul Beach Resort Riviera Cancun",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "AZUL BEACH RIVIERA",
+    "city": null
+  },
+  {
+    "name": "AZUL FIVES XCALACOCO",
+    "city": null
+  },
+  {
+    "name": "Azul Tulum By GuruHotel",
+    "city": "Tulum"
+  },
+  {
+    "name": "Azul Villa Esmeralda",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "AZULIK Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Azura Boutique Hotel",
+    "city": "Tulum"
+  },
+  {
+    "name": "B&B SiPlaya",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Baal Nah Kah",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "BAHIA PRINCIPE       (HDA DOÑA ISABEL)",
+    "city": null
+  },
+  {
+    "name": "Bahia Principe Grand Coba",
+    "city": "Akumal"
+  },
+  {
+    "name": "Bahia Principe Grand Tulum",
+    "city": "Akumal"
+  },
+  {
+    "name": "Bahia Principe Luxury Akumal",
+    "city": "Akumal"
+  },
+  {
+    "name": "Bahia Principe Luxury Sian Ka'an",
+    "city": "Akumal"
+  },
+  {
+    "name": "Bahlam Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Balam Playa - 15Th Ave",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Balcones Del Caribe",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Balkon Boutique Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Banana Boutique by Guru Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Banana Boutique Hotel By BFH",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Banana Cabanas",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Banyan Tree Mayakoba",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "BARCELO MAYA",
+    "city": null
+  },
+  {
+    "name": "Barcelo Maya Beach",
+    "city": null
+  },
+  {
+    "name": "Barcelo Maya Caribe",
+    "city": "Puerto Aventuras"
+  },
+  {
+    "name": "Barcelo Maya Colonial",
+    "city": "Puerto Aventuras"
+  },
+  {
+    "name": "Barcelo Maya Palace",
+    "city": "Puerto Aventuras"
+  },
+  {
+    "name": "Barcelo Maya Riviera",
+    "city": "Xpu-Ha"
+  },
+  {
+    "name": "Barcelo Maya Tropical",
+    "city": "Puerto Aventuras"
+  },
+  {
+    "name": "Barcelo Riviera Maya Arena",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Barracuda",
+    "city": null
+  },
+  {
+    "name": "Barrio Latino Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "BAYANTREE",
+    "city": null
+  },
+  {
+    "name": "Bazar Colonial Hotel",
+    "city": null
+  },
+  {
+    "name": "BE LOVED",
+    "city": null
+  },
+  {
+    "name": "Be Playa",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Be Tulum Hotel",
+    "city": "Tulum"
+  },
+  {
+    "name": "Beach Balance 5ta Av By BFH",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Beach Energy Hotel by BFH - 5th Ave",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "BEACH ESCAPE",
+    "city": null
+  },
+  {
+    "name": "Beach House Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "BEACH PALACE",
+    "city": null
+  },
+  {
+    "name": "Beach Palace All Inclusive",
+    "city": "Cancun"
+  },
+  {
+    "name": "Beachscape Kin Ha Villas & Suites",
+    "city": "Cancun"
+  },
+  {
+    "name": "Bejuco Hotel Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Bel Air Collection Resort & Spa Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Bel Air Collection Resort & Spa Riviera Maya",
+    "city": "Xpu-Ha"
+  },
+  {
+    "name": "BelleVue Beach Paradise",
+    "city": "Cancun"
+  },
+  {
+    "name": "Belosol Beach Club",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Beloved Playa Mujeres",
+    "city": "Playa Mujeres"
+  },
+  {
+    "name": "Best Beach Apartments - Cancun Plaza",
+    "city": "Cancun"
+  },
+  {
+    "name": "BFH ATTRACTION Deluxe Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Bh Hotel & Cenote Tulum",
+    "city": "Balam Canche"
+  },
+  {
+    "name": "Blue Angel Resort",
+    "city": null
+  },
+  {
+    "name": "BLUE BAY ESMERALDA",
+    "city": null
+  },
+  {
+    "name": "Blue Beach Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "BLUE DIAMOND",
+    "city": null
+  },
+  {
+    "name": "Blue Diamond Luxury Boutique Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Blue Parrot 5th Avenue",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Blue Parrot Suites",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "BlueBay Grand Esmeralda",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "BODEGUITA DEL MEDIO",
+    "city": null
+  },
+  {
+    "name": "BOK21",
+    "city": "Cancun"
+  },
+  {
+    "name": "Breathless Cancun Soul Resort & Spa",
+    "city": "Hotel Zone"
+  },
+  {
+    "name": "BREATHLESS RIVIERA",
+    "city": null
+  },
+  {
+    "name": "Breathless Riviera Cancun Resort & Spa",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "BREATHLESS SOUL",
+    "city": null
+  },
+  {
+    "name": "BRIC Hotel & Spa",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "BRISAS CONDOS",
+    "city": null
+  },
+  {
+    "name": "Bucaneros Hotel & Suites",
+    "city": null
+  },
+  {
+    "name": "Buddha Tulum Hotel & Villas",
+    "city": "Tulum"
+  },
+  {
+    "name": "Cabanas La Alborada",
+    "city": "Tulum"
+  },
+  {
+    "name": "Cabanas La Luna",
+    "city": "Tulum"
+  },
+  {
+    "name": "Cabanas Maalix",
+    "city": "Tulum"
+  },
+  {
+    "name": "Cabanas Marias Lakefront",
+    "city": "Bacalar"
+  },
+  {
+    "name": "Cabanas Puerto Morelos",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "Cabanas Tulum Beach Hotel & Spa",
+    "city": "Tulum"
+  },
+  {
+    "name": "Cabanas Zazilkin",
+    "city": "Tulum"
+  },
+  {
+    "name": "Cacao Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Cacao Tulum -Luxury Condos-",
+    "city": "Tulum"
+  },
+  {
+    "name": "Cache Hotel Boutique",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Cache Hotel Boutique - Adults Only",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Caleta Tankah Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "CALYSO",
+    "city": null
+  },
+  {
+    "name": "CanCuba",
+    "city": "Cancun"
+  },
+  {
+    "name": "Cancún",
+    "city": "Cancún"
+  },
+  {
+    "name": "Cancun Airport",
+    "city": "Cancún"
+  },
+  {
+    "name": "CANCUN BAY",
+    "city": null
+  },
+  {
+    "name": "Cancun Bay Resort",
+    "city": "Cancun"
+  },
+  {
+    "name": "Cancun Bay Suite",
+    "city": "Cancun"
+  },
+  {
+    "name": "Cancun Caribbean Turquoise",
+    "city": "Cancun"
+  },
+  {
+    "name": "Cancun International Airport",
+    "city": "Cancún"
+  },
+  {
+    "name": "Cancun International Suites",
+    "city": "Cancun"
+  },
+  {
+    "name": "Cancun Marina Club Hotel",
+    "city": "Cancun"
+  },
+  {
+    "name": "CANCUN PLAZA",
+    "city": null
+  },
+  {
+    "name": "Cancun Suites Apartments - Hotel Zone",
+    "city": "Cancun"
+  },
+  {
+    "name": "Cancun Tennis Inn",
+    "city": "Cancun"
+  },
+  {
+    "name": "CANOPY",
+    "city": null
+  },
+  {
+    "name": "Canopy by Hilton Cancun La Isla",
+    "city": "Cancun"
+  },
+  {
+    "name": "Cantarell",
+    "city": null
+  },
+  {
+    "name": "Capital O 171 Hotel Farallon Inn",
+    "city": "Cancun"
+  },
+  {
+    "name": "Capital O Airport 24/7",
+    "city": "Cancun"
+  },
+  {
+    "name": "Capital O Arco Maya",
+    "city": "Cancun"
+  },
+  {
+    "name": "Capital O Cancun Ocean View",
+    "city": "Cancun"
+  },
+  {
+    "name": "Capital O Hotel El Faisan Y El Venado",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Capital O La Casa De Los Alcatraces",
+    "city": "Cancun"
+  },
+  {
+    "name": "Capital O Mimi Del Mar",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Capital O The Magic Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Caracol Bay Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Caracol Suite Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Caribbean Beach House",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Caribbean Paradise Boutique by BFH",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Caribbean Paradise Hotel Boutique & Spa By Paradise Hotels",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Caribbean Princess Resort",
+    "city": "Cancun"
+  },
+  {
+    "name": "CARISA Y PALMA",
+    "city": null
+  },
+  {
+    "name": "Carmen Quinta Resort",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Carrillo's Hotel",
+    "city": "Cancun"
+  },
+  {
+    "name": "Casa Agape Hotel Boutique & Beach Club",
+    "city": "Tulum"
+  },
+  {
+    "name": "Casa Alebrije",
+    "city": "Cancun"
+  },
+  {
+    "name": "Casa Alphela",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Casa Balam",
+    "city": "Cancun"
+  },
+  {
+    "name": "Casa Boutique Hokhmah",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "Casa Cenote",
+    "city": "Tulum"
+  },
+  {
+    "name": "Casa Central",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Casa Coco by Coco B Isla",
+    "city": null
+  },
+  {
+    "name": "Casa De La Palapa",
+    "city": "Cancun"
+  },
+  {
+    "name": "Casa de los Alcatraces",
+    "city": "Cancun"
+  },
+  {
+    "name": "Casa de los Suenos",
+    "city": null
+  },
+  {
+    "name": "Casa Del Mar Cozumel Hotel & Dive Resort",
+    "city": null
+  },
+  {
+    "name": "Casa Del Sid Condos",
+    "city": null
+  },
+  {
+    "name": "Casa Don Diego Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Casa El Moro Hotel",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "Casa Granada 24",
+    "city": "Cancun"
+  },
+  {
+    "name": "Casa Grande Hotel Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Casa Habitacional Laurel",
+    "city": "Cancun"
+  },
+  {
+    "name": "Casa La Galeria By Bunik",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Casa Malca",
+    "city": "Tulum"
+  },
+  {
+    "name": "Casa Martin",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "CASA MAYA",
+    "city": null
+  },
+  {
+    "name": "Casa Mexicana Cozumel",
+    "city": null
+  },
+  {
+    "name": "Casa Pancho Villa",
+    "city": "Tulum"
+  },
+  {
+    "name": "Casa Santiago",
+    "city": "Tulum"
+  },
+  {
+    "name": "Casa Talavera",
+    "city": null
+  },
+  {
+    "name": "Casa Teka",
+    "city": "Tulum"
+  },
+  {
+    "name": "Casa Ticul Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "CASA TURQUESA",
+    "city": null
+  },
+  {
+    "name": "Casita de Maya Boutique Hotel",
+    "city": null
+  },
+  {
+    "name": "CATALONIA COSTA MUJERES",
+    "city": null
+  },
+  {
+    "name": "Catalonia Costa Mujeres All Suites & Spa Resort",
+    "city": "Playa Mujeres"
+  },
+  {
+    "name": "CATALONIA MAROMA",
+    "city": null
+  },
+  {
+    "name": "Catalonia Playa Maroma",
+    "city": "Playa Maroma"
+  },
+  {
+    "name": "CATALONIA RIVIERA",
+    "city": null
+  },
+  {
+    "name": "Catalonia Royal Tulum",
+    "city": "Xpu-Ha"
+  },
+  {
+    "name": "CATALONIA YUCATAN",
+    "city": null
+  },
+  {
+    "name": "Catalonia Yucatan Beach",
+    "city": "Puerto Aventuras"
+  },
+  {
+    "name": "CENTRO (XBALANQUE, ADHARA, SELINA, PAXAMAMA ANTILLANO ETC)",
+    "city": null
+  },
+  {
+    "name": "CENTRO 2",
+    "city": null
+  },
+  {
+    "name": "Chable Maroma",
+    "city": "Playa Maroma"
+  },
+  {
+    "name": "CHEDRAUI",
+    "city": null
+  },
+  {
+    "name": "chibal Uh",
+    "city": null
+  },
+  {
+    "name": "Cielito Hotel Boutique",
+    "city": "Tulum"
+  },
+  {
+    "name": "CITY EXPRES PDC",
+    "city": null
+  },
+  {
+    "name": "City Express Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "CITY EXPRESS JUNIOR",
+    "city": null
+  },
+  {
+    "name": "City Express Junior Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "City Express Plus Cancun Aeropuerto",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "City Express Suites Cancun Aeropuerto Riviera",
+    "city": "Cancun"
+  },
+  {
+    "name": "City Express Suites Playa Del Carmen",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Clara",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Club Arrecife Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Club GR Caribe Cancun – Premier All Inclusive",
+    "city": "Cancun"
+  },
+  {
+    "name": "CLUB MED",
+    "city": null
+  },
+  {
+    "name": "Club Med Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Club Paraiso Maya",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "CLUB REGINA",
+    "city": null
+  },
+  {
+    "name": "Club Regina Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Co.Banitas Eco Hotel",
+    "city": "Tulum"
+  },
+  {
+    "name": "Coco Hacienda Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Coco Limited",
+    "city": "Tulum"
+  },
+  {
+    "name": "COCOBONGO",
+    "city": null
+  },
+  {
+    "name": "Cocos Cabanas",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Collection O The Shore At 46th",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Comfort Inn Cancun Aeropuerto",
+    "city": "Cancun"
+  },
+  {
+    "name": "COMFORT INN-HAMPTON INN",
+    "city": null
+  },
+  {
+    "name": "Complimento La Ruina/ Cafe Sofia",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Condo Casa del Arbol",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Condo Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Condo-Hotel Marviya",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "Condotel Los Vientos",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "CONRAD",
+    "city": null
+  },
+  {
+    "name": "Conrad Tulum Riviera Maya",
+    "city": "Chemuyil"
+  },
+  {
+    "name": "Copal Tulum Hotel",
+    "city": "Tulum"
+  },
+  {
+    "name": "Coral Level at Iberostar Selection Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Coral Mar",
+    "city": "Cancun"
+  },
+  {
+    "name": "Coral Maya Condo Hotel",
+    "city": "Puerto Aventuras"
+  },
+  {
+    "name": "Coral Princess Hotel & Dive Resort",
+    "city": null
+  },
+  {
+    "name": "Corazon De Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "COURTYARD BAY MARRIOTT-COMFORT INN",
+    "city": null
+  },
+  {
+    "name": "Courtyard By Marriott Cancun Airport",
+    "city": "Cancun"
+  },
+  {
+    "name": "Cozumel Hotel & Resort, Trademark Collection by Wyndham",
+    "city": null
+  },
+  {
+    "name": "Cozumel Palace",
+    "city": null
+  },
+  {
+    "name": "Cozy Condo Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Cristalmar",
+    "city": null
+  },
+  {
+    "name": "CROWN PARADISE",
+    "city": null
+  },
+  {
+    "name": "Crown Paradise Club Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Crown Paradise Club Riviera Maya",
+    "city": "Caracol"
+  },
+  {
+    "name": "Cuxos Boutique Hotel",
+    "city": null
+  },
+  {
+    "name": "Cuxos Hotel Beachfront",
+    "city": null
+  },
+  {
+    "name": "CYAN",
+    "city": null
+  },
+  {
+    "name": "Cyan Cancun Hotel & Spa",
+    "city": "Cancun"
+  },
+  {
+    "name": "D Margo Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "D'Margo Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "D'maro hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Days Inn By Wyndham Playa Del Carmen",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Del Sol Beachfront Hotel",
+    "city": "Akumal"
+  },
+  {
+    "name": "Delek Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "DESIRE RIVIERA MAYA",
+    "city": null
+  },
+  {
+    "name": "Desire Riviera Maya Pearl Resort",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "Desire Riviera Maya Resort",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "DESIRE RIVIERA PEARL",
+    "city": null
+  },
+  {
+    "name": "Diamante K",
+    "city": "Tulum"
+  },
+  {
+    "name": "DNA Cancun Hotel y Posada",
+    "city": "Cancun"
+  },
+  {
+    "name": "DORADO MAROMA",
+    "city": null
+  },
+  {
+    "name": "DORADO ROYALE",
+    "city": null
+  },
+  {
+    "name": "DORADO SEASIDE",
+    "city": null
+  },
+  {
+    "name": "Dos Ceibas Eco Retreat",
+    "city": "Tulum"
+  },
+  {
+    "name": "Dos Hermanos",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "DOS PLAYAS",
+    "city": null
+  },
+  {
+    "name": "Downtown Playa Del Carmen Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Downtown Tulum Hotel",
+    "city": "Tulum"
+  },
+  {
+    "name": "Dreams Aventuras Riviera Maya",
+    "city": "Puerto Aventuras"
+  },
+  {
+    "name": "DREAMS JADE",
+    "city": null
+  },
+  {
+    "name": "Dreams Jade Resort & Spa",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "DREAMS NATURA",
+    "city": null
+  },
+  {
+    "name": "Dreams Natura Resort & Spa",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "DREAMS P.M.",
+    "city": null
+  },
+  {
+    "name": "Dreams Playa Mujeres Golf & Spa Resort",
+    "city": "Playa Mujeres"
+  },
+  {
+    "name": "Dreams Playa Mujeres Golf & Spa Resort - All Inclusive",
+    "city": "Playa Mujeres"
+  },
+  {
+    "name": "DREAMS PTO AVENTURAS",
+    "city": null
+  },
+  {
+    "name": "DREAMS RIVIERA",
+    "city": null
+  },
+  {
+    "name": "Dreams Riviera Cancun Resort & Spa",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "DREAMS SANDS",
+    "city": null
+  },
+  {
+    "name": "Dreams Sands Cancun Resort & Spa",
+    "city": "Cancun"
+  },
+  {
+    "name": "Dreams Sapphire Resort & Spa",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "DREAMS TULUM",
+    "city": null
+  },
+  {
+    "name": "Dreams Tulum Resort & Spa",
+    "city": "Tulum"
+  },
+  {
+    "name": "DREAMS VISTA (AMARA) IGLESIA PTO JUAREZ",
+    "city": null
+  },
+  {
+    "name": "Dreams Vista Cancun Golf & Spa Resort",
+    "city": "Cancun"
+  },
+  {
+    "name": "Eco-Hotel El Rey Del Caribe",
+    "city": "Cancun"
+  },
+  {
+    "name": "El Acuario Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "el batey",
+    "city": "Cancun"
+  },
+  {
+    "name": "El Cid La Ceiba Beach Hotel",
+    "city": null
+  },
+  {
+    "name": "El Dorado Casitas Royale by Karisma",
+    "city": null
+  },
+  {
+    "name": "El Dorado Maroma",
+    "city": "Cancun"
+  },
+  {
+    "name": "El Dorado Royale, by Karisma",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "El Dorado Seaside Palms, By Karisma",
+    "city": "Puerto Aventuras"
+  },
+  {
+    "name": "El Dorado Seaside Suites",
+    "city": "Puerto Aventuras"
+  },
+  {
+    "name": "El Paraiso Hotel Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "El Patio Hotel & Suites",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "El Pedregal Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "El Pez a Colibri Boutique Hotel",
+    "city": "Tulum"
+  },
+  {
+    "name": "El Punto Hotel",
+    "city": "Tulum"
+  },
+  {
+    "name": "El Secreto Hotel by Bunik",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "El Sol Del Caribe 5ta Av. Apart Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "El Taj Oceanfront & Beachside Condos Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "El Ultimo Maya",
+    "city": "Akumal"
+  },
+  {
+    "name": "Elefante",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Elements Tulum Boutique Hotel",
+    "city": "Tulum"
+  },
+  {
+    "name": "Elite Vacation Club",
+    "city": "Punta Sam"
+  },
+  {
+    "name": "EMPORIO",
+    "city": null
+  },
+  {
+    "name": "Emporio Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Encantada Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Era Hotel Tulum & Spa",
+    "city": "Tulum"
+  },
+  {
+    "name": "Esduma Iguanas Hotel Playa del Carmen",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Esduma Nativa Hotel Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Essence at Casa Maya by Go Travel Club",
+    "city": "Cancun"
+  },
+  {
+    "name": "Estudio Playa Mujeres",
+    "city": "Playa Mujeres"
+  },
+  {
+    "name": "Etéreo",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Etnica Tulum Residences",
+    "city": "Tulum"
+  },
+  {
+    "name": "Eurostars Hacienda Vista Real",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "EXCELLENCE",
+    "city": null
+  },
+  {
+    "name": "Excellence Coral Playa Mujeres",
+    "city": "Cancun"
+  },
+  {
+    "name": "Excellence Playa Mujeres",
+    "city": "Playa Mujeres"
+  },
+  {
+    "name": "EXCELLENCE RIVIERA",
+    "city": null
+  },
+  {
+    "name": "Excellence Riviera Cancun",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "Extended Suites Cancun Cumbres",
+    "city": "Cancun"
+  },
+  {
+    "name": "F.A. CONDESA",
+    "city": null
+  },
+  {
+    "name": "F.A. CORAL BEACH",
+    "city": null
+  },
+  {
+    "name": "F.A. VILLAS",
+    "city": null
+  },
+  {
+    "name": "FAIFIELD AEROPUERTO",
+    "city": null
+  },
+  {
+    "name": "Fairfield by Marriott Inn & Suites Cancun Downtown",
+    "city": "Cancun"
+  },
+  {
+    "name": "Fairfield Inn & Suites Cancun Airport",
+    "city": "Cancun"
+  },
+  {
+    "name": "Fairmont Heritage Place Mayakoba",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "FAIRMONT MAYACOBA",
+    "city": null
+  },
+  {
+    "name": "Fairmont Mayakoba",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Family Selection at Grand Palladium Costa Mujeres Resort & Spa",
+    "city": "Playa Mujeres"
+  },
+  {
+    "name": "FARFIELD DOWNTOWN",
+    "city": null
+  },
+  {
+    "name": "Fiesta Americana Cancun Villas",
+    "city": "Cancun"
+  },
+  {
+    "name": "Fiesta Americana Condesa Cancun All Inclusive",
+    "city": "Cancun"
+  },
+  {
+    "name": "Fiesta Americana Cozumel All Inclusive",
+    "city": null
+  },
+  {
+    "name": "Fiesta Inn Cancun Las Americas",
+    "city": "Cancun"
+  },
+  {
+    "name": "Fiesta Inn Playa Del Carmen",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "FINEST",
+    "city": null
+  },
+  {
+    "name": "Finest Playa Mujeres",
+    "city": "Playa Mujeres"
+  },
+  {
+    "name": "Finest Playa Mujeres by The Excellence Collection",
+    "city": "Punta Sam"
+  },
+  {
+    "name": "FISHERMAN",
+    "city": null
+  },
+  {
+    "name": "FIVES DOWNTOWN",
+    "city": null
+  },
+  {
+    "name": "FIVES OCEAN FRONT",
+    "city": null
+  },
+  {
+    "name": "FLAMINGO",
+    "city": null
+  },
+  {
+    "name": "Flamingo Hotel",
+    "city": null
+  },
+  {
+    "name": "Four Points by Sheraton Cancun Centro",
+    "city": "Cancun"
+  },
+  {
+    "name": "Francis Arlene Hotel",
+    "city": null
+  },
+  {
+    "name": "FUENTES AMERICAS (SUITES MALECON-FIESTA INN)",
+    "city": null
+  },
+  {
+    "name": "Garza Blanca Resort & Spa",
+    "city": null
+  },
+  {
+    "name": "Garza Blanca Resort & Spa Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "GENERATIONS",
+    "city": null
+  },
+  {
+    "name": "Generations Riviera Maya",
+    "city": null
+  },
+  {
+    "name": "Ginger Hotel",
+    "city": "Tulum"
+  },
+  {
+    "name": "Girasol Condo Hotel",
+    "city": "Cancun"
+  },
+  {
+    "name": "Golden Parnassus All Inclusive Resort & Spa Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "GOLDEN PARNASUS",
+    "city": null
+  },
+  {
+    "name": "Golden Shores Crown Paradise",
+    "city": "Cancun"
+  },
+  {
+    "name": "GOTA DE SAL",
+    "city": null
+  },
+  {
+    "name": "GR CARIBE",
+    "city": null
+  },
+  {
+    "name": "GR Caribe by Solaris",
+    "city": "Cancun"
+  },
+  {
+    "name": "GR SOLARIS",
+    "city": null
+  },
+  {
+    "name": "GR Solaris Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Gramercy Tulum",
+    "city": "Tulum Beach"
+  },
+  {
+    "name": "Gran Luxury Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Gran Luxury Playa del Carmen",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Grand Beach Resort by Meyer",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Grand City Hotel",
+    "city": "Cancun"
+  },
+  {
+    "name": "GRAND CORAL BEACH",
+    "city": null
+  },
+  {
+    "name": "Grand Fiesta Americana Coral Beach Cancun All Inclusive",
+    "city": "Cancun"
+  },
+  {
+    "name": "Grand Fifty Suites",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Grand Hyatt Playa Del Carmen Resort",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Grand Luxxe at Vidanta Riviera Maya",
+    "city": "Playa Paraiso"
+  },
+  {
+    "name": "Grand Oasis Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "GRAND OASIS F3",
+    "city": null
+  },
+  {
+    "name": "Grand Oasis Palm",
+    "city": "Cancun"
+  },
+  {
+    "name": "Grand Oasis Palm Blvd. Kukulcan Km 4.5",
+    "city": "Cancun"
+  },
+  {
+    "name": "GRAND OASIS TULUM",
+    "city": null
+  },
+  {
+    "name": "Grand Palladium Colonial Resort & Spa",
+    "city": "Akumal"
+  },
+  {
+    "name": "Grand Palladium Costa Mujeres Resort & Spa",
+    "city": "Playa Mujeres"
+  },
+  {
+    "name": "Grand Palladium Kantenah Resort & Spa",
+    "city": "Akumal"
+  },
+  {
+    "name": "Grand Palladium White Sand Resort & Spa",
+    "city": "Solidaridad"
+  },
+  {
+    "name": "GRAND PARK ROYAL",
+    "city": null
+  },
+  {
+    "name": "Grand Park Royal Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Grand Park Royal Cozumel",
+    "city": null
+  },
+  {
+    "name": "GRAND RESIDENCES",
+    "city": null
+  },
+  {
+    "name": "Grand Residences Riviera Cancun, a Registry Collection Hotel",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "Grand Riviera Princess",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Grand Royal Lagoon",
+    "city": "Cancun"
+  },
+  {
+    "name": "Grand Sens Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Grand Sirenis Riviera Maya Resort",
+    "city": "Akumal"
+  },
+  {
+    "name": "Grand Sunset Princess All Suites Resort",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "GRAND VELAS",
+    "city": null
+  },
+  {
+    "name": "Grand Velas Riviera Maya",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "GREEN 16",
+    "city": null
+  },
+  {
+    "name": "Green Caps Cancun Hospedaje",
+    "city": "Cancun"
+  },
+  {
+    "name": "H10 OCEAN CORAL Y TURQUESA",
+    "city": null
+  },
+  {
+    "name": "Habitaciones Privadas y Centricas Con Alberca.",
+    "city": "Cancun"
+  },
+  {
+    "name": "Habitas Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Hacienda Hotel",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hacienda Madrono",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hacienda Paradise Boutique Hotel by Xperience Hotels",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hacienda Paradise by BFH",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "HACIENDA TRES RIOS",
+    "city": null
+  },
+  {
+    "name": "Hacienda Tres Rios Resort & Nature Park",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hampton Inn by Hilton Cancun Cumbres",
+    "city": "Cancun"
+  },
+  {
+    "name": "HARD ROCK",
+    "city": null
+  },
+  {
+    "name": "Hard Rock Hotel Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hard Rock Hotel Riviera Maya",
+    "city": "Puerto Aventuras"
+  },
+  {
+    "name": "HAVEN RIVIERA",
+    "city": null
+  },
+  {
+    "name": "Haven Riviera Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "HC International by R&T",
+    "city": "Cancun"
+  },
+  {
+    "name": "HDA MORELOS",
+    "city": null
+  },
+  {
+    "name": "Healing Body Energy Retreats",
+    "city": "Tulum"
+  },
+  {
+    "name": "Heaven At The Hard Rock Hotel Riviera Maya",
+    "city": "Puerto Aventuras"
+  },
+  {
+    "name": "Heaven Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hideaway at Royalton Riviera Cancun, An Autograph Collection All-Inclusive Resort & Casino - Adults Only",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "Hilton Cancun Mar Caribe All Inclusive Resort",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hilton Cancun, An All-Inclusive Resort",
+    "city": "Cancun"
+  },
+  {
+    "name": "HILTON CANCUNUN",
+    "city": null
+  },
+  {
+    "name": "Hilton Garden Inn Cancun Airport",
+    "city": "Cancun"
+  },
+  {
+    "name": "HILTON MAR CARIBE",
+    "city": null
+  },
+  {
+    "name": "HILTON PDC",
+    "city": null
+  },
+  {
+    "name": "Hilton Playa del Carmen, an All-Inclusive Adult Only Resort",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "HILTON TULUM",
+    "city": null
+  },
+  {
+    "name": "Hilton Tulum Riviera Maya All-Inclusive Resort",
+    "city": "Tulum"
+  },
+  {
+    "name": "Hip Hotel Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Hive Cancun By G Hotels",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hm Hotel Pie De La Cuesta",
+    "city": "Pie de la Cuesta"
+  },
+  {
+    "name": "HM Playa del Carmen",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "HOLIDAY INN EXPRESS",
+    "city": null
+  },
+  {
+    "name": "Holiday Inn Express & Suites Playa del Carmen, an IHG hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hostal CASA MX quinta avenida",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hostal La Playita Pdc",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hostal Posada Roma",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hostel Agua Viva",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hostel Crucero Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Hotel & Beach Club Garrafon De Castilla",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel & Beach Club Ojo de Agua",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "Hotel & Spa Xbalamque Cancun Centro",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel & Suites Nader",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel 52",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel 56 Zuna",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel 770",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Adhara Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Akkuun Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Hotel Akumal Caribe",
+    "city": "Akumal"
+  },
+  {
+    "name": "Hotel Alux Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Alux Playa del Carmen",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel ArcoIris",
+    "city": "Tulum"
+  },
+  {
+    "name": "Hotel Atlantida",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Avenida Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Azul",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel B Cozumel",
+    "city": null
+  },
+  {
+    "name": "Hotel B Unique",
+    "city": null
+  },
+  {
+    "name": "Hotel B&B by Playa del Karma",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Bahia Chac Chi",
+    "city": null
+  },
+  {
+    "name": "Hotel Balxiba",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Bambu Suites",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Banana Boutique & Dive Center",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Banana Boutique & Spa By Paradise Hotels",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Banana Boutique by Voila Hoteles - 5th Av Playa del Carmen",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Batab",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Baxilba AlbercayEstacionamiento",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Beauty Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Hotel Belo Isla Mujeres",
+    "city": null
+  },
+  {
+    "name": "Hotel Blanco Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Hotel Blvd, Playa del Carmen",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Boca Iglesia",
+    "city": null
+  },
+  {
+    "name": "Hotel Bonampak Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Boutique ArenaBlue",
+    "city": "Tulum"
+  },
+  {
+    "name": "Hotel Boutique Kinta Kan - Adults Only",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Boutique Posada Mariposa",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Boutique Rato 10",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Brisas 5a AV",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Calaluna Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Hotel Calypso Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Cancun Handall",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Canto",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Carey Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Caribe Internacional",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Caribena",
+    "city": "Tulum"
+  },
+  {
+    "name": "Hotel Carpe Diem Tulum By Nah Hotels",
+    "city": "Tulum"
+  },
+  {
+    "name": "Hotel Casa de las Flores",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Casa de Luz Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Casa Grande Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Casa Maraf",
+    "city": null
+  },
+  {
+    "name": "Hotel Casa Maya",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Casa Tucan",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Casa Turquesa",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Catalonia Riviera Maya",
+    "city": "Puerto Aventuras"
+  },
+  {
+    "name": "Hotel Chiibal Uh",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Cielo",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel City Express Suites Playa del Carmen",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Coco Rio",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Colibri Beach",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Colonial Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Colonial San Carlos",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Copa : Hotel en Playa del Carmen",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Costa del Mar",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Cotty",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel D'Atyi",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel D'Gomar",
+    "city": null
+  },
+  {
+    "name": "Hotel Del Prado",
+    "city": null
+  },
+  {
+    "name": "Hotel Del Sol",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Delfin",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel DNA Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Dos Playas Faranda Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Eclipse",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel El Cozumeleno Beach Resort",
+    "city": null
+  },
+  {
+    "name": "Hotel El Marques",
+    "city": null
+  },
+  {
+    "name": "Hotel El Punto Boutique & Beach Club",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Esencia",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Faranda Imperial Laguna Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Flamingo Cancun Resort",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Garrafon",
+    "city": null
+  },
+  {
+    "name": "Hotel Grand Sunset Princess",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Ha Garden Gallery - 5th Avenue",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Hacienda de Castilla",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Hacienda del Caribe",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Hacienda Maria Bonita",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Hacienda Mariposa",
+    "city": "Playa Maroma"
+  },
+  {
+    "name": "Hotel Hacienda Morelos",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "Hotel Hacienda Real Del Caribe",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Hacienda Scarlette",
+    "city": "Tulum"
+  },
+  {
+    "name": "Hotel Hermanos Aguilar",
+    "city": null
+  },
+  {
+    "name": "Hotel Holistika",
+    "city": "Tulum"
+  },
+  {
+    "name": "Hotel Hul-Ku",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "HOTEL IBIS-FOUR POINTS",
+    "city": null
+  },
+  {
+    "name": "Hotel imperial Las Perlas",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Indigo Playa Del Carmen by IHG",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Isleno",
+    "city": null
+  },
+  {
+    "name": "Hotel Jardin",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Kavia",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Kavia 5th Avenida",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Kavia Playa del Carmen",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Kavia Plus",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Kin Ka'a",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Kinbe",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Kinich",
+    "city": null
+  },
+  {
+    "name": "Hotel Ko'ox Wenne",
+    "city": "Tulum"
+  },
+  {
+    "name": "Hotel Krystal Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Krystal Grand Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Kuxtal",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel La Casona Real",
+    "city": null
+  },
+  {
+    "name": "Hotel La Josefina",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel La Luna Gitana",
+    "city": "Tulum"
+  },
+  {
+    "name": "Hotel Las Arenas Puerto Morelos",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "Hotel Las Golondrinas",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Las Iguanas By Guruhotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Las Palmas",
+    "city": null
+  },
+  {
+    "name": "Hotel Los Arcos Tsulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Hotel Los Arrecifes",
+    "city": "Tulum"
+  },
+  {
+    "name": "Hotel Los Girasoles Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Los Naranjos Cancun Inn",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Luma By Kavia",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Luna Maya",
+    "city": "Tulum"
+  },
+  {
+    "name": "Hotel Lunata",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Ma'xanab Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Hotel MangleX",
+    "city": "Tulum"
+  },
+  {
+    "name": "Hotel Manzana Blanca",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Manzana Verde",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Marcianito",
+    "city": null
+  },
+  {
+    "name": "Hotel Margaritas",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Margaritas Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Maria Candelaria",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Mariachi By Kavia",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Marina El Cid Spa & Beach Resort",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "Hotel Mario Candelario",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Mary Carmen",
+    "city": null
+  },
+  {
+    "name": "Hotel Maya Bric - On Fifth Avenue",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Maya Caribe Faranda",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Maya Turquesa",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Morgana",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel MT Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Hotel Muyu Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Hotel MX Portal Maya",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Nadet Suite Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Hotel Nueva Vida de Ramiro",
+    "city": "Tulum"
+  },
+  {
+    "name": "Hotel NYX Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Oasis Palm",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Ojo de Agua",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "Hotel Osorio",
+    "city": null
+  },
+  {
+    "name": "Hotel Panacea Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Hotel Paradise Suites",
+    "city": null
+  },
+  {
+    "name": "Hotel Parador",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Partyholic",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Paso Del Mar",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Pension San Juan",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Pepita Cozumel",
+    "city": null
+  },
+  {
+    "name": "Hotel Perto Morelos Las Palmas",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "Hotel Peter Pan",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Playa del Sur",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Playa Kin Ha",
+    "city": "Tulum"
+  },
+  {
+    "name": "Hotel Plaza Almendros",
+    "city": null
+  },
+  {
+    "name": "Hotel Plaza by Phocea",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Plaza Caribe",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Plaza Cozumel",
+    "city": null
+  },
+  {
+    "name": "Hotel Plaza Kokai",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Plaza Playa",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Poc Na Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Hotel Pok Ta Pok",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Posada 06 Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Hotel Posada Marcas",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Posada Marina",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Posada Sian Ka'an",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Puerto Libre",
+    "city": "San Miguel de Cozumel"
+  },
+  {
+    "name": "Hotel Que Onda",
+    "city": "Akumal"
+  },
+  {
+    "name": "Hotel Quinta Santa Anita",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Residencia La Mariposa",
+    "city": "Tulum"
+  },
+  {
+    "name": "Hotel Riu Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Riu Caribe",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Riu Dunamar",
+    "city": "Playa Mujeres"
+  },
+  {
+    "name": "Hotel Riu Latino",
+    "city": "Playa Mujeres"
+  },
+  {
+    "name": "Hotel Riu Lupita",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Riu Palace Costa Mujeres",
+    "city": "Playa Mujeres"
+  },
+  {
+    "name": "Hotel Riu Palace Kukulkan",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Riu Palace Las Americas",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Riu Palace Mexico",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Riu Palace Peninsula",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Riu Palace Riviera Maya",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Riu Playacar",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Riu Tequila",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Riu Yucatan",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Riviera del Sol",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Roc Luxe Tulum",
+    "city": "Tulum Beach"
+  },
+  {
+    "name": "Hotel Secreto",
+    "city": null
+  },
+  {
+    "name": "Hotel Seloha",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Sevilla",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "Hotel Stella Maris Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Hotel Suites Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Sun Caribbean Divine",
+    "city": "Tulum"
+  },
+  {
+    "name": "Hotel Tankah",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Tequila Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Hotel Tiki Bleu",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Tiki Tiki Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Hotel Turquesa",
+    "city": "Playa Maroma"
+  },
+  {
+    "name": "Hotel Tzalam Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Hotel Villa del Mar",
+    "city": "Playa del Secreto"
+  },
+  {
+    "name": "Hotel Villas Segovia Suites",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Vista Caribe",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Vista Del Mar",
+    "city": null
+  },
+  {
+    "name": "Hotel Xbulu-Ha",
+    "city": null
+  },
+  {
+    "name": "Hotel Xcaret Arte",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Xcaret Mexico",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Hotel Xul-ha",
+    "city": null
+  },
+  {
+    "name": "Hotel Zendero",
+    "city": "Tulum"
+  },
+  {
+    "name": "Hotel Zone",
+    "city": "Cancún"
+  },
+  {
+    "name": "Hotel Zone Caribbean Suite",
+    "city": "Cancun"
+  },
+  {
+    "name": "HotelCoz Top",
+    "city": null
+  },
+  {
+    "name": "Hotelito Azul",
+    "city": "Tulum"
+  },
+  {
+    "name": "Hun Tulum Hotel",
+    "city": "Tulum"
+  },
+  {
+    "name": "HYATT PDC",
+    "city": null
+  },
+  {
+    "name": "Hyatt Vivid Grand Island",
+    "city": "Cancun"
+  },
+  {
+    "name": "HYATT ZILARA",
+    "city": null
+  },
+  {
+    "name": "Hyatt Zilara Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "HYATT ZILARA RIVIERA",
+    "city": null
+  },
+  {
+    "name": "Hyatt Zilara Riviera Maya",
+    "city": "Solidaridad"
+  },
+  {
+    "name": "HYATT ZIVA",
+    "city": null
+  },
+  {
+    "name": "Hyatt Ziva Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "HYATT ZIVA RIVIERA",
+    "city": null
+  },
+  {
+    "name": "Hyatt Ziva Riviera Cancun",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "IBERO QUETZAL",
+    "city": null
+  },
+  {
+    "name": "IBERO TUCAN",
+    "city": null
+  },
+  {
+    "name": "IBEROSTAR",
+    "city": null
+  },
+  {
+    "name": "Iberostar Cozumel",
+    "city": "San Miguel de Cozumel"
+  },
+  {
+    "name": "Iberostar Grand Paraiso",
+    "city": "Playa Paraiso"
+  },
+  {
+    "name": "IBEROSTAR PARAISO",
+    "city": null
+  },
+  {
+    "name": "Iberostar Paraiso Beach",
+    "city": "Playa Paraiso"
+  },
+  {
+    "name": "Iberostar Paraiso Del Mar",
+    "city": "Playa Paraiso"
+  },
+  {
+    "name": "Iberostar Quetzal",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Iberostar Selection Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Iberostar Selection Paraiso Lindo",
+    "city": "Playa Paraiso"
+  },
+  {
+    "name": "Iberostar Selection Paraiso Maya Suites",
+    "city": "Playa Paraiso"
+  },
+  {
+    "name": "Iberostar Tucan",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "ibis Cancun Centro Hotel",
+    "city": "Cancun"
+  },
+  {
+    "name": "IKAL DEL MAR",
+    "city": null
+  },
+  {
+    "name": "Illusion Boutique Hotel by Xperience Hotels",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Imagine Boutique Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "IMPERIAL LAGUNA",
+    "city": null
+  },
+  {
+    "name": "IMPERIAL LAS PERLAS",
+    "city": null
+  },
+  {
+    "name": "Imperla Hotel",
+    "city": null
+  },
+  {
+    "name": "In Fashion Hotel & Spa",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "In Fashion Hotel and Spa",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Infinity Luxury Travel Club",
+    "city": "Cancun"
+  },
+  {
+    "name": "InterContinental Presidente Cozumel Resort Spa",
+    "city": null
+  },
+  {
+    "name": "Intimissimo Constituyente",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Isla Mujeres Palace",
+    "city": null
+  },
+  {
+    "name": "IT Hotel Playa",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Ixchel Beach Hotel",
+    "city": null
+  },
+  {
+    "name": "Izla Hotel",
+    "city": null
+  },
+  {
+    "name": "Izsla Suites",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "J.W. MARRIOTT",
+    "city": null
+  },
+  {
+    "name": "Jack Tar Village",
+    "city": "Cancun"
+  },
+  {
+    "name": "Jade \"Exclusive Collection\" by Club Med",
+    "city": "Cancun"
+  },
+  {
+    "name": "Jarro Cafe Tulum Hotel",
+    "city": "Tulum"
+  },
+  {
+    "name": "Jashita Tulum Hotel",
+    "city": "Soliman Bay"
+  },
+  {
+    "name": "Jolie Jungle Eco Hotel",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "Joy Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "JW Marriott Cancun Resort & Spa",
+    "city": "Cancun"
+  },
+  {
+    "name": "Kai Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Kan Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Kanan Tulum By Ahau Collection",
+    "city": "Tulum"
+  },
+  {
+    "name": "Kasa Guajira",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Kasa Hotel Parota Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "KAYAK Luna Playa del Carmen",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "KAYAK Sol Playa del Carmen",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "KEMPINSKY",
+    "city": null
+  },
+  {
+    "name": "Kimpton Aluna Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Kin Ha Tulum Hotel",
+    "city": "Tulum"
+  },
+  {
+    "name": "KIN Mansion Beach",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "Kin Sol Soleil",
+    "city": "Playa Maroma"
+  },
+  {
+    "name": "Kinbe Deluxe Boutique Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "KLR The City Condos by Sercotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Koox All 4 U Hotel & Hostel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Koox City Garden Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Kore Tulum Retreat and Spa Resort",
+    "city": "Tulum"
+  },
+  {
+    "name": "KRISTAL GRAND",
+    "city": null
+  },
+  {
+    "name": "KRYSTAL CANCUN",
+    "city": null
+  },
+  {
+    "name": "KRYSTAL URBAN",
+    "city": null
+  },
+  {
+    "name": "Krystal Urban Cancun Centro",
+    "city": "Cancun"
+  },
+  {
+    "name": "Kuukum Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "La Casa De La Playa by Hoteles Xcaret",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "La Casa de los Angeles",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "La Casa Naranja",
+    "city": null
+  },
+  {
+    "name": "La Divina by Aldea Thai",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "La Pasion Hotel Boutique by Bunik",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "La Posada Del Sol",
+    "city": "Tulum"
+  },
+  {
+    "name": "La Quinta Orquidea",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "La Rana Cansada",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "La Tortuga Hotel & Spa",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "La Tulumena",
+    "city": "Tulum"
+  },
+  {
+    "name": "La Valise Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "La Zebra Colibri Boutique Hotel",
+    "city": "Tulum"
+  },
+  {
+    "name": "LADO LAGUNA",
+    "city": null
+  },
+  {
+    "name": "Laguna Inn Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "LAGUNA SUITES",
+    "city": null
+  },
+  {
+    "name": "Laguna Suites Golf & Spa",
+    "city": "Cancun"
+  },
+  {
+    "name": "Lahun Suites Playa Del Carmen",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Las Casitas Akumal",
+    "city": "Akumal"
+  },
+  {
+    "name": "Las Gaviotas Hotel & Suites",
+    "city": "Cancun"
+  },
+  {
+    "name": "Las Palmas en Laurel",
+    "city": "Cancun"
+  },
+  {
+    "name": "Las Palmas Hotel Puerto Morelos",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "Las Palmas Maya",
+    "city": "Tulum"
+  },
+  {
+    "name": "Las Ranitas Eco Boutique Hotel",
+    "city": "Tulum"
+  },
+  {
+    "name": "Las Villas Akumal",
+    "city": "Akumal"
+  },
+  {
+    "name": "Latino Hotel Boutique",
+    "city": "Tulum"
+  },
+  {
+    "name": "Layla Tulum - Boutique Hotel",
+    "city": "Tulum"
+  },
+  {
+    "name": "Le Blanc Spa Resort Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "LE REVE",
+    "city": null
+  },
+  {
+    "name": "Le Reve by MIJ Beachfront Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Le Swing Boutique Hotel",
+    "city": "Chemuyil"
+  },
+  {
+    "name": "LEBLANC",
+    "city": null
+  },
+  {
+    "name": "LIVE AQUA",
+    "city": null
+  },
+  {
+    "name": "Live Aqua Beach Resort Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "LiveTulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "LM by Inmense",
+    "city": "Puerto Aventuras"
+  },
+  {
+    "name": "Lo Nuestro Petite Hotel",
+    "city": "Tulum"
+  },
+  {
+    "name": "Lola",
+    "city": null
+  },
+  {
+    "name": "Lola by Coco B Isla",
+    "city": null
+  },
+  {
+    "name": "Los Amigos Beach",
+    "city": "Tulum"
+  },
+  {
+    "name": "Los Arcos Suites",
+    "city": null
+  },
+  {
+    "name": "Los Cuates de Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Los Itzaes Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Lotus Beach Hotel",
+    "city": null
+  },
+  {
+    "name": "Luciana Hotel & Beach Club",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Lucky Duck PJ",
+    "city": "Cancun"
+  },
+  {
+    "name": "Luna Azul Condominiums",
+    "city": "Akumal"
+  },
+  {
+    "name": "Luna Blue Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Lunah Xcacel Suites",
+    "city": "Chemuyil"
+  },
+  {
+    "name": "Luv Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Luxury Apartments Pool & Jacuzzi",
+    "city": "Cancun"
+  },
+  {
+    "name": "Lyj Hotel Hab 21",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Magia Beachside Condo Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Magic Blue Spa Boutique Hotel",
+    "city": "Solidaridad"
+  },
+  {
+    "name": "Mahekal Beach Resort",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "MAJESTIC COSTA.MUJERES",
+    "city": null
+  },
+  {
+    "name": "Majestic Elegance Costa Mujeres",
+    "city": "Playa Mujeres"
+  },
+  {
+    "name": "Mandala Nightclub",
+    "city": "Cancún"
+  },
+  {
+    "name": "Mar Bohemio Hotel",
+    "city": null
+  },
+  {
+    "name": "Maranatha",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Marazul Hotel Boutique",
+    "city": "Cancun"
+  },
+  {
+    "name": "Mareazul by Casago",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Mareazul by Moskito",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "MARGARITA RIVIERA MAYA",
+    "city": null
+  },
+  {
+    "name": "MARGARITA VILLE RIVIERA CANCUN",
+    "city": null
+  },
+  {
+    "name": "Margaritaville Island Reserve Riviera Cancun",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "Margaritaville Island Reserve Riviera Cancun by Karisma - All Inclusive",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "Margaritaville Riviera Maya Resort- Adults Only",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "Maria De Lourdes",
+    "city": "Cancun"
+  },
+  {
+    "name": "Maria Del Mar Boutique Hotel",
+    "city": "Tulum"
+  },
+  {
+    "name": "Maria del Mar, Beach Hotel",
+    "city": null
+  },
+  {
+    "name": "Maria's Kan-kin",
+    "city": null
+  },
+  {
+    "name": "MARINA",
+    "city": null
+  },
+  {
+    "name": "Marina Isla Mujeres",
+    "city": null
+  },
+  {
+    "name": "MARINA JUNGLE TOURS",
+    "city": null
+  },
+  {
+    "name": "Marina Paraiso Hotel Isla Mujeres",
+    "city": null
+  },
+  {
+    "name": "Maroma A Belmond Hotel",
+    "city": "Playa Maroma"
+  },
+  {
+    "name": "Marriott Cancun Resort",
+    "city": "Cancun"
+  },
+  {
+    "name": "MARRIOTT CASA MAGNA",
+    "city": null
+  },
+  {
+    "name": "Marvic Hotel Boutique",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Mateo's B&B",
+    "city": "Tulum"
+  },
+  {
+    "name": "Maya Bric Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Maya del Mar",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Maya Tankah by Freedom Paradise",
+    "city": "Tulum"
+  },
+  {
+    "name": "Maya Tulum Resort",
+    "city": "Tulum"
+  },
+  {
+    "name": "Maya Villa Condo Hotel & Beach Club",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Maya Villa Condo Hotel And Beachclub",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Mayafair Design Hotel",
+    "city": "Cancun"
+  },
+  {
+    "name": "MAYAN MONKEY",
+    "city": null
+  },
+  {
+    "name": "MAYAN PALACE (VIDANTA)",
+    "city": null
+  },
+  {
+    "name": "Mayan Palace Riviera Maya",
+    "city": "Playa Paraiso"
+  },
+  {
+    "name": "Mayan Paradise",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Melia Cozumel",
+    "city": null
+  },
+  {
+    "name": "Meliora By Bunik",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Mera Business Lounge",
+    "city": "Cancún"
+  },
+  {
+    "name": "Mereva Tulum by Blue sky",
+    "city": "Tulum"
+  },
+  {
+    "name": "Mestizo Gallery",
+    "city": "Tulum"
+  },
+  {
+    "name": "Mex Hoteles",
+    "city": "Cancun"
+  },
+  {
+    "name": "Mezzanine Colibri Boutique Hotel",
+    "city": "Tulum"
+  },
+  {
+    "name": "Mi Amor Colibri Boutique Hotel",
+    "city": "Tulum"
+  },
+  {
+    "name": "Mi Casa Tu Casa Cozumel Hacienda Boutique",
+    "city": "San Miguel de Cozumel"
+  },
+  {
+    "name": "Mia Reef Isla Mujeres",
+    "city": null
+  },
+  {
+    "name": "Mini Rooms By Illusion",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Mio Cancun Hotel Boutique",
+    "city": "Cancun"
+  },
+  {
+    "name": "Mision Sky Roof",
+    "city": "Tulum"
+  },
+  {
+    "name": "MK Hotel Beach",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Mom's Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "MOON PALACE",
+    "city": null
+  },
+  {
+    "name": "Moon Palace Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Moon Palace Nizuc All Inclusive",
+    "city": "Cancun"
+  },
+  {
+    "name": "Moon Palace The Grand - Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Moonshine Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Mosquito Blue Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Mosquito Blue Hotel & Spa",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Motel Boutique Chocolate",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Motel Costa",
+    "city": "Cancun"
+  },
+  {
+    "name": "Motel del Rey",
+    "city": "Cancun"
+  },
+  {
+    "name": "Motel Due",
+    "city": "Cancun"
+  },
+  {
+    "name": "Motel Mandala Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Mow Hotel & Residences",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Mudra Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Muluc Playa",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Mundo Maya",
+    "city": "Tulum"
+  },
+  {
+    "name": "Mura Hotel Boutique",
+    "city": "Cancun"
+  },
+  {
+    "name": "Mvngata Beach Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Na Balam Beach & Spa Boutique Hotel",
+    "city": null
+  },
+  {
+    "name": "Na'ala Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Naay Tulum Curamoria Collection",
+    "city": "Tulum"
+  },
+  {
+    "name": "Nautibeach Condos",
+    "city": null
+  },
+  {
+    "name": "Nerea Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "NEST Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "NEW Oceanfront Penthouse on Cancun Beach",
+    "city": "Cancun"
+  },
+  {
+    "name": "Newport House Playa del Carmen",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "NH Cancun Airport",
+    "city": "Cancun"
+  },
+  {
+    "name": "Nichupte Destination Holistic Spa",
+    "city": "Cancun"
+  },
+  {
+    "name": "NICKELODEON",
+    "city": null
+  },
+  {
+    "name": "Niik Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Nina Hotel & Beach Club",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Nirvana Lofts Hotel",
+    "city": "Cancun"
+  },
+  {
+    "name": "NIZUC",
+    "city": null
+  },
+  {
+    "name": "NIZUC Resort and Spa",
+    "city": "Cancun"
+  },
+  {
+    "name": "Nnam Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Nomade Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "NOW EMERALD",
+    "city": null
+  },
+  {
+    "name": "Now Emerald Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "NOW SAPPHIRE",
+    "city": null
+  },
+  {
+    "name": "NYX",
+    "city": null
+  },
+  {
+    "name": "NYX Hotel Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "O\"Tulum Adults Only",
+    "city": "Tulum"
+  },
+  {
+    "name": "Oasis Cancun Lite",
+    "city": "Cancun"
+  },
+  {
+    "name": "Oasis Palm",
+    "city": "Cancun"
+  },
+  {
+    "name": "OASIS SENS  / GRAND",
+    "city": null
+  },
+  {
+    "name": "OASIS SMART",
+    "city": null
+  },
+  {
+    "name": "OCCIDENTAL ARTE",
+    "city": null
+  },
+  {
+    "name": "Occidental at Xcaret Destination",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "OCCIDENTAL COSTA",
+    "city": null
+  },
+  {
+    "name": "Occidental Costa Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Occidental Cozumel",
+    "city": null
+  },
+  {
+    "name": "OCCIDENTAL MEXICO",
+    "city": null
+  },
+  {
+    "name": "OCCIDENTAL ROYAL HIDEWAY",
+    "city": null
+  },
+  {
+    "name": "Occidental Tucancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "OCCIDENTAL TUCANCUN (VILLAS MARLIN)",
+    "city": null
+  },
+  {
+    "name": "OCCIDENTAL XCARET",
+    "city": null
+  },
+  {
+    "name": "Ocean Coral & Turquesa",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "OCEAN DREAM",
+    "city": null
+  },
+  {
+    "name": "Ocean Dream Cancun by GuruHotel",
+    "city": "Cancun"
+  },
+  {
+    "name": "Ocean Drive",
+    "city": null
+  },
+  {
+    "name": "Ocean Front - Sea View",
+    "city": "Cancun"
+  },
+  {
+    "name": "Ocean Front Boutique",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Ocean Front Condo In Hotel Zone",
+    "city": "Cancun"
+  },
+  {
+    "name": "OCEAN MAYA ROYAL",
+    "city": null
+  },
+  {
+    "name": "Ocean Maya Royale",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Ocean Riviera Paradise",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Ocean Riviera Paradise - El Beso Adults Only",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "OCEAN SPA",
+    "city": null
+  },
+  {
+    "name": "Ocean Spa Hotel",
+    "city": "Cancun"
+  },
+  {
+    "name": "OCEAN VIEW ARENAS (HOLIDAY INN)",
+    "city": null
+  },
+  {
+    "name": "Ocean View Cancun Arenas",
+    "city": "Cancun"
+  },
+  {
+    "name": "Oceana by Corax Management",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Oh! Cancun On The Beach",
+    "city": "Cancun"
+  },
+  {
+    "name": "Oh! Cancun The Urban Oasis",
+    "city": "Cancun"
+  },
+  {
+    "name": "Olas Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "OLEO",
+    "city": null
+  },
+  {
+    "name": "Oleo Cancun Playa",
+    "city": "Cancun"
+  },
+  {
+    "name": "Olive Hotel & Boutique",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Om Tulum Hotel Cabanas and Beach Club",
+    "city": "Tulum"
+  },
+  {
+    "name": "Omni Cancun Resort & Villas",
+    "city": "Cancun"
+  },
+  {
+    "name": "One Cancun Centro",
+    "city": "Cancun"
+  },
+  {
+    "name": "One Playa Del Carmen",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Original Maya Bric",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Otoch Zaazil - Casa de Luz,  Playa del Carmen",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "OYO 203 Hotel Hunab",
+    "city": "Cancun"
+  },
+  {
+    "name": "OYO Hotel Addy",
+    "city": "Tulum"
+  },
+  {
+    "name": "OYO Hotel Bello Caribe",
+    "city": null
+  },
+  {
+    "name": "OYO Hotel Bonito",
+    "city": "Cancun"
+  },
+  {
+    "name": "OYO Hotel Dos Mundos",
+    "city": "San Miguel de Cozumel"
+  },
+  {
+    "name": "OYO Hotel Jaguar",
+    "city": "Cancun"
+  },
+  {
+    "name": "Oyo Hotel Playa Del Carmen",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "OYO Hotel Posada Roma",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "OYO Hotel San Jorge",
+    "city": "Cancun"
+  },
+  {
+    "name": "OYO Posada Olmeca",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "P.A. BEACH (OMNI)",
+    "city": null
+  },
+  {
+    "name": "PA Beach Club & Hotel",
+    "city": "Puerto Aventuras"
+  },
+  {
+    "name": "Paamul Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Pacha Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Palafitos Overwater Bungalows",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "PALLADIUM",
+    "city": null
+  },
+  {
+    "name": "PALLADIUM COSTA MUJERES",
+    "city": null
+  },
+  {
+    "name": "Palma Xiat Condo - Playa del Carmen",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Palmaia - The House of AiA",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Palms Tulum Luxury Condo Hotel",
+    "city": "Tulum"
+  },
+  {
+    "name": "Panama Jack Playa del Carmen",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Papagayo Hotel Boutique",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Papaya Playa Project",
+    "city": "Tulum"
+  },
+  {
+    "name": "Paradise Point Resort",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "PARADISUS",
+    "city": null
+  },
+  {
+    "name": "Paradisus Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Paradisus La Perla - Adults Only",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Paradisus Playa Del Carmen",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Paradisus Playa Mujeres",
+    "city": "Punta Sam"
+  },
+  {
+    "name": "Paraiso 23 Hotel",
+    "city": "Cancun"
+  },
+  {
+    "name": "Paraiso Azul's -Casa De Gopala",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Paraiso Suites",
+    "city": "Puerto Juarez"
+  },
+  {
+    "name": "PARK ROYAL",
+    "city": null
+  },
+  {
+    "name": "Park Royal Beach Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Pavo Real City - Playa del Carmen",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "PavoReal Beach Resort Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Pelicano Inn",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Pent House Armonia By Hf",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "PETEMPICH",
+    "city": null
+  },
+  {
+    "name": "Petit Lafitte Beach Front Hotel & Bungalows",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Piedra Escondida",
+    "city": "Tulum"
+  },
+  {
+    "name": "Piedra Maya",
+    "city": "Tulum"
+  },
+  {
+    "name": "Planet Hollywood Adult Scene Cancun, An Autograph Collection All-Inclusive Resort - Adults Only",
+    "city": "Costa Mujeres"
+  },
+  {
+    "name": "Planet Hollywood Cancun, An Autograph Collection All-Inclusive Resort",
+    "city": "Costa Mujeres"
+  },
+  {
+    "name": "PLANET HOLYWOOD",
+    "city": null
+  },
+  {
+    "name": "Platinum Yucatan Princess - Adults Only",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Playa 38 Hotel Boutique",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Playa Arena",
+    "city": null
+  },
+  {
+    "name": "Playa Azul Cozumel Hotel",
+    "city": null
+  },
+  {
+    "name": "Playa del Carmen",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Playa Maya by MIJ Hotels",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Playa Palms Beach Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Playacar Palace",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Playalingua Del Caribe",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "PLAZA ANTIGUA",
+    "city": null
+  },
+  {
+    "name": "Plaza Caribe Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Plaza Marina Condos",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Plaza Nardos Hotel & Suites",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Pocna Hotel",
+    "city": "Tulum"
+  },
+  {
+    "name": "Portea Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Porto Bello Gran Marina By GuruHotel",
+    "city": "Puerto Aventuras"
+  },
+  {
+    "name": "Porto Bello Hotel and Residences",
+    "city": "Puerto Aventuras"
+  },
+  {
+    "name": "Porto Playa Condo Hotel & Beachclub",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Porto Playa Condo Hotel And Beach Club",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Posada Hal-Ha Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Posada Lamar",
+    "city": "Tulum"
+  },
+  {
+    "name": "Posada Lucy",
+    "city": "Cancun"
+  },
+  {
+    "name": "Posada Luna del Sur",
+    "city": "Tulum"
+  },
+  {
+    "name": "Posada Yum Kin",
+    "city": "Tulum"
+  },
+  {
+    "name": "Premium Level at Barcelo Maya Palace",
+    "city": null
+  },
+  {
+    "name": "PRESIDENTE",
+    "city": null
+  },
+  {
+    "name": "Presidente InterContinental Cancun Resort",
+    "city": "Cancun"
+  },
+  {
+    "name": "Primitive Rooms",
+    "city": "Tulum"
+  },
+  {
+    "name": "PRINCESS",
+    "city": null
+  },
+  {
+    "name": "Princess Family Club Riviera",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Privilege Aluxes",
+    "city": null
+  },
+  {
+    "name": "Pueblito Escondido - Luxury Apartments by Mistik",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Punta Allen",
+    "city": "Cancun"
+  },
+  {
+    "name": "Punta Chiqueros",
+    "city": null
+  },
+  {
+    "name": "Pure Mareazul Riviera Maya",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Quinta Nahui",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Quinta Nina Playa del Carmen",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Quinta Palmera",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Quintas Del Mar",
+    "city": "Cancun"
+  },
+  {
+    "name": "Radhoo Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Radio Tulum Hotel",
+    "city": "Tulum"
+  },
+  {
+    "name": "Ramada by Wyndham Cancun City",
+    "city": "Cancun"
+  },
+  {
+    "name": "Rancho Tranquilo",
+    "city": "Tulum"
+  },
+  {
+    "name": "REAL INN",
+    "city": null
+  },
+  {
+    "name": "Real Inn Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "REAL PDC",
+    "city": null
+  },
+  {
+    "name": "Real Playa del Carmen",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "REEF 28/REEF COCOBEACH",
+    "city": null
+  },
+  {
+    "name": "REEF RESORT PLAYACAR",
+    "city": null
+  },
+  {
+    "name": "Reina Roja Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "REINASSENCE",
+    "city": null
+  },
+  {
+    "name": "Renaissance Cancun Resort & Marina",
+    "city": "Cancun"
+  },
+  {
+    "name": "Residence Inn Cancun Hotel Zone",
+    "city": "Cancun"
+  },
+  {
+    "name": "Residences at The Fives",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "RESIDENCES IN BY MARRIOTT",
+    "city": null
+  },
+  {
+    "name": "RESIDENCES IN BY MARRIOTT PDC",
+    "city": null
+  },
+  {
+    "name": "Residences Mimosa By 5th Avenue Realty Group",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Residencial Tulipanes Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Residencias Casa Grande",
+    "city": "Cancun"
+  },
+  {
+    "name": "Retiro Maya Beach Villas",
+    "city": "Tulum"
+  },
+  {
+    "name": "Riclarys Hotel",
+    "city": "Cancun"
+  },
+  {
+    "name": "RIU CANCUN",
+    "city": null
+  },
+  {
+    "name": "RIU CARIBE",
+    "city": null
+  },
+  {
+    "name": "RIU COSTA MUJERES",
+    "city": null
+  },
+  {
+    "name": "RIU DUNAMAR",
+    "city": null
+  },
+  {
+    "name": "RIU KUKULKAN",
+    "city": null
+  },
+  {
+    "name": "RIU LAS AMERICAS",
+    "city": null
+  },
+  {
+    "name": "RIU LATINO",
+    "city": null
+  },
+  {
+    "name": "RIU LUPITA",
+    "city": null
+  },
+  {
+    "name": "RIU PALACE MEXICO",
+    "city": null
+  },
+  {
+    "name": "Riu Palace Peninsula",
+    "city": "Cancun"
+  },
+  {
+    "name": "RIU PALACE RIVIERA MAYA",
+    "city": null
+  },
+  {
+    "name": "RIU PENINSULA",
+    "city": null
+  },
+  {
+    "name": "RIU PLAYACAR",
+    "city": null
+  },
+  {
+    "name": "RIU TEQUILA",
+    "city": null
+  },
+  {
+    "name": "RIU YUCATAN",
+    "city": null
+  },
+  {
+    "name": "RIVA",
+    "city": null
+  },
+  {
+    "name": "Rivemar",
+    "city": "Cancun"
+  },
+  {
+    "name": "Rivermar Hotel",
+    "city": "Cancun"
+  },
+  {
+    "name": "Rocamar Hotel Panoramico",
+    "city": null
+  },
+  {
+    "name": "Rodero Condos by Solymar",
+    "city": "Cancun"
+  },
+  {
+    "name": "Rooms in Cancun VIP",
+    "city": "Cancun"
+  },
+  {
+    "name": "Rosa del Viento",
+    "city": "Tulum"
+  },
+  {
+    "name": "Rosa Mirador Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "ROSEWOOD",
+    "city": null
+  },
+  {
+    "name": "Rosewood Mayakoba",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Royal Hideaway Playacar",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Royal Hideaway Playacar - Adults only - All Inclusive",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "ROYAL ISLANDER",
+    "city": null
+  },
+  {
+    "name": "Royal Level at Occidental Cozumel",
+    "city": null
+  },
+  {
+    "name": "ROYAL SANDS",
+    "city": null
+  },
+  {
+    "name": "ROYAL SOLARIS",
+    "city": null
+  },
+  {
+    "name": "Royal Solaris Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Royal Uno All Inclusive Resort & Spa",
+    "city": "Cancun"
+  },
+  {
+    "name": "Royalton CHIC Cancun, An Autograph Collection All-Inclusive Resort - Adults Only",
+    "city": "Cancun"
+  },
+  {
+    "name": "ROYALTON RIVIERA",
+    "city": null
+  },
+  {
+    "name": "Royalton Riviera Cancun, An Autograph Collection All-Inclusive Resort & Casino",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "ROYALTON SPLASH",
+    "city": null
+  },
+  {
+    "name": "Royalton Splash Riviera Cancun",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "ROYALTON SUITES",
+    "city": null
+  },
+  {
+    "name": "Rustik Inn",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Ruta Del Sol",
+    "city": "Tulum"
+  },
+  {
+    "name": "Safari Inn",
+    "city": null
+  },
+  {
+    "name": "SALVIA",
+    "city": null
+  },
+  {
+    "name": "San Carlos Eco lodge",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "Sanara Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Sandos Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "SANDOS CARACOL",
+    "city": null
+  },
+  {
+    "name": "Sandos Caracol Eco Resort",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Sandos Playacar",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Sasha Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Sayil Hotel Boutique",
+    "city": null
+  },
+  {
+    "name": "Scuba Club Cozumel",
+    "city": null
+  },
+  {
+    "name": "SEADUST",
+    "city": null
+  },
+  {
+    "name": "Seadust Cancun Family Resort",
+    "city": "Cancun"
+  },
+  {
+    "name": "SECRETS AKUMAL",
+    "city": null
+  },
+  {
+    "name": "Secrets Akumal Riviera Maya",
+    "city": "Akumal"
+  },
+  {
+    "name": "Secrets Aura Cozumel",
+    "city": null
+  },
+  {
+    "name": "Secrets Capri Riviera Cancun - All Inclusive - Adults Only",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Secrets Impression Isla Mujeres",
+    "city": null
+  },
+  {
+    "name": "SECRETS MAROMA",
+    "city": null
+  },
+  {
+    "name": "Secrets Maroma Beach Riviera Cancun",
+    "city": "Playa Maroma"
+  },
+  {
+    "name": "SECRETS MOXCHE",
+    "city": null
+  },
+  {
+    "name": "Secrets Moxche Playa del Carmen",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "SECRETS P.M.",
+    "city": null
+  },
+  {
+    "name": "SECRETS PLAYA BLANCA",
+    "city": null
+  },
+  {
+    "name": "Secrets Playa Mujeres Golf & Spa Resort",
+    "city": "Playa Mujeres"
+  },
+  {
+    "name": "SECRETS RIVIERA",
+    "city": null
+  },
+  {
+    "name": "Secrets Riviera Cancun Resort & Spa",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "SECRETS THE VINE",
+    "city": null
+  },
+  {
+    "name": "Secrets The Vine Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Selina Cancun Laguna, Hotel Zone",
+    "city": "Cancun"
+  },
+  {
+    "name": "SELINA LAGOON",
+    "city": null
+  },
+  {
+    "name": "Senses Riviera Maya by Artisan",
+    "city": "Playa Paraiso"
+  },
+  {
+    "name": "Sensimar Resort Riviera Maya, Gourmet All Inclusive By Karisma",
+    "city": "Puerto Aventuras"
+  },
+  {
+    "name": "SENSIRA",
+    "city": null
+  },
+  {
+    "name": "Sensira Resort & Spa Riviera Maya",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "Sercotel the Gallery by KLR",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Serena Hotel & Spa",
+    "city": "Puerto Aventuras"
+  },
+  {
+    "name": "Serenity Authentic Glamping Tulum",
+    "city": "Xpu-Ha"
+  },
+  {
+    "name": "Serenity Hotel Boutique",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Seven Boutique Apartments",
+    "city": "Cancun"
+  },
+  {
+    "name": "SEVEN BOUTIQUES",
+    "city": null
+  },
+  {
+    "name": "SEVEN-ELEVEN",
+    "city": null
+  },
+  {
+    "name": "Shambala Petit Hotel",
+    "city": "Tulum"
+  },
+  {
+    "name": "SHANGRI LA CARIBE",
+    "city": null
+  },
+  {
+    "name": "Sian Kaan Visitors Center",
+    "city": "Punta Allen"
+  },
+  {
+    "name": "Siesta Fiesta Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Singular Joy Downtown Hotel & Residences",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Sirenas Tulum - Beach Zone",
+    "city": "Tulum"
+  },
+  {
+    "name": "SIRENIS",
+    "city": null
+  },
+  {
+    "name": "Sky Inn Hotel Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "SLS",
+    "city": null
+  },
+  {
+    "name": "SLS Cancun Hotel",
+    "city": "Cancun"
+  },
+  {
+    "name": "Smart Cancun by Oasis",
+    "city": "Cancun"
+  },
+  {
+    "name": "Sofia Boutique Condos by Bunik",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Soham Suites",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Soho Playa Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Sole Suites",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "SOLYMAR",
+    "city": null
+  },
+  {
+    "name": "Solymar Cancun Beach Resort",
+    "city": "Cancun"
+  },
+  {
+    "name": "Solymar Condos 2301 - 2401 - 2501",
+    "city": "Cancun"
+  },
+  {
+    "name": "Sonido Del Mar",
+    "city": "Tulum"
+  },
+  {
+    "name": "SOTAVENTO",
+    "city": null
+  },
+  {
+    "name": "Sotavento Hotel & Yacht Club",
+    "city": "Cancun"
+  },
+  {
+    "name": "Sotavento Resort Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Soul Beach Luxury Boutique Hotel & Spa",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Soy Local",
+    "city": "Cancun"
+  },
+  {
+    "name": "Soy Local Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Stay in Cancun Paradise",
+    "city": "Cancun"
+  },
+  {
+    "name": "Studios Playa",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Suenos Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Suite Frente Al Mar",
+    "city": "Cancun"
+  },
+  {
+    "name": "Suite Vacacional",
+    "city": "Cancun"
+  },
+  {
+    "name": "Suites 918 Hotel",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "Suites Aeropuerto 24/7",
+    "city": "Cancun"
+  },
+  {
+    "name": "Suites at Mayan Palace Vidanta Resort Riviera Maya",
+    "city": "Playa Paraiso"
+  },
+  {
+    "name": "Suites Bahia",
+    "city": null
+  },
+  {
+    "name": "Suites Brisas Beach Resort",
+    "city": "Cancun"
+  },
+  {
+    "name": "Suites Cancun Centro",
+    "city": "Cancun"
+  },
+  {
+    "name": "Suites Colonial",
+    "city": null
+  },
+  {
+    "name": "Suites Costa Blanca",
+    "city": "Cancun"
+  },
+  {
+    "name": "Suites Costa Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Suites DLT All Inclusive",
+    "city": "Cancun"
+  },
+  {
+    "name": "Suites Elizabeth",
+    "city": null
+  },
+  {
+    "name": "Suites Gaby Hotel",
+    "city": "Cancun"
+  },
+  {
+    "name": "Suites La Roca By R&T",
+    "city": "Cancun"
+  },
+  {
+    "name": "Suites Puerto Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "SUITES SINA",
+    "city": null
+  },
+  {
+    "name": "Suites Villa Italia",
+    "city": "Cancun"
+  },
+  {
+    "name": "Sun Palace",
+    "city": "Cancun"
+  },
+  {
+    "name": "Sun Suites Cozumel",
+    "city": null
+  },
+  {
+    "name": "Sun Village",
+    "city": null
+  },
+  {
+    "name": "Sunlight Hotel",
+    "city": "Cancun"
+  },
+  {
+    "name": "Sunrise 42 Suites Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Sunscape Akumal Beach Resort & Spa",
+    "city": "Akumal"
+  },
+  {
+    "name": "Sunscape Sabor Cozumel",
+    "city": null
+  },
+  {
+    "name": "Sunset Fishermen Beach Resort",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "SUNSET MARINA LAGOON",
+    "city": null
+  },
+  {
+    "name": "Sunset Marina Resort",
+    "city": "Cancun"
+  },
+  {
+    "name": "Sunset Marina Resort & Yacht Club",
+    "city": "Cancun"
+  },
+  {
+    "name": "SUNSET ROYAL",
+    "city": null
+  },
+  {
+    "name": "Sunset Royal Beach Resort",
+    "city": "Cancun"
+  },
+  {
+    "name": "SUPER AKI",
+    "city": null
+  },
+  {
+    "name": "Súper Akí Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "T'saakik",
+    "city": "Alfredo V. Bonfil"
+  },
+  {
+    "name": "Taan\"",
+    "city": "Tulum"
+  },
+  {
+    "name": "Tago Tulum by G Hotels",
+    "city": "Tulum"
+  },
+  {
+    "name": "TAKH",
+    "city": null
+  },
+  {
+    "name": "Takh308",
+    "city": "Cancun"
+  },
+  {
+    "name": "Teetotum Hotel",
+    "city": "Tulum"
+  },
+  {
+    "name": "TEMPTATION",
+    "city": null
+  },
+  {
+    "name": "Temptation Cancun Resort",
+    "city": "Cancun"
+  },
+  {
+    "name": "Tequila Factory Cancun Hotel",
+    "city": "Cancun"
+  },
+  {
+    "name": "Terracaribe Hotel",
+    "city": "Cancun"
+  },
+  {
+    "name": "Terrasse Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "The Beach Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "The Bliss at Vidanta Riviera Maya",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "The Carmen - Beachfront, Adults Only",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "The Carmen Hotel - Adults Only",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "The Carmen Hotel - Ocean Front",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "The Elements Oceanfront & Beachside Condo Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "The Fives Beach Hotel & Residences",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "The Fives Downtown Hotel & Residences, Curio Collection by Hilton",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "The Fives Oceanfront",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "The Fives Travelers at The Fives Beach by YPJ-All Inclusive",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "The Grand Bliss at Vidanta Riviera Maya",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "The Grand Mayan at Vidanta Riviera Maya",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "The Landmark Resort of Cozumel",
+    "city": null
+  },
+  {
+    "name": "The Magic Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "The Palm at Playa",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "The Pyramid at Grand Oasis",
+    "city": "Cancun"
+  },
+  {
+    "name": "The Reef 28",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "The Reef Coco Beach",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "The Reef Playacar",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "The Ritz-Carlton, Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "The Riviera Maya EDITION at Kanai",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "The Royal Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "The Royal Cancun All Suites Resort",
+    "city": "Cancun"
+  },
+  {
+    "name": "The Royal Haciendas",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "The Royal Haciendas All Suites Resort & Spa",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "The Royal Islander All Suites Resort",
+    "city": "Cancun"
+  },
+  {
+    "name": "The Royal Sands All Suites Resort & Spa",
+    "city": "Cancun"
+  },
+  {
+    "name": "The Shore at 46th",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "The Strabon Hotel",
+    "city": "Tulum"
+  },
+  {
+    "name": "The Tower by Temptation",
+    "city": "Cancun"
+  },
+  {
+    "name": "The Villas Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "The Waves Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "The Westin Cancun Resort Villas & Spa",
+    "city": "Cancun"
+  },
+  {
+    "name": "The Westin Cozumel",
+    "city": null
+  },
+  {
+    "name": "The Westin Lagunamar Ocean Resort Villas & Spa, Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "The Westin Resort & Spa, Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "The Yellow Nest",
+    "city": "Tulum"
+  },
+  {
+    "name": "THE YUCATAN",
+    "city": null
+  },
+  {
+    "name": "The Yucatan Playa del Carmen All-Inclusive Resort, Tapestry by Hilton",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Thompson Beach House",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Thompson Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Thompson Playa Del Carmen Adults Only",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Tierra Maya",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "TORRES PENINSULA",
+    "city": null
+  },
+  {
+    "name": "Trebol hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Triton",
+    "city": "Cancun"
+  },
+  {
+    "name": "Tropical casa blanca",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Tropical Escape Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "TRS Coral Hotel",
+    "city": "Playa Mujeres"
+  },
+  {
+    "name": "TRS Yucatan Hotel",
+    "city": "Solidaridad"
+  },
+  {
+    "name": "Tukan Hotel & Beach Club",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Tulum Brew House Hotel",
+    "city": "Tulum"
+  },
+  {
+    "name": "Tulum Express Suites",
+    "city": "Tulum"
+  },
+  {
+    "name": "Tulum Inn Boutique",
+    "city": "Tulum"
+  },
+  {
+    "name": "Tuluna Tulum Hotel",
+    "city": "Tulum"
+  },
+  {
+    "name": "Turquoise Petit",
+    "city": "Tulum"
+  },
+  {
+    "name": "Turquoize at Hyatt Ziva Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "U by Grand Fiesta Americana",
+    "city": "Cancun"
+  },
+  {
+    "name": "Unic Design Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "UNICO 20 80",
+    "city": null
+  },
+  {
+    "name": "UNICO 20 87 Hotel Riviera Maya",
+    "city": "Akumal"
+  },
+  {
+    "name": "Uolis Nah",
+    "city": "Tulum"
+  },
+  {
+    "name": "URBAN OASIS",
+    "city": null
+  },
+  {
+    "name": "Vacacioncancunplaza",
+    "city": "Cancun"
+  },
+  {
+    "name": "VALENTIN IMPERIAL MAYA",
+    "city": null
+  },
+  {
+    "name": "Valentin Imperial Riviera Maya",
+    "city": "Playa del Secreto"
+  },
+  {
+    "name": "Ventanas al Mar",
+    "city": null
+  },
+  {
+    "name": "Ventus at Marina El Cid Spa & Beach Resort",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "Ventus Ha' at Marina El Cid Spa & Beach Resort",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "Viceroy Riviera Maya",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Vida Playa Suites",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Vidanta",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Vidanta Resort, Grand Imperial Jungle Aqua Master Suite",
+    "city": "Angel R. Cabada"
+  },
+  {
+    "name": "Villa Coba",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Villa Del Palmar Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Villa Encantada by Coco B Isla",
+    "city": null
+  },
+  {
+    "name": "Villa Las Estrellas",
+    "city": "Tulum"
+  },
+  {
+    "name": "Villa Leo Hotel",
+    "city": "Cancun"
+  },
+  {
+    "name": "VILLA NIZUC",
+    "city": null
+  },
+  {
+    "name": "Villa Pescadores",
+    "city": "Tulum"
+  },
+  {
+    "name": "Villa Santa Pilar",
+    "city": null
+  },
+  {
+    "name": "Villa Segovia",
+    "city": "San Miguel de Cozumel"
+  },
+  {
+    "name": "Villa Vista",
+    "city": null
+  },
+  {
+    "name": "Villa ZenaLiza",
+    "city": "Tulum"
+  },
+  {
+    "name": "Villablanca Garden Beach Hotel",
+    "city": null
+  },
+  {
+    "name": "Village Tan Kah",
+    "city": null
+  },
+  {
+    "name": "Villas  Hinaha",
+    "city": null
+  },
+  {
+    "name": "VILLAS DEL PALMAR GARZA BLANCA",
+    "city": null
+  },
+  {
+    "name": "Villas Geminis Boutique Condo Hotel",
+    "city": "Tulum"
+  },
+  {
+    "name": "Villas H2O",
+    "city": "Tulum"
+  },
+  {
+    "name": "Villas Las Anclas",
+    "city": null
+  },
+  {
+    "name": "Villas Manglar",
+    "city": "Cancun"
+  },
+  {
+    "name": "Villas Marlin",
+    "city": "Cancun"
+  },
+  {
+    "name": "Villas Mundaca",
+    "city": null
+  },
+  {
+    "name": "VILLAS PLAYA BLANCA PUERTA DEL MAR",
+    "city": null
+  },
+  {
+    "name": "Villas Sacbe Condo Hotel and Beach Club",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Villas Santa Fe",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Vista Caribe Diving Resort Playa del Carmen",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "VIVA WYNDHAM AZTECA",
+    "city": null
+  },
+  {
+    "name": "Viva Wyndham Azteca - All-Inclusive Resort",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "VIVA WYNDHAM MAYA",
+    "city": null
+  },
+  {
+    "name": "Viva Wyndham Maya - An All Inclusive Resort",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Volta By Casago",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "WALDORF ASTORIA",
+    "city": null
+  },
+  {
+    "name": "Waldorf Astoria Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "Watal Tulum Hotel",
+    "city": "Tulum"
+  },
+  {
+    "name": "We Express Hotel Playa Del Carmen",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "We Hotel Puerto Morelos",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "We Playa Hotel - Adults Only",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "We Uniq Hotel El Carmen",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "WESTIN LAGUNA",
+    "city": null
+  },
+  {
+    "name": "WESTIN REGINA",
+    "city": null
+  },
+  {
+    "name": "White Sand Playa",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Wish Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "WorldMark Isla Mujeres",
+    "city": null
+  },
+  {
+    "name": "Wyndham Alltra Cancun",
+    "city": "Cancun"
+  },
+  {
+    "name": "WYNDHAM ALLTRA CUN",
+    "city": null
+  },
+  {
+    "name": "WYNDHAM ALLTRA PDC",
+    "city": null
+  },
+  {
+    "name": "Wyndham Alltra Playa del Carmen Adults Only All Inclusive",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "WYNDHAM GARDEN CANCUN",
+    "city": null
+  },
+  {
+    "name": "Wyndham Garden Cancun Downtown",
+    "city": "Cancun"
+  },
+  {
+    "name": "WYNDHAM GARDEN PDC",
+    "city": null
+  },
+  {
+    "name": "Wyndham Garden Playa Del Carmen",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "WYNDHAM GRAND",
+    "city": null
+  },
+  {
+    "name": "Wyndham Grand Cancún All Inclusive Resort & Villas",
+    "city": "cancun"
+  },
+  {
+    "name": "Xaha Villas Suites & Golf Resort",
+    "city": "Tulum"
+  },
+  {
+    "name": "Xakluum Eco Glampings",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "Xell Suites & Hotel",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Xibalba Hotel",
+    "city": "Tulum"
+  },
+  {
+    "name": "Xiinbal Tulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Xiknal",
+    "city": null
+  },
+  {
+    "name": "Xolumado Inspiration Village By Karisma",
+    "city": "Solidaridad"
+  },
+  {
+    "name": "Xperience Hotels Aqualuna Boutique",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Xperience Tulum Hotel",
+    "city": "Tulum"
+  },
+  {
+    "name": "XscapeTulum",
+    "city": "Tulum"
+  },
+  {
+    "name": "Xtudio Comfort Hotel by Xperience Hotels",
+    "city": "Playa del Carmen"
+  },
+  {
+    "name": "Xunaan Hotel",
+    "city": "Tulum"
+  },
+  {
+    "name": "YELLOW CAPSULE",
+    "city": null
+  },
+  {
+    "name": "ZaaZil Cancun Suites",
+    "city": "Cancun"
+  },
+  {
+    "name": "Zamas Hotel",
+    "city": "Tulum"
+  },
+  {
+    "name": "Zenses Wellness & Yoga Resort",
+    "city": "Tulum"
+  },
+  {
+    "name": "ZOETRY",
+    "city": null
+  },
+  {
+    "name": "Zoetry Paraiso de La Bonita Riviera Maya",
+    "city": "Puerto Morelos"
+  },
+  {
+    "name": "Zoetry Villa Rolandi Isla Mujeres Cancun",
+    "city": null
+  }
+]

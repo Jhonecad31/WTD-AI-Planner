@@ -1,18 +1,13 @@
 import { describe, expect, it } from "vitest";
-import type { CatalogProduct } from "./types";
 import { fold, searchHotels, zoneForPlace } from "./hotels";
 
-const products = [
-  {
-    pickupPlaces: [
-      { id: 1, title: "Hyatt Ziva Cancún", city: "Cancun" },
-      { id: 2, title: "Grand Hyatt Playa del Carmen", city: "Playa del Carmen" },
-      { id: 3, title: "Dreams Tulum", city: null },
-      { id: 4, title: "Secrets Akumal", city: "Akumal" },
-      { id: 5, title: "Hyatt Ziva Cancún", city: "Cancun" },
-    ],
-  },
-] as unknown as CatalogProduct[];
+const list = [
+  { name: "Hyatt Ziva Cancún", city: "Cancun" },
+  { name: "Grand Hyatt Playa del Carmen", city: "Playa del Carmen" },
+  { name: "Dreams Tulum", city: null },
+  { name: "Secrets Akumal", city: "Akumal" },
+  { name: "Hyatt Ziva Cancún", city: "Cancun" },
+];
 
 describe("hotel search", () => {
   it("folds accents and case", () => {
@@ -25,9 +20,14 @@ describe("hotel search", () => {
     expect(zoneForPlace("", "Somewhere")).toBeNull();
   });
   it("matches every word, accent-insensitive, deduplicated", () => {
-    const hits = searchHotels(products, "hyatt cancun");
+    const hits = searchHotels("hyatt cancun", { list });
     expect(hits).toEqual([{ name: "Hyatt Ziva Cancún", city: "Cancun", zone: "cancun" }]);
-    expect(searchHotels(products, "hyatt").map((h) => h.name)).toHaveLength(2);
-    expect(searchHotels(products, "")).toEqual([]);
+    expect(searchHotels("hyatt", { list }).map((h) => h.name)).toHaveLength(2);
+    expect(searchHotels("", { list })).toEqual([]);
+  });
+  it("searches the shipped list without touching the catalog", () => {
+    const hits = searchHotels("hyatt");
+    expect(hits.length).toBeGreaterThan(0);
+    expect(hits.every((h) => fold(h.name).includes("hyatt"))).toBe(true);
   });
 });

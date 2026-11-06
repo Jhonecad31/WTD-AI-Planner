@@ -66,7 +66,8 @@ export async function POST(request: NextRequest) {
       ok: true,
       leadId: lead.id,
       ref: lead.ref,
-      pdfUrl: pdfUrlFor(lead),
+      // Only local dev keeps a copy on disk; the wizard renders the PDF on demand (POST /api/pdf).
+      pdfUrl: lead.pdfPath ? pdfUrlFor(lead) : null,
       emails: emails.map((e) => ({ kind: e.kind, status: e.status, provider: e.provider })),
     });
   } catch (e) {

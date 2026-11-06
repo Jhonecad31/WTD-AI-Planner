@@ -78,7 +78,7 @@ Todas las llaves se guardan solo como variables de entorno (`.env` en local, sec
 **Puertas abiertas con feature flags (`src/server/config/flags.ts`, leídas de `.env`):**
 | Flag | Por defecto | Qué hace |
 |---|---|---|
-| `EMAIL_PROVIDER` | `db` | `db`: el correo se guarda en `outbound_emails` y se ve en el panel (desarrollo). `resend`: se envía de verdad. |
+| `EMAIL_PROVIDER` | `auto` | `auto`: envía con Resend en cuanto existe `RESEND_API_KEY`; si no, el correo se queda en el outbox. `db`: nunca envía (desarrollo). `resend`: fuerza el envío. |
 | `FLIGHTS_PROVIDER` | `aerodatabox` | Puede ser `manual` para trabajar sin API de vuelos. |
 | `CAPTCHA_ENABLED` | `false` en local | Turnstile se prende al desplegar. |
 
@@ -193,7 +193,7 @@ Todas las llaves se guardan solo como variables de entorno (`.env` en local, sec
 - Se guarda en Supabase Storage (bucket privado). El cliente lo descarga en el momento desde la pantalla y, por correo, con un link firmado que expira en 7 días.
 - **Correos** (`src/server/email/`), con plantillas en **React Email**, detrás de `EmailProvider`:
   - `DbEmailProvider` (por defecto en desarrollo): guarda el correo renderizado en `outbound_emails` y lo muestra en el panel, con vista previa. Sirve para diseñar y revisar las plantillas sin mandar nada.
-  - `ResendEmailProvider`: se activa con `EMAIL_PROVIDER=resend` y la llave de Resend.
+  - `ResendEmailProvider`: se activa con solo `RESEND_API_KEY` (o `EMAIL_PROVIDER=resend`).
   - **Correo al cliente** (`CustomerTripEmail`): diseño limpio y llamativo con la marca. Encabezado con el degradado, saludo por nombre, fechas y vuelos, el itinerario día por día con foto, nombre y precio de cada tour, el total, el PDF adjunto y un botón grande "Talk to a specialist" (WhatsApp con texto prellenado). Pie con "powered by WhatToDo". Sin información interna.
   - **Correo al agente de ventas** (`AgentLeadEmail`): diseño simple y de fácil uso, pensado para reservar en Bokun en minutos:
     - Asunto: `[Lead #123] Nombre · 5 noches · 2 adultos + 1 niño (8) · $1,240 USD`

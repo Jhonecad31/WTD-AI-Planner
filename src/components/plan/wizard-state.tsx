@@ -78,7 +78,7 @@ export interface WizardDraft {
   };
   contact?: { email: string; phone: string };
   /** Set once the lead was sent; shows the done screen on reload. */
-  submitted?: { leadId: string; ref: string; pdfUrl: string };
+  submitted?: { leadId: string; ref: string; pdfUrl: string | null };
 }
 
 /**
