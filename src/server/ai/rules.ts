@@ -6,8 +6,11 @@ import { planDays, type DaySlot } from "@/lib/plan-days";
 import { isPrivateTitle } from "@/lib/item-meta";
 import { pickupCoverage } from "@/server/catalog/pickup";
 import {
+  commercialBoost,
   experienceTypes,
+  mainExperience,
   primaryInterest,
+  sameKindOfDay,
   variety,
   zoneDistance,
   type Variety,
@@ -72,9 +75,15 @@ export function isAvoided(p: { title: string; bokunId?: number }, request: TripR
  * skip, and night life only when wanted and near the hotel. Every engine and guard
  * filters on this, so the wizard's "I'd rather skip" chips are a guarantee.
  */
+/** An ATV park day is only for travelers who asked for adventure, rain or shine. */
+export function wantsAtv(p: { title: string; bokunId?: number }, request: TripRequest): boolean {
+  return mainExperience(p) !== "atv" || request.interests.includes("adventure");
+}
+
 export function allowedForTraveler(p: CatalogProduct, request: TripRequest): boolean {
   return (
     !isAvoided(p, request) &&
+    wantsAtv(p, request) &&
     partyAllowed(p, request) &&
     // A tour that picks up along the coast but not from this hotel's zone can't be booked
     // with pickup for this traveler: off the menu.
@@ -171,7 +180,8 @@ export function scoreProduct(
   // No reviews means no rating yet (Bokun reports 0): treat as an average tour, not a bad one.
   const rating = p.reviewCount ? (p.rating ?? 4.5) : 4.5;
   const reviews = Math.log10((p.reviewCount ?? 0) + 1);
-  let score = mainHit + secondary + rating + reviews;
+  // Small commercial priority among tours of the same interest (Chichén first).
+  let score = mainHit + secondary + rating + reviews + commercialBoost(p);
   if (opts.preferPrivate && isPrivateTitle(p.title)) score += 3;
   if (opts.zone) {
     const steps = zoneDistance(p, opts.zone);
@@ -249,6 +259,19 @@ export function transferFor(
   return ranked[0]?.p ?? null;
 }
 
+/**
+ * "Try another version": the previous plan's tours plus every tour that is the same kind
+ * of day as one of them (Chichén Deluxe after Chichén Classic, another Dolphin Discovery),
+ * so the new version is really a different trip, not the same days under other ids.
+ */
+export function expandAvoid(products: CatalogProduct[], avoid: number[] | undefined): number[] {
+  if (!avoid?.length) return [];
+  const avoided = products.filter((p) => avoid.includes(p.bokunId));
+  return products
+    .filter((p) => avoid.includes(p.bokunId) || avoided.some((a) => sameKindOfDay(p, a)))
+    .map((p) => p.bokunId);
+}
+
 /** Moves the avoided products to the end of a ranked list, keeping the order otherwise. */
 export function lastIfAvoided<T>(list: T[], avoid: number[] | undefined, id: (x: T) => number) {
   if (!avoid?.length) return;
@@ -309,9 +332,13 @@ export function buildRulesItinerary(inputs: PlanInputs): Itinerary {
   );
 
   // Rainy-day picks may fall outside the chosen interests: WhatToDo's parks first.
+  // Rainy days go to WhatToDo's own parks, but only the ones the traveler would want
+  // anyway (ATV needs "adventure"); otherwise rain just rules out the sea tours.
   const rainyPool = products
     .filter((p) => p.onSite && p.kind === "tour" && (p.priceFromUsd ?? 0) > 0)
     .filter((p) => isRainyFavorite(p) && fitsAges(p, request.travelers))
+    .filter((p) => allowedForTraveler(p, request))
+    .filter((p) => scoreProduct(p, request.interests, scoreOpts(request)) > 0)
     .sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
 
   // Transfers first: they're a hard requirement and shrink the tour budget.

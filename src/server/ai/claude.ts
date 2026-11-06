@@ -27,6 +27,7 @@ import {
 import { fitsAges, priceProductForParty } from "./pricing";
 import {
   areaOf,
+  commercialBoost,
   experienceTypes,
   primaryInterest,
   zoneDistance,
@@ -100,13 +101,16 @@ export function pickCandidates(
     .slice(0, MAX_CANDIDATES)
     .map((x) => x.p);
   // "Try another version": the previous tours leave the menu altogether while enough
-  // others remain, so a new version is really new (asking Claude nicely wasn't enough).
+  // others remain to fill the tour days, so a new version is really new (asking Claude
+  // nicely wasn't enough). With fewer fresh tours than days, the old ones stay at the end.
   if (opts.avoid?.length) {
     const skip = new Set(opts.avoid);
     const fresh = tours.filter((p) => !skip.has(p.bokunId));
-    if (fresh.length >= MIN_CANDIDATES) tours = fresh;
+    const tourDays = planDays(request).filter((d) => d.label === "full").length;
+    if (fresh.length >= Math.max(1, tourDays)) tours = fresh;
   }
-  // On a rainy trip, Extreme Adventure must be on the menu even if it ranked low.
+  // On a rainy trip, WhatToDo's parks must be on the menu even if they ranked low, but
+  // only when they fit the traveler (an ATV park needs "adventure").
   if (opts.rainy) {
     for (const p of products) {
       if (
@@ -114,6 +118,8 @@ export function pickCandidates(
         p.kind === "tour" &&
         isRainyFavorite(p) &&
         fitsAges(p, request.travelers) &&
+        allowedForTraveler(p, request) &&
+        scoreProduct(p, request.interests, scoreOpts(request)) > 0 &&
         !tours.some((t) => t.bokunId === p.bokunId)
       )
         tours.push(p);
@@ -165,6 +171,8 @@ function compact(
     // True when the tour matches none of the traveler's interests: on the menu only so a
     // day isn't left empty once every matching tour is used.
     filler: !!opts.filler,
+    // WhatToDo's flagship for its interest (Chichén Itzá among the ruins): prefer it.
+    flagship: commercialBoost(p) > 0,
   };
 }
 
@@ -199,12 +207,13 @@ You build day-by-day itineraries using ONLY the products in the candidate list. 
 - "pickupFromHotel": "included" means the tour collects them at the hotel, so a few zones of distance are fine; "self" means they must reach the meeting point on their own, so keep those close to the hotel (zonesFromHotel 0-1) unless the traveler clearly wants it.
 - Stay near the hotel: "zonesFromHotel" is how far down the coast a tour happens (0 = same area, 5 = Cancun ↔ Tulum). Between similar options prefer the lower number, and never fill a trip with 3+ tours at 4-5 zones away. Far day trips (area "far": Chichén Itzá, Holbox, Bacalar) count as 3 and are fine once or twice, not every day. Null = unknown.
 - Candidates with filler=true match none of the requested interests. Use one only on a day that would otherwise have no tour because every matching candidate is already used or doesn't fit (budget, ages, weather); never place a filler while a matching candidate is still available, and prefer fillers near the hotel.
+- When two candidates serve the same interest, prefer the one with flagship=true (e.g. Chichén Itzá before other ruins), still never two of the same kind.
 - Match the traveler's interests by what a tour mainly is ("mainInterest"), not by the extra interests it also lists: someone who asked for "cultural" gets ruins and towns, not a dolphin swim that merely mentions the Mayan coast. Cover every requested interest that has tours at least once before repeating an interest (shopping has no tours). Prefer higher rating/reviews when similar (use the tripadvisor rating when present).
 - When ratings are null, do not fall back on how famous a tour is: choose by fit with this group (interests, ages, budget, pace) and vary the kind of experience across days. At most one partyNight tour per trip, unless "party" is among the interests and the trip has 5+ full days.
 - Children: check minAge against the youngest traveler. With kids under 12, avoid tours of ${LONG_TOUR_MINUTES / 60}+ hours (e.g. Chichén Itzá day trips) unless nothing else fits; with a child under ${LONG_TOUR_KID_AGE}, never more than ONE such tour in the whole trip.
 ${request.preferPrivate ? "- The traveler prefers PRIVATE tours: when similar options exist, pick the one with Private/Privado in the title.\n" : ""}- If the traveler asked for transfers, place the transfer item on the arrival day and/or departure day using a transfer bokunId, startTime null.
 - Each item note: one short, warm, specific sentence (max ~20 words) in ${lang} about why it fits this group. Day titles short (2-5 words), in ${lang}. Summary: one sentence in ${lang}, max 25 words.
-- Weather: each skeleton day may carry weather {kind, source}. On every "rainy" day, in date order, use a not-yet-used candidate with rainyFavorite=true (WhatToDo's Extreme Adventuring and Cenote Adventuring parks) as long as it fits budget and ages. This rule outranks interest coverage and ratings. Only when no unused rainyFavorite candidate fits, prefer cenotes, ruins, food or other non-sea tours. On "rainy" or "windy" days never pick a tour with seaTour=true when another option fits. Save rainyFavorite tours for rainy days when the trip has any. Mention the weather in that day's note only when it changed the choice. "typical" weather is a monthly average, not a forecast: do not change plans because of it.
+- Weather: each skeleton day may carry weather {kind, source}. On every "rainy" day, in date order, prefer a not-yet-used candidate with rainyFavorite=true (WhatToDo's Extreme Adventuring and Cenote Adventuring parks) IF one is on the menu: they are only listed when they match the traveler's interests (an ATV park is never offered to someone who didn't ask for adventure). Otherwise, on rainy days prefer cenotes, ruins, caves, parks, food or other non-sea tours from the traveler's interests. On "rainy" or "windy" days never pick a tour with seaTour=true when another option fits. Save rainyFavorite tours for rainy days when the trip has any. Mention the weather in that day's note only when it changed the choice. "typical" weather is a monthly average, not a forecast: do not change plans because of it.
 - Output every day in the skeleton, in order, even if a day has only a free item.${
     avoid.length
       ? `\n- The traveler asked for ANOTHER VERSION of the trip: do not use these bokunIds (from the previous version) unless no other candidate fits: ${avoid.join(", ")}. Choose a noticeably different set of experiences.`

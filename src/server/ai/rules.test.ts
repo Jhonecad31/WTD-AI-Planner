@@ -565,10 +565,11 @@ describe("pickCandidates (Claude's menu)", () => {
     expect(ids({ ...request, travelers: adults, interests: ["party"] })).toContain(4);
   });
 
-  it("lists interest matches first, then tops up with other tours", () => {
+  it("lists interest matches first, then tops up with other tours (never an ATV park)", () => {
     const tours = ids({ ...request, travelers: adults, interests: ["cultural"] });
     expect(tours[0]).toBe(1);
-    expect(tours).toEqual(expect.arrayContaining([2, 3]));
+    expect(tours).toContain(3);
+    expect(tours).not.toContain(2); // "Cenotes ATV" needs "adventure"
   });
 
   it("never offers adults-only night life to a group with kids", () => {
@@ -774,8 +775,8 @@ describe("Claude's menu for another version", () => {
     const avoid = [400, 401, 402];
     const menu = pickCandidates(req, many, { avoid }).tours.map((p) => p.bokunId);
     for (const id of avoid) expect(menu).not.toContain(id);
-    // With too few alternatives the old tours stay on the menu (at the end).
-    const few = many.slice(0, 6);
+    // With fewer fresh tours than tour days (3 here) the old tours stay on the menu (at the end).
+    const few = many.slice(0, 5);
     const menu2 = pickCandidates(req, few, { avoid }).tours.map((p) => p.bokunId);
     expect(menu2.slice(-3)).toEqual(expect.arrayContaining(avoid));
   });
@@ -928,5 +929,141 @@ describe("pickup coverage by hotel zone", () => {
     expect(scoreProduct(dolphinsWithRide, ["water"], fromCancun)).toBeGreaterThan(
       scoreProduct(dolphinsSelf, ["water"], fromCancun),
     );
+  });
+});
+
+describe("ATV only for travelers who asked for adventure", () => {
+  const atv = product({
+    bokunId: 801,
+    title: "ATV, Ziplining & Cenote Tour at Extreme Adventure Eco Park",
+    interests: ["adventure", "water"],
+  });
+  const ruins = product({ bokunId: 802, title: "Tulum Ruins", interests: ["cultural"] });
+  const cenotes = product({
+    bokunId: 803,
+    title: "Cenotes Adventuring Park",
+    interests: ["water", "adventure"],
+  });
+  const adults = [{ age: 30 }, { age: 30 }];
+  const rain = (): DayWeather => ({ source: "forecast", kind: "rainy", tMaxC: 28, tMinC: 23 });
+
+  it("keeps the ATV park out when adventure wasn't picked, even on a rainy day", () => {
+    const req: TripRequest = {
+      ...request,
+      travelers: adults,
+      interests: ["cultural", "water"],
+      budgetPerPerson: 1000,
+    };
+    expect(allowedForTraveler(atv, req)).toBe(false);
+    const it_ = buildRulesItinerary({
+      request: req,
+      products: [atv, ruins, cenotes],
+      weather: { "2026-12-11": rain(), "2026-12-13": rain() },
+    });
+    const ids = it_.days.flatMap((d) => d.items).map((i) => i.bokunId);
+    expect(ids).not.toContain(801);
+    // The cenote park is water, so it still serves the rainy day.
+    expect(ids).toContain(803);
+    expect(
+      pickCandidates(req, [atv, ruins, cenotes], { rainy: true }).tours.map((p) => p.bokunId),
+    ).not.toContain(801);
+  });
+
+  it("gives the ATV park to adventure travelers, rain or shine", () => {
+    const req: TripRequest = {
+      ...request,
+      travelers: adults,
+      interests: ["adventure"],
+      budgetPerPerson: 1000,
+    };
+    expect(allowedForTraveler(atv, req)).toBe(true);
+    const dry = buildRulesItinerary({ request: req, products: [atv, ruins, cenotes] });
+    expect(dry.days.flatMap((d) => d.items).map((i) => i.bokunId)).toContain(801);
+    const wet = buildRulesItinerary({
+      request: req,
+      products: [atv, ruins, cenotes],
+      weather: { "2026-12-11": rain() },
+    });
+    expect(
+      wet.days.find((d) => d.date === "2026-12-11")?.items.some((i) => i.bokunId === 801),
+    ).toBe(true);
+  });
+});
+
+describe("commercial priority (boost)", () => {
+  it("puts Chichén first among the ruins from any zone, without beating another interest", () => {
+    const coast = ["Cancun", "Playa del Carmen", "Tulum"].map((city, id) => ({
+      id,
+      title: city,
+      city,
+    }));
+    const chichen = product({
+      bokunId: 670332,
+      title: "Chichen Itza Classic Cenote & Valladolid Tour",
+      interests: ["cultural", "water"],
+      pickupPlaces: coast,
+    });
+    const ekBalam = product({
+      bokunId: 848479,
+      title: "Ek Balam Mayan Traditions",
+      interests: ["cultural"],
+    });
+    const tulum = product({
+      bokunId: 796135,
+      title: "Tulum, Coba, Playa del Carmen and Cenote Kuxtal Deluxe Tour",
+      interests: ["cultural", "water"],
+    });
+    for (const zone of ["cancun", "tulum"] as const) {
+      const opts = scoreOpts({ ...request, hotel: { noHotel: false, zone } });
+      const s = (p: CatalogProduct) => scoreProduct(p, ["cultural"], opts);
+      expect(s(chichen)).toBeGreaterThan(s(ekBalam));
+      expect(s(chichen)).toBeGreaterThan(s(tulum));
+    }
+    // A traveler who didn't ask for culture still doesn't get Chichén ahead of their interest.
+    const atv = product({
+      bokunId: 670333,
+      title: "ATV, Ziplining & Cenote Tour at Extreme Adventure Eco Park",
+      interests: ["adventure", "water"],
+    });
+    const opts = scoreOpts({ ...request, interests: ["adventure", "water"] });
+    expect(scoreProduct(atv, ["adventure", "water"], opts)).toBeGreaterThan(
+      scoreProduct(chichen, ["adventure", "water"], opts),
+    );
+  });
+});
+
+describe("try another version excludes the same kind of day, not just the same id", () => {
+  it("leaves out Chichén Deluxe when Chichén Classic was in the previous version", async () => {
+    const { expandAvoid } = await import("./rules");
+    const classic = product({
+      bokunId: 670332,
+      title: "Chichen Itza Classic Cenote & Valladolid Tour",
+      interests: ["cultural"],
+    });
+    const deluxe = product({
+      bokunId: 796133,
+      title: "Chichen Itza Deluxe Tour with Cenote & Valladolid",
+      interests: ["cultural"],
+    });
+    const ekBalam = product({
+      bokunId: 848479,
+      title: "Ek Balam Mayan Traditions",
+      interests: ["cultural"],
+    });
+    const dolphinsCancun = product({
+      bokunId: 1025575,
+      title: "Dolphin Discovery in Cancun (Hotel Zone)",
+      interests: ["water"],
+    });
+    const dolphinsPlaya = product({
+      bokunId: 1028829,
+      title: "Dolphin Discovery in Playa del Carmen",
+      interests: ["water"],
+    });
+    const all = [classic, deluxe, ekBalam, dolphinsCancun, dolphinsPlaya];
+    const expanded = expandAvoid(all, [670332, 1025575]);
+    expect(expanded.sort()).toEqual([1025575, 1028829, 670332, 796133].sort());
+    expect(expanded).not.toContain(848479);
+    expect(expandAvoid(all, undefined)).toEqual([]);
   });
 });

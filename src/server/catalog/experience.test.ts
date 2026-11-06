@@ -196,8 +196,10 @@ describe("curated families and inclusions (read from the Bokun descriptions)", (
   it("never plans two Río Secreto days, whatever ruins come with them", () => {
     expect(variety(rioTulum, [rioCoba])).toBe(0);
     expect(variety(rioAlone, [rioTulum])).toBe(0);
-    // Río Secreto with a Tulum stop after a Tulum/Cobá day: a different headline, allowed.
-    expect(variety(rioTulum, [tulumCoba])).toBe(1);
+    // Río Secreto + Tulum after a Tulum/Cobá day visits the Tulum ruins twice: a repeat.
+    expect(variety(rioTulum, [tulumCoba])).toBe(0);
+    // Río Secreto alone after that day shares nothing named: fine.
+    expect(variety(rioAlone, [tulumCoba])).toBe(2);
     expect(mainExperience(rioTulum)).toBe("cave");
   });
 
@@ -223,5 +225,29 @@ describe("curated families and inclusions (read from the Bokun descriptions)", (
     expect(experienceTypes(xelha)).toEqual(
       expect.arrayContaining(["snorkel", "zipline", "cenote"]),
     );
+  });
+});
+
+describe("the same place twice is a repeat", () => {
+  it("catches the same ruins or island under different headlines", () => {
+    const chichenCenote = {
+      bokunId: 670332,
+      title: "Chichen Itza Classic Cenote & Valladolid Tour",
+    };
+    const tulumCoba = {
+      bokunId: 796135,
+      title: "Tulum, Coba, Playa del Carmen and Cenote Kuxtal Deluxe Tour",
+    };
+    const rioCoba = { bokunId: 1023186, title: "Rio Secreto + Coba Mayan Ruins" };
+    const casaTortuga = {
+      bokunId: 1107394,
+      title: "Cenotes Casa Tortuga with Tulum Ruins Day Trip",
+    };
+    expect(variety(rioCoba, [tulumCoba])).toBe(0); // Cobá twice
+    expect(variety(casaTortuga, [tulumCoba])).toBe(0); // Tulum twice
+    expect(variety(chichenCenote, [tulumCoba])).toBe(1); // different sites, shared cenote stop only
+    const dolphinsCozumel = { bokunId: 1026428, title: "Dolphin Discovery in Cozumel" };
+    const cozumelDay = { bokunId: 1063989, title: "Cozumel Day Excursion Essentials" };
+    expect(variety(dolphinsCozumel, [cozumelDay])).toBe(0);
   });
 });

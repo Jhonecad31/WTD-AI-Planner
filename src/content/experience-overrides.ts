@@ -19,6 +19,7 @@ import type { Interest } from "@/server/catalog/types";
  *   pays separately (snorkel "available" at a dolphin park) are left out on purpose.
  * - `family`: tours that are the same experience under different titles (the three
  *   Río Secreto combos, the two clear-boat rides): never two of one family in a trip.
+ * - `boost`: small commercial priority (points) among tours of the same interest.
  *
  * Read from the Bokun descriptions on 2026-11-05; "(check)" marks our best guess.
  */
@@ -28,6 +29,13 @@ export interface ExperienceOverride {
   area?: Area | "far";
   activities?: ExperienceType[];
   family?: string;
+  /**
+   * Commercial priority: points added to the score so, among tours of the same interest,
+   * this one goes first (Chichén Itzá over Ek Balam or Tulum). Keep it small (≤ 2): the
+   * traveler's main interest is worth 6, so a boost never puts a tour in a trip that
+   * didn't ask for its kind.
+   */
+  boost?: number;
 }
 
 export const EXPERIENCE_OVERRIDES: Record<number, ExperienceOverride> = {
@@ -55,6 +63,10 @@ export const EXPERIENCE_OVERRIDES: Record<number, ExperienceOverride> = {
   1023186: { type: "cave", family: "rio-secreto" }, // + Cobá ruins
 
   // --- Ruins day trips (far) ---
+  // Chichén Itzá is the flagship cultural day: first among the ruins from any hotel zone.
+  670332: { boost: 1.5 }, // Chichén Classic
+  796133: { boost: 1.5 }, // Chichén Deluxe
+  796134: { boost: 1.5 }, // Chichén Plus
   848479: { activities: ["cenote"] }, // Ek Balam + cenote Chichikan + Uayma
   1107394: { activities: ["cave"] }, // Casa Tortuga: 2 open + 2 cave cenotes, Tulum ruins
   // Chichén ×3 and Tulum/Cobá: the title already names the cenote stop.
