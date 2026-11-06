@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { timingSafeEqual } from "node:crypto";
 import { env } from "@/server/config/env";
-import { syncCatalogFromBokun } from "@/server/catalog/service";
+import { bundledSnapshot, syncCatalogFromBokun } from "@/server/catalog/service";
 import { refreshAllRatings } from "@/server/tripadvisor";
 
 export const maxDuration = 60;
@@ -10,6 +10,11 @@ export const maxDuration = 60;
  * Refreshes the Bokun catalog. Called by Vercel Cron (see vercel.json) with
  * `Authorization: Bearer $CRON_SECRET`, or manually with the same header.
  * With no CRON_SECRET configured it only runs in local development.
+ *
+ * The refresh lives in this instance's memory and /tmp only; other instances
+ * keep serving the snapshot built into the deploy (`bundledSnapshotAt`), so a
+ * cold start never waits for Bokun. Redeploy after `npm run catalog:snapshot`
+ * to ship a newer one.
  */
 export async function GET(request: NextRequest) {
   const secret = env().CRON_SECRET;
@@ -34,5 +39,6 @@ export async function GET(request: NextRequest) {
     tripadvisorRatings,
     ms: Date.now() - t0,
     fetchedAt: snapshot.fetchedAt,
+    bundledSnapshotAt: bundledSnapshot()?.fetchedAt ?? null,
   });
 }
