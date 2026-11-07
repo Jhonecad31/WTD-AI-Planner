@@ -227,6 +227,18 @@ export async function sendLeadEmails(
       ? { status: "sent", sentAt: new Date().toISOString() }
       : { status: "failed", error: result.error };
 
+    // On Vercel nothing else records the outcome, so make it visible in the runtime logs.
+    // The recipient address is left out on purpose (it is the traveler's personal data).
+    if (result.ok) {
+      console.info(
+        `[email] sent ${email.kind} for lead ${lead.ref} (resend id ${result.id ?? "?"})`,
+      );
+    } else {
+      console.error(
+        `[email] Resend rejected the ${email.kind} email for lead ${lead.ref} (from: ${e.EMAIL_FROM}): ${result.error}`,
+      );
+    }
+
     Object.assign(email, patch);
 
     if (process.env.VERCEL !== "1") {
