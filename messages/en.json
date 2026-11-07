@@ -376,6 +376,7 @@
       "sending": "Sending…",
       "doneTitle": "Done! Check your inbox",
       "doneBody": "We sent your itinerary to {email}. A specialist will contact you within {hours} hours to book it.",
+      "doneInboxHint": "Don't see it? Check your Promotions tab or spam folder. It comes from WhatToDo Planner.",
       "download": "Download PDF",
       "downloading": "Building PDF…",
       "downloadFailed": "We couldn't build the PDF. Please try again.",

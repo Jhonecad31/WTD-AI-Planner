@@ -115,6 +115,9 @@ export function StepContact() {
           <p className="mx-auto mt-2 max-w-md text-brand-ink/70">
             {t("doneBody", { email, hours })}
           </p>
+          <p className="mx-auto mt-3 max-w-md rounded-card bg-amber-50 px-4 py-3 text-sm text-amber-900">
+            {t("doneInboxHint")}
+          </p>
           <p className="mt-2 text-sm text-muted">
             {t("reference")}: <span className="font-bold text-heading">{done.ref}</span>
           </p>
