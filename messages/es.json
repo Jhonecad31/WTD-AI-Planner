@@ -377,6 +377,7 @@
       "sending": "Enviando…",
       "doneTitle": "¡Listo! Revisa tu correo",
       "doneBody": "Enviamos tu itinerario a {email}. Un especialista te contactará en menos de {hours} horas para reservarlo.",
+      "doneInboxHint": "¿No lo ves? Revisa la pestaña Promociones o la carpeta de spam. Te llega de WhatToDo Planner.",
       "download": "Descargar PDF",
       "downloading": "Generando PDF…",
       "downloadFailed": "No pudimos generar el PDF. Inténtalo de nuevo.",
