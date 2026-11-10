@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getLocale, getTranslations } from "next-intl/server";
+import { Clarity } from "@/components/analytics/clarity";
 import { routing } from "@/i18n/routing";
 import "@/styles/globals.css";
 
@@ -32,10 +33,12 @@ export default async function RootLayout({ children }: LayoutProps<"/[locale]">)
 
   return (
     <html lang={locale} className={`${nunito.variable} h-full antialiased`}>
+      <head>
+        <Clarity />
+      </head>
       <body className="min-h-full flex flex-col">
         <NextIntlClientProvider>{children}</NextIntlClientProvider>
       </body>
     </html>
   );
 }
-
