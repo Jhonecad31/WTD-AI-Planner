@@ -5,7 +5,6 @@ import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getLocale, getTranslations } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import "@/styles/globals.css";
-import Script from "next/script";
 
 // Same Nunito files whattodoincancun.com serves from /fonts.
 const nunito = localFont({
@@ -40,32 +39,3 @@ export default async function RootLayout({ children }: LayoutProps<"/[locale]">)
   );
 }
 
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <html lang="en">
-      <body>
-        {children}
-
-        <Script
-  id="microsoft-clarity"
-  strategy="afterInteractive"
-  dangerouslySetInnerHTML={{
-    __html: `
-      (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;
-        t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-      })(window,document,"clarity","script",${JSON.stringify(process.env.NEXT_PUBLIC_CLARITY_ID ?? "")});
-    `,
-  }}
-/>
-      </body>
-    </html>
-  );
-}
