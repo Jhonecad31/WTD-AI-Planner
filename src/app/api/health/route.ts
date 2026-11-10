@@ -1,4 +1,5 @@
 import { env } from "@/server/config/env";
+import { flags } from "@/server/config/flags";
 
 /**
  * Deployment check: which integrations are configured. Never returns secret values,
@@ -18,6 +19,9 @@ export async function GET() {
   const modes = {
     aiProvider: e.AI_PROVIDER,
     emailProvider: e.EMAIL_PROVIDER,
+    /** What sendLeadEmails will really do: "resend" sends, "db" only keeps the outbox. */
+    effectiveEmailProvider: flags.emailProvider(),
+    emailFrom: e.EMAIL_FROM,
     appUrl: e.NEXT_PUBLIC_APP_URL,
     leadsTo: e.LEADS_TO ? "set" : "missing",
   };

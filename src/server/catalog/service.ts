@@ -5,12 +5,20 @@ import { env } from "@/server/config/env";
 import { interestsFor, isRestaurantUrl, normalizeActivity } from "./normalize";
 import type { CatalogProduct } from "./types";
 import siteLinks from "@/content/site-links.json";
+import bundledSnapshotJson from "@/content/catalog-snapshot.json";
 import { EXCLUDED_BOKUN_IDS } from "@/content/excluded-products";
+import { expandSnapshot, type CompactCatalogSnapshot } from "./snapshot";
 
 /**
- * Catalog loader with a local JSON cache (`.cache/catalog.json`).
- * Phase 1: file cache so development doesn't hammer Bokun (400 req/min limit).
- * Phase 4+: the same shape is persisted to the `catalog_products` table.
+ * Catalog loader. Three layers, freshest wins:
+ *   1. process memory;
+ *   2. a JSON cache on disk (`.cache/catalog.json`, `/tmp/wtd-cache` on Vercel),
+ *      written by every sync (daily cron, /dev/catalog?refresh=1);
+ *   3. the "site" snapshot shipped inside the build (`src/content/catalog-snapshot.json`,
+ *      regenerated with `npm run catalog:snapshot`).
+ * Bokun is only hit when none of them covers the requested scope: on Vercel each
+ * new instance starts with 1 and 2 empty, and a full sync is hundreds of requests
+ * (400 req/min limit), so no request ever waits for one.
  */
 
 // On Vercel the project directory is read-only; /tmp is the only writable disk.
@@ -39,6 +47,20 @@ export interface CatalogSnapshot {
 const SITE_IDS = new Set(Object.keys(siteLinks as Record<string, unknown>).map(Number));
 
 let memory: CatalogSnapshot | null = null;
+let bundled: CatalogSnapshot | null | undefined;
+
+/** The snapshot compiled into the build, or null when it is unusable. */
+export function bundledSnapshot(): CatalogSnapshot | null {
+  if (bundled !== undefined) return bundled;
+  try {
+    const snapshot = expandSnapshot(bundledSnapshotJson as unknown as CompactCatalogSnapshot);
+    bundled = snapshot.products.length ? snapshot : null;
+  } catch (e) {
+    console.warn("[catalog] bundled snapshot unusable:", e instanceof Error ? e.message : e);
+    bundled = null;
+  }
+  return bundled;
+}
 
 async function readCache(): Promise<CatalogSnapshot | null> {
   try {
@@ -123,7 +145,12 @@ export async function syncCatalogFromBokun(
   return snapshot;
 }
 
-/** Returns the cached catalog, refreshing from Bokun when stale or missing. */
+/**
+ * Returns the freshest catalog available without calling Bokun (memory, disk
+ * cache or the snapshot in the build); syncs from Bokun only when none covers
+ * `scope` or on `forceRefresh`. A snapshot older than a day is still served,
+ * with a warning: refreshing is the cron's job, never a visitor's request.
+ */
 export async function getCatalog(
   opts: { forceRefresh?: boolean; scope?: CatalogScope } = {},
 ): Promise<CatalogSnapshot> {
@@ -131,10 +158,21 @@ export async function getCatalog(
   const covers = (s: CatalogSnapshot) => s.scope === "all" || s.scope === scope;
   if (!opts.forceRefresh) {
     if (memory && covers(memory)) return memory;
-    const cached = await readCache();
-    if (cached && covers(cached) && Date.now() - Date.parse(cached.fetchedAt) < CACHE_TTL_MS) {
-      memory = cached;
-      return cached;
+    const candidates = [await readCache(), bundledSnapshot()].filter(
+      (s): s is CatalogSnapshot => !!s && covers(s) && Number.isFinite(Date.parse(s.fetchedAt)),
+    );
+    const freshest = candidates.sort(
+      (a, b) => Date.parse(b.fetchedAt) - Date.parse(a.fetchedAt),
+    )[0];
+    if (freshest) {
+      if (Date.now() - Date.parse(freshest.fetchedAt) > CACHE_TTL_MS) {
+        console.warn(
+          `[catalog] serving a catalog fetched ${freshest.fetchedAt}; the daily cron or ` +
+            "`npm run catalog:snapshot` refreshes it",
+        );
+      }
+      memory = freshest;
+      return freshest;
     }
   }
   return syncCatalogFromBokun({ scope });

@@ -8,10 +8,14 @@ import { z } from "zod";
  */
 const schema = z.object({
   NEXT_PUBLIC_APP_URL: z.string().url().default("http://localhost:3000"),
-  LEADS_TO: z.string().default("sales@example.com"),
+  LEADS_TO: z.string().default("sales@whattodoincancun.com"),
   NEXT_PUBLIC_RESPONSE_TIME_HOURS: z.coerce.number().int().positive().default(24),
 
-  EMAIL_PROVIDER: z.enum(["db", "resend"]).default("db"),
+  /**
+   * auto = send through Resend whenever RESEND_API_KEY is set, otherwise keep the
+   * emails in the outbox; db / resend force one or the other.
+   */
+  EMAIL_PROVIDER: z.enum(["auto", "db", "resend"]).default("auto"),
   /** rules = deterministic engine, claude = Claude API with rules fallback */
   AI_PROVIDER: z.enum(["rules", "claude"]).default("claude"),
   CAPTCHA_ENABLED: z
@@ -51,12 +55,25 @@ export type Env = z.infer<typeof schema>;
 
 let cached: Env | null = null;
 
+/**
+ * Values pasted into a hosting dashboard often carry a trailing newline or spaces,
+ * which break HMAC signatures and HTTP headers, so they are trimmed. They also often
+ * keep the quotes from a .env line (`EMAIL_FROM="Name <a@b.com>"`): dotenv strips
+ * those locally but Vercel stores them as typed, and Resend then rejects the `from`.
+ * One matching pair of wrapping quotes is removed.
+ */
+export function cleanEnvValue(value: string): string {
+  const v = value.trim();
+  if (v.length >= 2 && (v[0] === '"' || v[0] === "'") && v[v.length - 1] === v[0]) {
+    return v.slice(1, -1).trim();
+  }
+  return v;
+}
+
 export function env(): Env {
   if (cached) return cached;
-  // Values pasted into a hosting dashboard often carry a trailing newline or
-  // spaces; those break HMAC signatures and HTTP headers, so trim everything.
   const trimmed = Object.fromEntries(
-    Object.entries(process.env).map(([k, v]) => [k, typeof v === "string" ? v.trim() : v]),
+    Object.entries(process.env).map(([k, v]) => [k, typeof v === "string" ? cleanEnvValue(v) : v]),
   );
   const parsed = schema.safeParse(trimmed);
   if (!parsed.success) {

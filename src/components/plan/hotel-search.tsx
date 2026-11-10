@@ -8,6 +8,18 @@ import { SearchIcon } from "@/components/ui/icons";
 
 type HotelOption = { name: string; city: string | null; zone: HotelZone | null };
 
+const fold = (s: string) => s.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase().trim();
+
+/** Previous results whose name still contains every word of the new query. */
+function localMatches(hotels: HotelOption[], query: string): HotelOption[] {
+  const words = fold(query).split(/\s+/).filter(Boolean);
+  if (!words.length) return [];
+  return hotels.filter((h) => {
+    const key = fold(h.name);
+    return words.every((w) => key.includes(w));
+  });
+}
+
 /**
  * Hotel name field with suggestions from WhatToDo's pickup list. Free text is
  * still accepted (Airbnb, a hotel that isn't listed yet).
@@ -32,13 +44,11 @@ export function HotelSearch({
     hotels: [],
   });
   const query = value.trim();
-  const hotels = results.q === query ? results.hotels : [];
-  const searching = query.length >= 2 && results.q !== query;
-
-  // Warm the server's hotel list as soon as the step opens, so the first search is instant.
-  useEffect(() => {
-    fetch("/api/hotels?q=ho").catch(() => {});
-  }, []);
+  const fresh = results.q === query;
+  // While the next answer is on its way, keep showing the previous results that still
+  // match what was typed, so suggestions never flicker away between keystrokes.
+  const hotels = fresh ? results.hotels : localMatches(results.hotels, query);
+  const searching = query.length >= 2 && !fresh && hotels.length === 0;
 
   useEffect(() => {
     if (query.length < 2) return;
