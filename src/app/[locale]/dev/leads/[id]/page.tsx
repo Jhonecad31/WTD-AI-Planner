@@ -22,8 +22,9 @@ export default async function LeadPage({ params }: { params: Promise<{ id: strin
         {lead.name} <span className="text-muted">· {lead.ref}</span>
       </h1>
       <p className="text-sm text-muted">
-        {lead.email} · {lead.phone ?? "no phone"} · {lead.locale.toUpperCase()} · status{" "}
-        {lead.status} · engine {lead.engine ?? "—"} · {new Date(lead.createdAt).toLocaleString()}
+        {lead.email} · {lead.phone ?? "no phone"} · {lead.origin ?? "no origin"} ·{" "}
+        {lead.locale.toUpperCase()} · status {lead.status} · engine {lead.engine ?? "—"} ·{" "}
+        {new Date(lead.createdAt).toLocaleString()}
       </p>
       <div className="mt-4 flex flex-wrap gap-3 text-sm font-semibold">
         <a

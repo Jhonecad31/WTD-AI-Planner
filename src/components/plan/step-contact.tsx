@@ -3,10 +3,12 @@
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
-import { Field, Input } from "@/components/ui/field";
+import { Field, Input, Select } from "@/components/ui/field";
 import { ArrowLeftIcon, CheckIcon, MailIcon } from "@/components/ui/icons";
 import { brand } from "@/content/brand";
+import { dialFor, dialOptions } from "@/content/dial-codes";
 import { formatDate, formatUsd } from "@/lib/format";
+import { isValidLocalPhone } from "@/lib/lead-schema";
 import { useWizard } from "./wizard-state";
 import { buildTripRequest } from "./step-itinerary";
 
@@ -19,7 +21,14 @@ export function StepContact() {
   const { draft, back, patch, reset } = useWizard();
   const [name, setName] = useState(draft.travelers[0]?.name ?? "");
   const [email, setEmail] = useState(draft.contact?.email ?? "");
-  const [phone, setPhone] = useState(draft.contact?.phone ?? "");
+  // Country code and number are two separate boxes so nobody forgets the code.
+  const [dialIso, setDialIso] = useState(draft.contact?.dial ?? "");
+  // A draft saved before the split kept the whole number in `phone`: start that one empty.
+  const [phone, setPhone] = useState(draft.contact?.dial ? draft.contact.phone : "");
+  const dialCode = dialFor(dialIso);
+  const fullPhone = dialCode ? `+${dialCode} ${phone.trim()}` : "";
+  const countries = dialOptions(locale);
+  const [origin, setOrigin] = useState(draft.contact?.origin ?? "");
   const [consent, setConsent] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -35,9 +44,11 @@ export function StepContact() {
   const errors = {
     name: name.trim().length >= 2 ? null : t("errorName"),
     email: /\S+@\S+\.\S+/.test(email) ? null : t("errorEmail"),
+    phone: !dialCode ? t("errorDial") : isValidLocalPhone(phone) ? null : t("errorPhone"),
+    origin: origin.trim().length >= 2 ? null : t("errorOrigin"),
     consent: consent ? null : t("errorConsent"),
   };
-  const valid = !errors.name && !errors.email && !errors.consent;
+  const valid = !errors.name && !errors.email && !errors.phone && !errors.origin && !errors.consent;
   const canSend = !!request && !!itinerary && valid && !sending;
 
   async function submit(e: React.FormEvent) {
@@ -54,7 +65,8 @@ export function StepContact() {
           lead: {
             name: name.trim(),
             email: email.trim(),
-            phone: phone.trim() || undefined,
+            phone: fullPhone,
+            origin: origin.trim(),
             consent: true,
             locale,
           },
@@ -67,7 +79,15 @@ export function StepContact() {
       if (!r.ok || !j.leadId || !j.ref) throw new Error(j.error ?? t("failed"));
       const result = { leadId: j.leadId, ref: j.ref, pdfUrl: j.pdfUrl ?? null };
       setDone(result);
-      patch({ submitted: result, contact: { email: email.trim(), phone: phone.trim() } });
+      patch({
+        submitted: result,
+        contact: {
+          email: email.trim(),
+          phone: phone.trim(),
+          origin: origin.trim(),
+          dial: dialIso,
+        },
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : t("failed"));
     } finally {
@@ -191,15 +211,68 @@ export function StepContact() {
             required
           />
         </Field>
-        <Field label={t("phone")} hint={t("phoneHint")} htmlFor="lead-phone">
+        <Field
+          label={t("phone")}
+          hint={t("phoneHint")}
+          htmlFor="lead-phone"
+          error={tried ? errors.phone : null}
+          className="sm:col-span-2"
+        >
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <div className="relative sm:w-64 sm:shrink-0">
+              <Select
+                id="lead-dial"
+                aria-label={t("dialCode")}
+                value={dialIso}
+                onChange={(e) => setDialIso(e.target.value)}
+                autoComplete="tel-country-code"
+                className={dialIso ? "" : "text-brand-ink/40"}
+                required
+              >
+                <option value="" disabled>
+                  {t("dialCodePlaceholder")}
+                </option>
+                {countries.map((c) => (
+                  <option key={c.iso} value={c.iso} className="text-brand-ink">
+                    {c.label}
+                  </option>
+                ))}
+              </Select>
+              <span
+                aria-hidden
+                className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs text-brand-ink/50"
+              >
+                ▼
+              </span>
+            </div>
+            <Input
+              id="lead-phone"
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              autoComplete="tel-national"
+              inputMode="tel"
+              placeholder={t("phonePlaceholder")}
+              className="min-w-0 flex-1"
+              required
+            />
+          </div>
+        </Field>
+        <Field
+          label={t("origin")}
+          hint={t("originHint")}
+          htmlFor="lead-origin"
+          error={tried ? errors.origin : null}
+          className="sm:col-span-2"
+        >
           <Input
-            id="lead-phone"
-            type="tel"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            autoComplete="tel"
-            inputMode="tel"
-            placeholder="+1 555 123 4567"
+            id="lead-origin"
+            value={origin}
+            onChange={(e) => setOrigin(e.target.value)}
+            autoComplete="address-level2"
+            placeholder={t("originPlaceholder")}
+            maxLength={80}
+            required
           />
         </Field>
       </div>

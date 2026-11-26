@@ -394,6 +394,13 @@ export function AgentLeadEmail({
                   </td>
                 </tr>
                 <tr>
+                  <td style={td} colSpan={3}>
+                    <b>From (country / city)</b>
+                    <br />
+                    {lead.origin || "—"}
+                  </td>
+                </tr>
+                <tr>
                   <td style={td}>
                     <b>Arrival</b>
                     <br />

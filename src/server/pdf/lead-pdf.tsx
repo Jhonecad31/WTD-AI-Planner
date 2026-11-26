@@ -162,7 +162,14 @@ export interface LeadPdfModel {
   ref: string;
   createdAt: string;
   engine: string;
-  contact: { name: string; email: string; phone: string | null; language: string };
+  contact: {
+    name: string;
+    email: string;
+    phone: string | null;
+    /** Country or city the traveler is from. */
+    origin: string | null;
+    language: string;
+  };
   trip: { nights: number; dateRange: string; luxuryTransfers: boolean };
   flights: { arrival: LeadPdfFlight; departure: LeadPdfFlight };
   hotel: {
@@ -298,6 +305,7 @@ export function buildLeadPdfModel(lead: LeadRecord, products: CatalogProduct[]):
       name: lead.name,
       email: lead.email,
       phone: lead.phone,
+      origin: lead.origin ?? null,
       language: lead.locale === "es" ? "Spanish (ES)" : "English (EN)",
     },
     trip: {
@@ -669,7 +677,11 @@ export function LeadPdf({ m }: { m: LeadPdfModel }) {
 
         <H2>Contact</H2>
         <View style={s.row}>
-          <KV k="Name" v={m.contact.name} />
+          <KV
+            k="Name"
+            v={m.contact.name}
+            sub={m.contact.origin ? `From ${m.contact.origin}` : null}
+          />
           <KV k="Email" v={m.contact.email} small={m.contact.email.length > 22} />
           <KV k="Phone" v={m.contact.phone ?? "—"} />
           <KV k="Language" v={m.contact.language} sub={`Ref ${m.ref}`} />

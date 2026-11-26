@@ -70,6 +70,7 @@ const lead: LeadRecord = {
   name: "Ana García",
   email: "ana@example.com",
   phone: "+52 998 123 4567",
+  origin: "Monterrey, México",
   locale: "es",
   consentAt: "2026-11-06T10:00:00.000Z",
   engine: "claude",
@@ -191,6 +192,7 @@ describe("buildLeadPdfModel", () => {
       name: "Ana García",
       email: "ana@example.com",
       phone: "+52 998 123 4567",
+      origin: "Monterrey, México",
       language: "Spanish (ES)",
     });
     expect(m.engine).toBe("claude");

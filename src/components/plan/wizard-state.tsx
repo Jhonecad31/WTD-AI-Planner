@@ -76,7 +76,8 @@ export interface WizardDraft {
     /** The trip request it was built from; a changed answer builds a new one. */
     requestKey?: string;
   };
-  contact?: { email: string; phone: string };
+  /** `phone` is the number without its country code; `dial` is the ISO country picked for it. */
+  contact?: { email: string; phone: string; origin?: string; dial?: string };
   /** Set once the lead was sent; shows the done screen on reload. */
   submitted?: { leadId: string; ref: string; pdfUrl: string | null };
 }
