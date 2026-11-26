@@ -2,11 +2,31 @@ import { z } from "zod";
 import { TripRequestSchema, type TripRequest } from "./trip-schema";
 import { ItinerarySchema, type Itinerary } from "./itinerary-schema";
 
+/**
+ * A usable phone in international form: starts with the country code (`+52 …`), only
+ * digits, spaces and - ( ) . after it, and at least 8 digits in total.
+ */
+export function isValidPhone(value: string): boolean {
+  const v = value.trim();
+  return /^\+\d[\d\s().-]*$/.test(v) && v.replace(/\D/g, "").length >= 8;
+}
+
+/** The number without its country code, as typed in the second box: at least 6 digits. */
+export function isValidLocalPhone(value: string): boolean {
+  const v = value.trim();
+  return /^[\d\s().-]+$/.test(v) && v.replace(/\D/g, "").length >= 6;
+}
+
 /** What the traveler types in step 6. */
 export const LeadInputSchema = z.object({
   name: z.string().trim().min(2).max(80),
   email: z.string().trim().email().max(120),
-  phone: z.string().trim().max(30).optional().or(z.literal("")),
+  // Required: the sales team books by phone/WhatsApp, so a lead without one is not actionable.
+  phone: z.string().trim().max(30).refine(isValidPhone, {
+    message: "A phone number with its country code (+52 …) is required",
+  }),
+  /** Country or city the traveler is from (free text). */
+  origin: z.string().trim().min(2).max(80),
   consent: z.literal(true),
   locale: z.enum(["en", "es"]).default("en"),
 });
@@ -34,6 +54,8 @@ export interface LeadRecord {
   name: string;
   email: string;
   phone: string | null;
+  /** Country or city the traveler is from (absent on records written before it existed). */
+  origin?: string | null;
   locale: "en" | "es";
   consentAt: string;
   request: TripRequest;

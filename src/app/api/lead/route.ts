@@ -43,6 +43,7 @@ export async function POST(request: NextRequest) {
       name: input.name,
       email: input.email.toLowerCase(),
       phone: input.phone || null,
+      origin: input.origin || null,
       locale: input.locale,
       consentAt: now,
       request: trip,
